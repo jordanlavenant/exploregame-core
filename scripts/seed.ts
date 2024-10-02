@@ -1,22 +1,37 @@
-// import { db } from 'api/src/lib/db'
-
-// Manually apply seeds via the `yarn rw prisma db seed` command.
-//
-// Seeds automatically run the first time you run the `yarn rw prisma migrate dev`
-// command and every time you run the `yarn rw prisma migrate reset` command.
-//
-// See https://redwoodjs.com/docs/database-seeds for more info
+import { db } from 'api/src/lib/db'
 
 export default async () => {
   try {
-    // Create your database records here! For example, seed some users:
-    //
-    // const users = [
-    //   { name: 'Alice', email: 'alice@redwoodjs.com },
-    //   { name: 'Bob', email: 'bob@redwoodjs.com },
-    // ]
-    //
-    // await db.user.createMany({ data: users })
+    const filieres = [
+      {
+        nomF: 'INFO',
+        descriptionF: 'BUT Informatique',
+      },
+      {
+        nomF: 'GEA',
+        descriptionF: 'BUT Gestion des Entreprises et des Administrations',
+      },
+      {
+        nomF: 'GMP',
+        descriptionF: 'BUT Génie Mécanique et Productique',
+      },
+      {
+        nomF: 'QLIO',
+        descriptionF: 'BUT Qualité, Logistique Industrielle et Organisation',
+      },
+      {
+        nomF: 'Chimie',
+        descriptionF: 'BUT Chimie',
+      },
+      {
+        nomF: 'MT2E',
+        descriptionF:
+          "BUT Métiers de la transition et de l'efficacité énergétiques",
+      },
+    ]
+    await db.filiere.createMany({ data: filieres })
+
+    // Rest ...
 
     console.info(
       '\n  No seed data, skipping. See scripts/seed.ts to start seeding your database!\n'
