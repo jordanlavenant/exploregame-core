@@ -8,7 +8,6 @@ import FatalErrorPage from 'src/pages/FatalErrorPage'
 import './index.css'
 import './scaffold.css'
 
-
 interface AppProps {
   children?: ReactNode
 }
