@@ -26,7 +26,7 @@ export const QUERY: TypedDocumentNode<EditFiliereByIdF> = gql`
 `
 
 const UPDATE_FILIERE_MUTATION: TypedDocumentNode<
-  EditFiliereById,
+  EditFiliereByIdF,
   UpdateFiliereMutationVariables
 > = gql`
   mutation UpdateFiliereMutation($idF: String!, $input: UpdateFiliereInput!) {
@@ -60,16 +60,16 @@ export const Success = ({ filiere }: CellSuccessProps<EditFiliereByIdF>) => {
 
   const onSave = (
     input: UpdateFiliereInput,
-    id: EditFiliereByIdF['filiere']['id']
+    idF: EditFiliereByIdF['filiere']['idF']
   ) => {
-    updateFiliere({ variables: { id, input } })
+    updateFiliere({ variables: { idF, input } })
   }
 
   return (
     <div className="rw-segment">
       <header className="rw-segment-header">
         <h2 className="rw-heading rw-heading-secondary">
-          Edit Filiere {filiere?.id}
+          Edit Filiere {filiere?.idF}
         </h2>
       </header>
       <div className="rw-segment-main">
