@@ -1,8 +1,8 @@
 # Explore Game - Core
 
-## Pré-requis
+# Pré-requis
 
-### Corepack
+## Corepack
 
 Ouvrir une `invite de commande` en **administrateur**.
 
@@ -10,7 +10,7 @@ Ouvrir une `invite de commande` en **administrateur**.
 corepack enable
 ```
 
-### Yarn
+## Yarn
 
 Toujours dans la même invite de commande, pour initialiser `yarn`, effectuez la commande suivante
 
@@ -21,7 +21,7 @@ yarn
 > Vérifiez que la version de `yarn` est bien `v1.22.22`.
 
 
-### SQLite
+## SQLite
 
 Si vous souhaitez utiliser `SQLite` pour le développement, il vous faudra créer un fichier `.env` à la racine du projet et y écrire cette instruction.
 
@@ -31,25 +31,68 @@ DATABASE_URL=file:./dev.db
 
 Cette instruction permet d'utiliser la base de donnée par défaut du framework `Redwood`, cela hébergera une base de donnée en **locale** sur votre machine. Ainsi les données ne seront pas synchronisées entre les développeurs.
 
-### PostgreSQL
+## PostgreSQL
 
 Si vous souhaitez utiliser `postgreSQL` pour le développement, il faudra suivre les instructions d'installations suivantes
 
-#### Linux
+### Linux
 
 ...
 
-#### Windows
+### Windows
 
-...
+**postgreSQL** - Base de donnée
 
-Créer un fichier `.env` à la racine du projet et y écrire cette instruction et adapter les données.
+Lien de téléchargement
+> https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+Ce lien téléchargera un installeur pour `postgreSQL` sur votre machine, et un gestionnaire de base de donnée `pgAdmin4`.
+
+>**⚠** Souvenez-vous des identifiants que vous avez renseigné lors de l'installation de `postgreSQL`.
+
+
+**pgAdmin4** - Gestionnaire de base de donnée
+
+* Lancez l'application `pgAdmin4` et connectez-vous avec les identifiants que vous avez renseigné lors de l'installation de `postgreSQL`.
+
+* Supprimer le serveur `PostgreSQL 17` par défaut.
+
+* Créer un serveur, nommez-le `ExploreGame` et renseignez les informations suivantes :
 
 ```bash
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public
+Host: localhost
+Port: 5432
+Username: postgres
+Password: <votre mot de passe identifiant>
 ```
 
-## Installation
+* Créez une base de donnée nommée `ExploreGame` et sauvegarder.
+
+* Créer un fichier `.env` à la racine du projet
+
+```bash
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE?schema=public
+```
+* Modifier les champs `USER`, `PASSWORD`, `HOST` et `DATABASE` avec les informations que vous avez renseigné lors de l'installation de `postgreSQL`.
+
+```bash
+USER=postgres
+PASSWORD=<votre mot de passe identifiant>
+HOST=localhost
+DATABASE=ExploreGame
+```
+
+* Commenter la ligne `provider = "sqlite"` dans le fichier `api/db/schema.prisma` et décommenter la ligne `provider = "postgresql"` comme suit :
+
+```prisma
+datasource db {
+  // provider = "sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+# Installation
 
 Pour installer les dépendances, effectuez la commande à la racine du projet
 
@@ -57,19 +100,19 @@ Pour installer les dépendances, effectuez la commande à la racine du projet
 yarn
 ```
 
-## Migrations
+# Migrations
 
 Pour récupérer la migration actuelle, effectuez la commande
 
 ```
-yarn rw migrate dev
+yarn rw prisma migrate dev
 ```
 
 _Vous n'êtes pas obligé de renseigner un nom à la migration._
 
 >**⚠** Cette commande affecte automatiquement la seed initiale. (jeu de données)
 
-## Lancement
+# Lancement
 
 Pour lancer l'application, effectuez la commande
 
@@ -77,7 +120,7 @@ Pour lancer l'application, effectuez la commande
 yarn rw dev
 ```
 
-## Informations importantes
+# Informations importantes
 
 Le lancement du projet ouvre des instances sur différents ports :
 
@@ -86,24 +129,24 @@ Le lancement du projet ouvre des instances sur différents ports :
 - `8911/graphql` - UI de l'ORM
 
 
-## Modèles
+# Modèles
 
 Pour ajouter un `model` à notre base de donnée, il faut ajouter le modèle dans le fichier `api/db/schema.prisma`.
 
-### Appliquer la migration
+## Appliquer la migration
 
 ```
 yarn rw migrate dev
 ```
 
 
-### Générer les types
+## Générer les types
 ```
 yarn rw g types
 ```
 
 
-### Génerer les scaffold (UI)
+## Génerer les scaffold (UI)
 
 ```
 yarn rw g scaffold <model>

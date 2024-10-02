@@ -19,7 +19,7 @@ generator client {
 // to create migrations for them and apply to your dev DB.
 
 model Filiere {
-  idF          String @id @default(uuid()) @db.Uuid
+  idF          String @id @default(uuid())
   nomF         String
   descriptionF String
 }
