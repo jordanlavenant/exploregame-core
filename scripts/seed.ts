@@ -2,34 +2,34 @@ import { db } from 'api/src/lib/db'
 
 export default async () => {
   try {
-    const filieres = [
+    const courses = [
       {
-        nomF: 'INFO',
-        descriptionF: 'BUT Informatique',
+        name: 'INFO',
+        description: 'BUT Informatique',
       },
       {
-        nomF: 'GEA',
-        descriptionF: 'BUT Gestion des Entreprises et des Administrations',
+        name: 'GEA',
+        description: 'BUT Gestion des Entreprises et des Administrations',
       },
       {
-        nomF: 'GMP',
-        descriptionF: 'BUT Génie Mécanique et Productique',
+        name: 'GMP',
+        description: 'BUT Génie Mécanique et Productique',
       },
       {
-        nomF: 'QLIO',
-        descriptionF: 'BUT Qualité, Logistique Industrielle et Organisation',
+        name: 'QLIO',
+        description: 'BUT Qualité, Logistique Industrielle et Organisation',
       },
       {
-        nomF: 'Chimie',
-        descriptionF: 'BUT Chimie',
+        name: 'Chimie',
+        description: 'BUT Chimie',
       },
       {
-        nomF: 'MT2E',
-        descriptionF:
+        name: 'MT2E',
+        description:
           "BUT Métiers de la transition et de l'efficacité énergétiques",
       },
     ]
-    await db.filiere.createMany({ data: filieres })
+    await db.course.createMany({ data: courses })
 
     // Rest ...
 

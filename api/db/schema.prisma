@@ -18,10 +18,88 @@ generator client {
 // Define your own datamodels here and run `yarn redwood prisma migrate dev`
 // to create migrations for them and apply to your dev DB.
 
-model Filiere {
-  idF          String @id @default(uuid())
-  nomF         String
-  descriptionF String
+model Location {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  Question    Question[]
 }
 
-// Suite du modèle
+model Course {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  Player      Player[]
+}
+
+model QuestionType {
+  id       String     @id @default(uuid())
+  type     String
+  Question Question[]
+}
+
+model Question {
+  id           String       @id @default(uuid())
+  question     String
+  description  String
+  idTQ         String
+  idL          String
+  QuestionType QuestionType @relation(fields: [idTQ], references: [id])
+  Location     Location     @relation(fields: [idL], references: [id])
+  Answer       Answer[]
+  Hint         Hint[]
+}
+
+model Answer {
+  id          String   @id @default(uuid())
+  answer      String
+  description String
+  idQ         String
+  Question    Question @relation(fields: [idQ], references: [id])
+}
+
+model Hint {
+  id       String   @id @default(uuid())
+  hint     String
+  help     String
+  idQ      String
+  Question Question @relation(fields: [idQ], references: [id])
+}
+
+model Scenario {
+  id          String @id @default(uuid())
+  scenario    String
+  description String
+  word        String
+}
+
+model User {
+  id        String   @id @default(uuid())
+  lastname  String
+  firstname String
+  mail      String
+  password  String
+  Player    Player[]
+  Admin     Admin[]
+}
+
+model Player {
+  id     String @id @default(uuid())
+  gender String
+  idU    String
+  idF    String
+  User   User   @relation(fields: [idU], references: [id])
+  Course Course @relation(fields: [idF], references: [id])
+}
+
+model Admin {
+  id   String @id @default(uuid())
+  role String
+  idU  String
+  User User   @relation(fields: [idU], references: [id])
+}
+
+model Status {
+  id     String @id @default(uuid())
+  status String
+}
