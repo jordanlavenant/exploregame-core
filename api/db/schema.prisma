@@ -7,7 +7,9 @@
 datasource db {
   // provider = "sqlite"
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
+  // url      = "file:./dev.db"
 }
 
 generator client {
@@ -66,9 +68,9 @@ model Hint {
   Question Question @relation(fields: [idQ], references: [id])
 }
 
-model Scenario {
+model Script {
   id          String @id @default(uuid())
-  scenario    String
+  script      String
   description String
   word        String
 }
