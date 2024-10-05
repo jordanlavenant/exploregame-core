@@ -11,6 +11,7 @@
     ]
   },
   "dependencies": {
+    "@redwoodjs/auth-dbauth-web": "8.3.0",
     "@redwoodjs/forms": "8.3.0",
     "@redwoodjs/router": "8.3.0",
     "@redwoodjs/web": "8.3.0",
