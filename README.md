@@ -97,7 +97,7 @@ datasource db {
 Pour installer les dépendances, effectuez la commande à la racine du projet
 
 ```bash
-yarn
+yarn rw g secret
 ```
 
 # Migrations
@@ -111,6 +111,12 @@ yarn rw prisma migrate dev
 _Vous n'êtes pas obligé de renseigner un nom à la migration._
 
 >**⚠** Cette commande affecte automatiquement la seed initiale. (jeu de données)
+
+Pour générer un `SECRET_TOKEN` pour vous connectez à l'application
+
+```bash
+yarn
+```
 
 # Lancement
 
