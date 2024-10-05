@@ -126,6 +126,16 @@ Pour lancer l'application, effectuez la commande
 yarn rw dev
 ```
 
+# Identifiants
+
+Il existe des identifiants par-défaut pour accéder à l'interface administrateur
+
+`admin@admin` - `admin`
+
+**ou**
+
+`root@root` - `root`
+
 # Informations importantes
 
 Le lancement du projet ouvre des instances sur différents ports :
@@ -133,7 +143,6 @@ Le lancement du projet ouvre des instances sur différents ports :
 - `8910` - UI
 - `8911` - API
 - `8911/graphql` - UI de l'ORM
-
 
 # Modèles
 

@@ -1,7 +1,31 @@
 import { db } from 'api/src/lib/db'
+import { hashPassword } from '@redwoodjs/auth-dbauth-api'
 
 export default async () => {
   try {
+
+    const users = [
+      {
+        email: 'admin@admin',
+        password: 'admin',
+      },
+      {
+        email: ' root@root',
+        password: 'root',
+      },
+    ]
+
+    for (const user of users) {
+      const [hashedPassword, salt] = await hashPassword(user.password)
+      await db.user.create({
+        data: {
+          email: user.email,
+          hashedPassword,
+          salt,
+        },
+      })
+    }
+
     const courses = [
       {
         name: 'INFO',
