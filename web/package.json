@@ -11,13 +11,23 @@
     ]
   },
   "dependencies": {
+    "@radix-ui/react-navigation-menu": "^1.2.1",
+    "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
     "@redwoodjs/auth-dbauth-web": "8.3.0",
     "@redwoodjs/forms": "8.3.0",
     "@redwoodjs/router": "8.3.0",
     "@redwoodjs/web": "8.3.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "humanize-string": "2.1.0",
+    "lucide-react": "^0.447.0",
+    "navigation-menu": "^1.0.0",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "shadcn": "^2.1.0",
+    "tailwind-merge": "^2.5.3",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@redwoodjs/vite": "8.3.0",

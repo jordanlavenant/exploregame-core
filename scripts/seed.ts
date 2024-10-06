@@ -1,9 +1,9 @@
 import { db } from 'api/src/lib/db'
+
 import { hashPassword } from '@redwoodjs/auth-dbauth-api'
 
 export default async () => {
   try {
-
     const users = [
       {
         email: 'admin@admin',

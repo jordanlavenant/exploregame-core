@@ -21,6 +21,7 @@ const Routes = () => {
       <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
       <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
       <PrivateSet unauthenticated="login">
+        <Route path="/" page={HomePage} name="home" />
         <Set wrap={ScaffoldLayout} title="Statuses" titleTo="statuses" buttonLabel="New Status" buttonTo="newStatus">
           <Route path="/statuses/new" page={StatusNewStatusPage} name="newStatus" />
           <Route path="/statuses/{id}/edit" page={StatusEditStatusPage} name="editStatus" />
@@ -45,25 +46,25 @@ const Routes = () => {
           <Route path="/users/{id}" page={UserUserPage} name="user" />
           <Route path="/users" page={UserUsersPage} name="users" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Scripts" titleTo="scripts" buttonLabel="New Script" buttonTo="newScript">
+        <Set wrap={ScaffoldLayout} title="Scénarios" titleTo="scripts" buttonLabel="Nouveau scénario" buttonTo="newScript">
           <Route path="/scripts/new" page={ScriptNewScriptPage} name="newScript" />
           <Route path="/scripts/{id}/edit" page={ScriptEditScriptPage} name="editScript" />
           <Route path="/scripts/{id}" page={ScriptScriptPage} name="script" />
           <Route path="/scripts" page={ScriptScriptsPage} name="scripts" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
+        <Set wrap={ScaffoldLayout} title="Indices" titleTo="hints" buttonLabel="Nouvel indice" buttonTo="newHint">
           <Route path="/hints/new" page={HintNewHintPage} name="newHint" />
           <Route path="/hints/{id}/edit" page={HintEditHintPage} name="editHint" />
           <Route path="/hints/{id}" page={HintHintPage} name="hint" />
           <Route path="/hints" page={HintHintsPage} name="hints" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Answers" titleTo="answers" buttonLabel="New Answer" buttonTo="newAnswer">
+        <Set wrap={ScaffoldLayout} title="Réponses" titleTo="answers" buttonLabel="Nouvelle réponse" buttonTo="newAnswer">
           <Route path="/answers/new" page={AnswerNewAnswerPage} name="newAnswer" />
           <Route path="/answers/{id}/edit" page={AnswerEditAnswerPage} name="editAnswer" />
           <Route path="/answers/{id}" page={AnswerAnswerPage} name="answer" />
           <Route path="/answers" page={AnswerAnswersPage} name="answers" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion">
+        <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="Nouvelle question" buttonTo="newQuestion">
           <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
           <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
           <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
@@ -75,13 +76,13 @@ const Routes = () => {
           <Route path="/question-types/{id}" page={QuestionTypeQuestionTypePage} name="questionType" />
           <Route path="/question-types" page={QuestionTypeQuestionTypesPage} name="questionTypes" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Courses" titleTo="courses" buttonLabel="New Course" buttonTo="newCourse">
+        <Set wrap={ScaffoldLayout} title="Filières" titleTo="courses" buttonLabel="Nouvelle filière" buttonTo="newCourse">
           <Route path="/courses/new" page={CourseNewCoursePage} name="newCourse" />
           <Route path="/courses/{id}/edit" page={CourseEditCoursePage} name="editCourse" />
           <Route path="/courses/{id}" page={CourseCoursePage} name="course" />
           <Route path="/courses" page={CourseCoursesPage} name="courses" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Locations" titleTo="locations" buttonLabel="New Location" buttonTo="newLocation">
+        <Set wrap={ScaffoldLayout} title="Lieux" titleTo="locations" buttonLabel="Nouveau lieu" buttonTo="newLocation">
           <Route path="/locations/new" page={LocationNewLocationPage} name="newLocation" />
           <Route path="/locations/{id}/edit" page={LocationEditLocationPage} name="editLocation" />
           <Route path="/locations/{id}" page={LocationLocationPage} name="location" />
