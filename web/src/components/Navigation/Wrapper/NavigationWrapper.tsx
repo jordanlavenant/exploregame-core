@@ -73,7 +73,7 @@ const NavigationWrapper = () => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <img src="/explore-game-logo.png" alt="logo" className="w-16" />
+      {/* <img src="/explore-game-logo.png" alt="logo" className="w-16" /> */}
       <Button variant="outline" onClick={logOut} className="px-8 sm:px-4">
         <LogOut size={18} />
       </Button>
