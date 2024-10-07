@@ -35,58 +35,112 @@ const PlayerForm = (props: PlayerFormProps) => {
         />
 
         <Label
-          name="gender"
+          name="email"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Gender
+          Email
         </Label>
 
         <TextField
-          name="gender"
-          defaultValue={props.player?.gender}
+          name="email"
+          defaultValue={props.player?.email}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="gender" className="rw-field-error" />
+        <FieldError name="email" className="rw-field-error" />
 
         <Label
-          name="idU"
+          name="genderId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Id u
+          Gender id
         </Label>
 
         <TextField
-          name="idU"
-          defaultValue={props.player?.idU}
+          name="genderId"
+          defaultValue={props.player?.genderId}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="idU" className="rw-field-error" />
+        <FieldError name="genderId" className="rw-field-error" />
 
         <Label
-          name="idF"
+          name="firstName"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Id f
+          First name
         </Label>
 
         <TextField
-          name="idF"
-          defaultValue={props.player?.idF}
+          name="firstName"
+          defaultValue={props.player?.firstName}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="idF" className="rw-field-error" />
+        <FieldError name="firstName" className="rw-field-error" />
+
+        <Label
+          name="lastName"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Last name
+        </Label>
+
+        <TextField
+          name="lastName"
+          defaultValue={props.player?.lastName}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="lastName" className="rw-field-error" />
+
+        <Label
+          name="hashedPassword"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Hashed password
+        </Label>
+
+        <TextField
+          name="hashedPassword"
+          defaultValue={props.player?.hashedPassword}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="hashedPassword" className="rw-field-error" />
+
+        <Label
+          name="departmentId"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Department id
+        </Label>
+
+        <TextField
+          name="departmentId"
+          defaultValue={props.player?.departmentId}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="departmentId" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

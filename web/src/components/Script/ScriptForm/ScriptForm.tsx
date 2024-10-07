@@ -7,6 +7,7 @@ import {
   FieldError,
   Label,
   TextField,
+  CheckboxField,
   Submit,
 } from '@redwoodjs/forms'
 
@@ -35,58 +36,39 @@ const ScriptForm = (props: ScriptFormProps) => {
         />
 
         <Label
-          name="script"
+          name="name"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Script
+          Name
         </Label>
 
         <TextField
-          name="script"
-          defaultValue={props.script?.script}
+          name="name"
+          defaultValue={props.script?.name}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="script" className="rw-field-error" />
+        <FieldError name="name" className="rw-field-error" />
 
         <Label
-          name="description"
+          name="visible"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Description
+          Visible
         </Label>
 
-        <TextField
-          name="description"
-          defaultValue={props.script?.description}
+        <CheckboxField
+          name="visible"
+          defaultChecked={props.script?.visible}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
         />
 
-        <FieldError name="description" className="rw-field-error" />
-
-        <Label
-          name="word"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Word
-        </Label>
-
-        <TextField
-          name="word"
-          defaultValue={props.script?.word}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
-        />
-
-        <FieldError name="word" className="rw-field-error" />
+        <FieldError name="visible" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

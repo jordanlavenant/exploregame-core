@@ -21,8 +21,8 @@ export const QUERY: TypedDocumentNode<EditQuestionById> = gql`
       id
       question
       description
-      idTQ
-      idL
+      questionTypeId
+      stepId
     }
   }
 `
@@ -36,8 +36,8 @@ const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
       id
       question
       description
-      idTQ
-      idL
+      questionTypeId
+      stepId
     }
   }
 `

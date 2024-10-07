@@ -33,13 +33,13 @@ describe('answers', () => {
       input: {
         answer: 'String',
         description: 'String',
-        idQ: scenario.answer.two.idQ,
+        questionId: scenario.answer.two.questionId,
       },
     })
 
     expect(result.answer).toEqual('String')
     expect(result.description).toEqual('String')
-    expect(result.idQ).toEqual(scenario.answer.two.idQ)
+    expect(result.questionId).toEqual(scenario.answer.two.questionId)
   })
 
   scenario('updates a answer', async (scenario: StandardScenario) => {

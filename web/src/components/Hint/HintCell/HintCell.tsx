@@ -13,9 +13,9 @@ export const QUERY: TypedDocumentNode<FindHintById, FindHintByIdVariables> =
     query FindHintById($id: String!) {
       hint: hint(id: $id) {
         id
-        hint
         help
-        idQ
+        questionId
+        hintLevelId
       }
     }
   `

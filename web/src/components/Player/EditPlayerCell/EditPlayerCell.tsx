@@ -19,9 +19,12 @@ export const QUERY: TypedDocumentNode<EditPlayerById> = gql`
   query EditPlayerById($id: String!) {
     player: player(id: $id) {
       id
-      gender
-      idU
-      idF
+      email
+      genderId
+      firstName
+      lastName
+      hashedPassword
+      departmentId
     }
   }
 `
@@ -33,9 +36,12 @@ const UPDATE_PLAYER_MUTATION: TypedDocumentNode<
   mutation UpdatePlayerMutation($id: String!, $input: UpdatePlayerInput!) {
     updatePlayer(id: $id, input: $input) {
       id
-      gender
-      idU
-      idF
+      email
+      genderId
+      firstName
+      lastName
+      hashedPassword
+      departmentId
     }
   }
 `

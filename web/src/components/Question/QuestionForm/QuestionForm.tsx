@@ -71,40 +71,40 @@ const QuestionForm = (props: QuestionFormProps) => {
         <FieldError name="description" className="rw-field-error" />
 
         <Label
-          name="idTQ"
+          name="questionTypeId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Id tq
+          Question type id
         </Label>
 
         <TextField
-          name="idTQ"
-          defaultValue={props.question?.idTQ}
+          name="questionTypeId"
+          defaultValue={props.question?.questionTypeId}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="idTQ" className="rw-field-error" />
+        <FieldError name="questionTypeId" className="rw-field-error" />
 
         <Label
-          name="idL"
+          name="stepId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Id l
+          Step id
         </Label>
 
         <TextField
-          name="idL"
-          defaultValue={props.question?.idL}
+          name="stepId"
+          defaultValue={props.question?.stepId}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="idL" className="rw-field-error" />
+        <FieldError name="stepId" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

@@ -1,11 +1,15 @@
 export const schema = gql`
   type Player {
     id: String!
-    gender: String!
-    idU: String!
-    idF: String!
-    User: User!
-    Course: Course!
+    email: String!
+    genderId: String!
+    firstName: String!
+    lastName: String!
+    hashedPassword: String!
+    departmentId: String!
+    Gender: Gender!
+    Department: Department!
+    PlayerScript: [PlayerScript]!
   }
 
   type Query {
@@ -14,15 +18,21 @@ export const schema = gql`
   }
 
   input CreatePlayerInput {
-    gender: String!
-    idU: String!
-    idF: String!
+    email: String!
+    genderId: String!
+    firstName: String!
+    lastName: String!
+    hashedPassword: String!
+    departmentId: String!
   }
 
   input UpdatePlayerInput {
-    gender: String
-    idU: String
-    idF: String
+    email: String
+    genderId: String
+    firstName: String
+    lastName: String
+    hashedPassword: String
+    departmentId: String
   }
 
   type Mutation {

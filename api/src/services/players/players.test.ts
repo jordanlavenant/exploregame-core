@@ -31,25 +31,31 @@ describe('players', () => {
   scenario('creates a player', async (scenario: StandardScenario) => {
     const result = await createPlayer({
       input: {
-        gender: 'String',
-        idU: scenario.player.two.idU,
-        idF: scenario.player.two.idF,
+        email: 'String596935',
+        genderId: scenario.player.two.genderId,
+        firstName: 'String',
+        lastName: 'String',
+        hashedPassword: 'String',
+        departmentId: scenario.player.two.departmentId,
       },
     })
 
-    expect(result.gender).toEqual('String')
-    expect(result.idU).toEqual(scenario.player.two.idU)
-    expect(result.idF).toEqual(scenario.player.two.idF)
+    expect(result.email).toEqual('String596935')
+    expect(result.genderId).toEqual(scenario.player.two.genderId)
+    expect(result.firstName).toEqual('String')
+    expect(result.lastName).toEqual('String')
+    expect(result.hashedPassword).toEqual('String')
+    expect(result.departmentId).toEqual(scenario.player.two.departmentId)
   })
 
   scenario('updates a player', async (scenario: StandardScenario) => {
     const original = (await player({ id: scenario.player.one.id })) as Player
     const result = await updatePlayer({
       id: original.id,
-      input: { gender: 'String2' },
+      input: { email: 'String80146442' },
     })
 
-    expect(result.gender).toEqual('String2')
+    expect(result.email).toEqual('String80146442')
   })
 
   scenario('deletes a player', async (scenario: StandardScenario) => {

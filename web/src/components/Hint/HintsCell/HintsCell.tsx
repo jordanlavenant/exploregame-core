@@ -13,9 +13,9 @@ export const QUERY: TypedDocumentNode<FindHints, FindHintsVariables> = gql`
   query FindHints {
     hints {
       id
-      hint
       help
-      idQ
+      questionId
+      hintLevelId
     }
   }
 `

@@ -7,8 +7,8 @@
 datasource db {
   // provider = "sqlite"
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
+  // url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
   // url      = "file:./dev.db"
 }
 
@@ -20,14 +20,40 @@ generator client {
 // Define your own datamodels here and run `yarn redwood prisma migrate dev`
 // to create migrations for them and apply to your dev DB.
 
-model Location {
-  id          String     @id @default(uuid())
-  name        String
-  description String
-  Question    Question[]
+model Script {
+  id           String @id @default(uuid())
+  name         String
+  visible      Boolean @default(false)
+  ScriptStep   ScriptStep[]
+  PlayerScript PlayerScript[]
 }
 
-model Course {
+model Location {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  Step        Step[]
+}
+
+model Step {
+  id           String     @id @default(uuid())
+  name         String
+  locationId   String
+  ScriptStep   ScriptStep[]
+  Questions    Question[]
+  Location     Location   @relation(fields: [locationId], references: [id])
+}
+
+model ScriptStep {
+  id          String @id @default(uuid())
+  scriptId    String
+  stepId      String
+  lettre      String
+  Script      Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  Step        Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+}
+
+model Department {
   id          String   @id @default(uuid())
   name        String
   description String
@@ -41,38 +67,38 @@ model QuestionType {
 }
 
 model Question {
-  id           String       @id @default(uuid())
-  question     String
-  description  String
-  idTQ         String
-  idL          String
-  QuestionType QuestionType @relation(fields: [idTQ], references: [id])
-  Location     Location     @relation(fields: [idL], references: [id])
-  Answer       Answer[]
-  Hint         Hint[]
+  id             String       @id @default(uuid())
+  question       String
+  description    String
+  questionTypeId String
+  stepId         String
+  Step           Step @relation(fields: [stepId], references: [id])
+  QuestionType   QuestionType @relation(fields: [questionTypeId], references: [id])
+  Answer         Answer[]
+  Hint           Hint[]
 }
 
 model Answer {
   id          String   @id @default(uuid())
   answer      String
   description String
-  idQ         String
-  Question    Question @relation(fields: [idQ], references: [id])
+  questionId  String
+  Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model HintLevel {
+  id   String @id @default(uuid())
+  type String
+  Hint Hint[]
 }
 
 model Hint {
-  id       String   @id @default(uuid())
-  hint     String
-  help     String
-  idQ      String
-  Question Question @relation(fields: [idQ], references: [id])
-}
-
-model Script {
-  id          String @id @default(uuid())
-  script      String
-  description String
-  word        String
+  id          String   @id @default(uuid())
+  help        String
+  questionId  String
+  hintLevelId String
+  HintLevel   HintLevel @relation(fields: [hintLevelId], references: [id])
+  Question    Question @relation(fields: [questionId], references: [id])
 }
 
 model User {
@@ -82,27 +108,33 @@ model User {
   salt                String
   resetToken          String?
   resetTokenExpiresAt DateTime?
-  Player              Player[]
-  Admin               Admin[]
+}
+
+model Gender {
+  id     String   @id @default(uuid())
+  gender String
+  Player Player[]
 }
 
 model Player {
-  id     String @id @default(uuid())
-  gender String
-  idU    String
-  idF    String
-  User   User   @relation(fields: [idU], references: [id])
-  Course Course @relation(fields: [idF], references: [id])
+  id              String @id @default(uuid())
+  email           String @unique
+  genderId        String
+  firstName       String
+  lastName        String
+  hashedPassword  String
+  departmentId    String
+  Gender          Gender @relation(fields: [genderId], references: [id])
+  Department      Department @relation(fields: [departmentId], references: [id])
+  PlayerScript    PlayerScript[]
 }
 
-model Admin {
-  id   String @id @default(uuid())
-  role String
-  idU  String
-  User User   @relation(fields: [idU], references: [id])
-}
-
-model Status {
-  id     String @id @default(uuid())
-  status String
+model PlayerScript {
+  id            String @id @default(uuid())
+  playerId      String
+  scriptId      String
+  score         Int
+  remainingTime Int
+  Player        Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  Script        Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
 }

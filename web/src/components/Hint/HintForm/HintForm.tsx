@@ -35,24 +35,6 @@ const HintForm = (props: HintFormProps) => {
         />
 
         <Label
-          name="hint"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Hint
-        </Label>
-
-        <TextField
-          name="hint"
-          defaultValue={props.hint?.hint}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
-        />
-
-        <FieldError name="hint" className="rw-field-error" />
-
-        <Label
           name="help"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
@@ -71,22 +53,40 @@ const HintForm = (props: HintFormProps) => {
         <FieldError name="help" className="rw-field-error" />
 
         <Label
-          name="idQ"
+          name="questionId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Id q
+          Question id
         </Label>
 
         <TextField
-          name="idQ"
-          defaultValue={props.hint?.idQ}
+          name="questionId"
+          defaultValue={props.hint?.questionId}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="idQ" className="rw-field-error" />
+        <FieldError name="questionId" className="rw-field-error" />
+
+        <Label
+          name="hintLevelId"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Hint level id
+        </Label>
+
+        <TextField
+          name="hintLevelId"
+          defaultValue={props.hint?.hintLevelId}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="hintLevelId" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

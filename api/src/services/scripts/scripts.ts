@@ -1,4 +1,8 @@
-import type { QueryResolvers, MutationResolvers } from 'types/graphql'
+import type {
+  QueryResolvers,
+  MutationResolvers,
+  ScriptRelationResolvers,
+} from 'types/graphql'
 
 import { db } from 'src/lib/db'
 
@@ -32,4 +36,13 @@ export const deleteScript: MutationResolvers['deleteScript'] = ({ id }) => {
   return db.script.delete({
     where: { id },
   })
+}
+
+export const Script: ScriptRelationResolvers = {
+  ScriptStep: (_obj, { root }) => {
+    return db.script.findUnique({ where: { id: root?.id } }).ScriptStep()
+  },
+  PlayerScript: (_obj, { root }) => {
+    return db.script.findUnique({ where: { id: root?.id } }).PlayerScript()
+  },
 }

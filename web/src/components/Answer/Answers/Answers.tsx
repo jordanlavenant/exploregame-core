@@ -52,7 +52,7 @@ const AnswersList = ({ answers }: FindAnswers) => {
             <th>Id</th>
             <th>Answer</th>
             <th>Description</th>
-            <th>Id q</th>
+            <th>Question id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -62,7 +62,7 @@ const AnswersList = ({ answers }: FindAnswers) => {
               <td>{truncate(answer.id)}</td>
               <td>{truncate(answer.answer)}</td>
               <td>{truncate(answer.description)}</td>
-              <td>{truncate(answer.idQ)}</td>
+              <td>{truncate(answer.questionId)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

@@ -13,9 +13,8 @@ export const QUERY: TypedDocumentNode<FindScriptById, FindScriptByIdVariables> =
     query FindScriptById($id: String!) {
       script: script(id: $id) {
         id
-        script
-        description
-        word
+        name
+        visible
       }
     }
   `

@@ -50,9 +50,9 @@ const HintsList = ({ hints }: FindHints) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Hint</th>
             <th>Help</th>
-            <th>Id q</th>
+            <th>Question id</th>
+            <th>Hint level id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -60,9 +60,9 @@ const HintsList = ({ hints }: FindHints) => {
           {hints.map((hint) => (
             <tr key={hint.id}>
               <td>{truncate(hint.id)}</td>
-              <td>{truncate(hint.hint)}</td>
               <td>{truncate(hint.help)}</td>
-              <td>{truncate(hint.idQ)}</td>
+              <td>{truncate(hint.questionId)}</td>
+              <td>{truncate(hint.hintLevelId)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

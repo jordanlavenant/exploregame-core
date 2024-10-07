@@ -1,9 +1,10 @@
 export const schema = gql`
   type Hint {
     id: String!
-    hint: String!
     help: String!
-    idQ: String!
+    questionId: String!
+    hintLevelId: String!
+    HintLevel: HintLevel!
     Question: Question!
   }
 
@@ -13,15 +14,15 @@ export const schema = gql`
   }
 
   input CreateHintInput {
-    hint: String!
     help: String!
-    idQ: String!
+    questionId: String!
+    hintLevelId: String!
   }
 
   input UpdateHintInput {
-    hint: String
     help: String
-    idQ: String
+    questionId: String
+    hintLevelId: String
   }
 
   type Mutation {

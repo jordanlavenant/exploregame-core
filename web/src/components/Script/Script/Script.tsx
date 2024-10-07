@@ -9,7 +9,7 @@ import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import {} from 'src/lib/formatters'
+import { checkboxInputTag } from 'src/lib/formatters'
 
 const DELETE_SCRIPT_MUTATION: TypedDocumentNode<
   DeleteScriptMutation,
@@ -58,16 +58,12 @@ const Script = ({ script }: Props) => {
               <td>{script.id}</td>
             </tr>
             <tr>
-              <th>Script</th>
-              <td>{script.script}</td>
+              <th>Name</th>
+              <td>{script.name}</td>
             </tr>
             <tr>
-              <th>Description</th>
-              <td>{script.description}</td>
-            </tr>
-            <tr>
-              <th>Word</th>
-              <td>{script.word}</td>
+              <th>Visible</th>
+              <td>{checkboxInputTag(script.visible)}</td>
             </tr>
           </tbody>
         </table>

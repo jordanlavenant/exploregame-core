@@ -13,10 +13,11 @@ export const QUERY: TypedDocumentNode<FindUserById, FindUserByIdVariables> =
     query FindUserById($id: String!) {
       user: user(id: $id) {
         id
-        lastname
-        firstname
-        mail
-        password
+        email
+        hashedPassword
+        salt
+        resetToken
+        resetTokenExpiresAt
       }
     }
   `

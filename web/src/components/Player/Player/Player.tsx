@@ -58,16 +58,28 @@ const Player = ({ player }: Props) => {
               <td>{player.id}</td>
             </tr>
             <tr>
-              <th>Gender</th>
-              <td>{player.gender}</td>
+              <th>Email</th>
+              <td>{player.email}</td>
             </tr>
             <tr>
-              <th>Id u</th>
-              <td>{player.idU}</td>
+              <th>Gender id</th>
+              <td>{player.genderId}</td>
             </tr>
             <tr>
-              <th>Id f</th>
-              <td>{player.idF}</td>
+              <th>First name</th>
+              <td>{player.firstName}</td>
+            </tr>
+            <tr>
+              <th>Last name</th>
+              <td>{player.lastName}</td>
+            </tr>
+            <tr>
+              <th>Hashed password</th>
+              <td>{player.hashedPassword}</td>
+            </tr>
+            <tr>
+              <th>Department id</th>
+              <td>{player.departmentId}</td>
             </tr>
           </tbody>
         </table>

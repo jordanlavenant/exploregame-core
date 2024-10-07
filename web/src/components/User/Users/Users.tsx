@@ -10,7 +10,7 @@ import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/User/UsersCell'
-import { truncate } from 'src/lib/formatters'
+import { timeTag, truncate } from 'src/lib/formatters'
 
 const DELETE_USER_MUTATION: TypedDocumentNode<
   DeleteUserMutation,
@@ -50,10 +50,11 @@ const UsersList = ({ users }: FindUsers) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Lastname</th>
-            <th>Firstname</th>
-            <th>Mail</th>
-            <th>Password</th>
+            <th>Email</th>
+            <th>Hashed password</th>
+            <th>Salt</th>
+            <th>Reset token</th>
+            <th>Reset token expires at</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -61,10 +62,11 @@ const UsersList = ({ users }: FindUsers) => {
           {users.map((user) => (
             <tr key={user.id}>
               <td>{truncate(user.id)}</td>
-              <td>{truncate(user.lastname)}</td>
-              <td>{truncate(user.firstname)}</td>
-              <td>{truncate(user.mail)}</td>
-              <td>{truncate(user.password)}</td>
+              <td>{truncate(user.email)}</td>
+              <td>{truncate(user.hashedPassword)}</td>
+              <td>{truncate(user.salt)}</td>
+              <td>{truncate(user.resetToken)}</td>
+              <td>{timeTag(user.resetTokenExpiresAt)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

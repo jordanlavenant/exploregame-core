@@ -17,8 +17,8 @@ export const QUERY: TypedDocumentNode<
       id
       question
       description
-      idTQ
-      idL
+      questionTypeId
+      stepId
     }
   }
 `

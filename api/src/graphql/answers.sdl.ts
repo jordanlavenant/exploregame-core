@@ -3,7 +3,7 @@ export const schema = gql`
     id: String!
     answer: String!
     description: String!
-    idQ: String!
+    questionId: String!
     Question: Question!
   }
 
@@ -15,13 +15,13 @@ export const schema = gql`
   input CreateAnswerInput {
     answer: String!
     description: String!
-    idQ: String!
+    questionId: String!
   }
 
   input UpdateAnswerInput {
     answer: String
     description: String
-    idQ: String
+    questionId: String
   }
 
   type Mutation {

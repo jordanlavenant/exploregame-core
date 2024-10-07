@@ -24,22 +24,26 @@ describe('hints', () => {
 
   scenario('creates a hint', async (scenario: StandardScenario) => {
     const result = await createHint({
-      input: { hint: 'String', help: 'String', idQ: scenario.hint.two.idQ },
+      input: {
+        help: 'String',
+        questionId: scenario.hint.two.questionId,
+        hintLevelId: scenario.hint.two.hintLevelId,
+      },
     })
 
-    expect(result.hint).toEqual('String')
     expect(result.help).toEqual('String')
-    expect(result.idQ).toEqual(scenario.hint.two.idQ)
+    expect(result.questionId).toEqual(scenario.hint.two.questionId)
+    expect(result.hintLevelId).toEqual(scenario.hint.two.hintLevelId)
   })
 
   scenario('updates a hint', async (scenario: StandardScenario) => {
     const original = (await hint({ id: scenario.hint.one.id })) as Hint
     const result = await updateHint({
       id: original.id,
-      input: { hint: 'String2' },
+      input: { help: 'String2' },
     })
 
-    expect(result.hint).toEqual('String2')
+    expect(result.help).toEqual('String2')
   })
 
   scenario('deletes a hint', async (scenario: StandardScenario) => {

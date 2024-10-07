@@ -39,10 +39,13 @@ export const deletePlayer: MutationResolvers['deletePlayer'] = ({ id }) => {
 }
 
 export const Player: PlayerRelationResolvers = {
-  User: (_obj, { root }) => {
-    return db.player.findUnique({ where: { id: root?.id } }).User()
+  Gender: (_obj, { root }) => {
+    return db.player.findUnique({ where: { id: root?.id } }).Gender()
   },
-  Course: (_obj, { root }) => {
-    return db.player.findUnique({ where: { id: root?.id } }).Course()
+  Department: (_obj, { root }) => {
+    return db.player.findUnique({ where: { id: root?.id } }).Department()
+  },
+  PlayerScript: (_obj, { root }) => {
+    return db.player.findUnique({ where: { id: root?.id } }).PlayerScript()
   },
 }

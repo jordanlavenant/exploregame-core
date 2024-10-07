@@ -13,9 +13,8 @@ export const QUERY: TypedDocumentNode<FindScripts, FindScriptsVariables> = gql`
   query FindScripts {
     scripts {
       id
-      script
-      description
-      word
+      name
+      visible
     }
   }
 `

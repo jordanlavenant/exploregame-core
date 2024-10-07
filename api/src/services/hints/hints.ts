@@ -36,6 +36,9 @@ export const deleteHint: MutationResolvers['deleteHint'] = ({ id }) => {
 }
 
 export const Hint: HintRelationResolvers = {
+  HintLevel: (_obj, { root }) => {
+    return db.hint.findUnique({ where: { id: root?.id } }).HintLevel()
+  },
   Question: (_obj, { root }) => {
     return db.hint.findUnique({ where: { id: root?.id } }).Question()
   },

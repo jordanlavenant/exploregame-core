@@ -66,12 +66,12 @@ const Question = ({ question }: Props) => {
               <td>{question.description}</td>
             </tr>
             <tr>
-              <th>Id tq</th>
-              <td>{question.idTQ}</td>
+              <th>Question type id</th>
+              <td>{question.questionTypeId}</td>
             </tr>
             <tr>
-              <th>Id l</th>
-              <td>{question.idL}</td>
+              <th>Step id</th>
+              <td>{question.stepId}</td>
             </tr>
           </tbody>
         </table>

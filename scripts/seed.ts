@@ -53,7 +53,7 @@ export default async () => {
           "BUT Métiers de la transition et de l'efficacité énergétiques",
       },
     ]
-    await db.course.createMany({ data: courses })
+    await db.department.createMany({ data: courses })
 
     // Rest ...
 

@@ -15,7 +15,7 @@ export const QUERY: TypedDocumentNode<FindAnswers, FindAnswersVariables> = gql`
       id
       answer
       description
-      idQ
+      questionId
     }
   }
 `

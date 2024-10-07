@@ -1,9 +1,6 @@
 import { Link, routes } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
-import NavigationWrapper from '@/components/Navigation/Wrapper/NavigationWrapper'
-import { Separator } from '@/components/ui/separator'
-
 type LayoutProps = {
   title: string
   titleTo: keyof typeof routes
@@ -20,16 +17,11 @@ const ScaffoldLayout = ({
   children,
 }: LayoutProps) => {
   return (
-    <>
+    <div className="rw-scaffold">
       <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-      <NavigationWrapper />
-      <Separator />
       <header className="rw-header">
         <h1 className="rw-heading rw-heading-primary">
-          <Link
-            to={routes[titleTo]()}
-            className="text-green-500 font-bold text-2xl"
-          >
+          <Link to={routes[titleTo]()} className="rw-link">
             {title}
           </Link>
         </h1>
@@ -38,7 +30,7 @@ const ScaffoldLayout = ({
         </Link>
       </header>
       <main className="rw-main">{children}</main>
-    </>
+    </div>
   )
 }
 

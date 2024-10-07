@@ -58,16 +58,16 @@ const Hint = ({ hint }: Props) => {
               <td>{hint.id}</td>
             </tr>
             <tr>
-              <th>Hint</th>
-              <td>{hint.hint}</td>
-            </tr>
-            <tr>
               <th>Help</th>
               <td>{hint.help}</td>
             </tr>
             <tr>
-              <th>Id q</th>
-              <td>{hint.idQ}</td>
+              <th>Question id</th>
+              <td>{hint.questionId}</td>
+            </tr>
+            <tr>
+              <th>Hint level id</th>
+              <td>{hint.hintLevelId}</td>
             </tr>
           </tbody>
         </table>

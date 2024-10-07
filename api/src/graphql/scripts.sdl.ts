@@ -1,9 +1,10 @@
 export const schema = gql`
   type Script {
     id: String!
-    script: String!
-    description: String!
-    word: String!
+    name: String!
+    visible: Boolean!
+    ScriptStep: [ScriptStep]!
+    PlayerScript: [PlayerScript]!
   }
 
   type Query {
@@ -12,15 +13,13 @@ export const schema = gql`
   }
 
   input CreateScriptInput {
-    script: String!
-    description: String!
-    word: String!
+    name: String!
+    visible: Boolean!
   }
 
   input UpdateScriptInput {
-    script: String
-    description: String
-    word: String
+    name: String
+    visible: Boolean
   }
 
   type Mutation {

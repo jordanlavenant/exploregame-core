@@ -21,7 +21,7 @@ export const QUERY: TypedDocumentNode<EditAnswerById> = gql`
       id
       answer
       description
-      idQ
+      questionId
     }
   }
 `
@@ -35,7 +35,7 @@ const UPDATE_ANSWER_MUTATION: TypedDocumentNode<
       id
       answer
       description
-      idQ
+      questionId
     }
   }
 `

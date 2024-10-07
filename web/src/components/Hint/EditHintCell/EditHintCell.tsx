@@ -19,9 +19,9 @@ export const QUERY: TypedDocumentNode<EditHintById> = gql`
   query EditHintById($id: String!) {
     hint: hint(id: $id) {
       id
-      hint
       help
-      idQ
+      questionId
+      hintLevelId
     }
   }
 `
@@ -33,9 +33,9 @@ const UPDATE_HINT_MUTATION: TypedDocumentNode<
   mutation UpdateHintMutation($id: String!, $input: UpdateHintInput!) {
     updateHint(id: $id, input: $input) {
       id
-      hint
       help
-      idQ
+      questionId
+      hintLevelId
     }
   }
 `

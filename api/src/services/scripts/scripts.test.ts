@@ -30,22 +30,20 @@ describe('scripts', () => {
 
   scenario('creates a script', async () => {
     const result = await createScript({
-      input: { script: 'String', description: 'String', word: 'String' },
+      input: { name: 'String' },
     })
 
-    expect(result.script).toEqual('String')
-    expect(result.description).toEqual('String')
-    expect(result.word).toEqual('String')
+    expect(result.name).toEqual('String')
   })
 
   scenario('updates a script', async (scenario: StandardScenario) => {
     const original = (await script({ id: scenario.script.one.id })) as Script
     const result = await updateScript({
       id: original.id,
-      input: { script: 'String2' },
+      input: { name: 'String2' },
     })
 
-    expect(result.script).toEqual('String2')
+    expect(result.name).toEqual('String2')
   })
 
   scenario('deletes a script', async (scenario: StandardScenario) => {

@@ -7,8 +7,15 @@ import {
   FieldError,
   Label,
   TextField,
+  DatetimeLocalField,
   Submit,
 } from '@redwoodjs/forms'
+
+const formatDatetime = (value) => {
+  if (value) {
+    return value.replace(/:\d{2}\.\d{3}\w/, '')
+  }
+}
 
 type FormUser = NonNullable<EditUserById['user']>
 
@@ -35,76 +42,92 @@ const UserForm = (props: UserFormProps) => {
         />
 
         <Label
-          name="lastname"
+          name="email"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Lastname
+          Email
         </Label>
 
         <TextField
-          name="lastname"
-          defaultValue={props.user?.lastname}
+          name="email"
+          defaultValue={props.user?.email}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="lastname" className="rw-field-error" />
+        <FieldError name="email" className="rw-field-error" />
 
         <Label
-          name="firstname"
+          name="hashedPassword"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Firstname
+          Hashed password
         </Label>
 
         <TextField
-          name="firstname"
-          defaultValue={props.user?.firstname}
+          name="hashedPassword"
+          defaultValue={props.user?.hashedPassword}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="firstname" className="rw-field-error" />
+        <FieldError name="hashedPassword" className="rw-field-error" />
 
         <Label
-          name="mail"
+          name="salt"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Mail
+          Salt
         </Label>
 
         <TextField
-          name="mail"
-          defaultValue={props.user?.mail}
+          name="salt"
+          defaultValue={props.user?.salt}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="mail" className="rw-field-error" />
+        <FieldError name="salt" className="rw-field-error" />
 
         <Label
-          name="password"
+          name="resetToken"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Password
+          Reset token
         </Label>
 
         <TextField
-          name="password"
-          defaultValue={props.user?.password}
+          name="resetToken"
+          defaultValue={props.user?.resetToken}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
         />
 
-        <FieldError name="password" className="rw-field-error" />
+        <FieldError name="resetToken" className="rw-field-error" />
+
+        <Label
+          name="resetTokenExpiresAt"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Reset token expires at
+        </Label>
+
+        <DatetimeLocalField
+          name="resetTokenExpiresAt"
+          defaultValue={formatDatetime(props.user?.resetTokenExpiresAt)}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+        />
+
+        <FieldError name="resetTokenExpiresAt" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

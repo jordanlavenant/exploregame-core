@@ -71,22 +71,22 @@ const AnswerForm = (props: AnswerFormProps) => {
         <FieldError name="description" className="rw-field-error" />
 
         <Label
-          name="idQ"
+          name="questionId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Id q
+          Question id
         </Label>
 
         <TextField
-          name="idQ"
-          defaultValue={props.answer?.idQ}
+          name="questionId"
+          defaultValue={props.answer?.questionId}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="idQ" className="rw-field-error" />
+        <FieldError name="questionId" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

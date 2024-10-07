@@ -3,10 +3,10 @@ export const schema = gql`
     id: String!
     question: String!
     description: String!
-    idTQ: String!
-    idL: String!
+    questionTypeId: String!
+    stepId: String!
+    Step: Step!
     QuestionType: QuestionType!
-    Location: Location!
     Answer: [Answer]!
     Hint: [Hint]!
   }
@@ -19,15 +19,15 @@ export const schema = gql`
   input CreateQuestionInput {
     question: String!
     description: String!
-    idTQ: String!
-    idL: String!
+    questionTypeId: String!
+    stepId: String!
   }
 
   input UpdateQuestionInput {
     question: String
     description: String
-    idTQ: String
-    idL: String
+    questionTypeId: String
+    stepId: String
   }
 
   type Mutation {

@@ -10,7 +10,7 @@ import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Script/ScriptsCell'
-import { truncate } from 'src/lib/formatters'
+import { checkboxInputTag, truncate } from 'src/lib/formatters'
 
 const DELETE_SCRIPT_MUTATION: TypedDocumentNode<
   DeleteScriptMutation,
@@ -50,9 +50,8 @@ const ScriptsList = ({ scripts }: FindScripts) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Script</th>
-            <th>Description</th>
-            <th>Word</th>
+            <th>Name</th>
+            <th>Visible</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -60,9 +59,8 @@ const ScriptsList = ({ scripts }: FindScripts) => {
           {scripts.map((script) => (
             <tr key={script.id}>
               <td>{truncate(script.id)}</td>
-              <td>{truncate(script.script)}</td>
-              <td>{truncate(script.description)}</td>
-              <td>{truncate(script.word)}</td>
+              <td>{truncate(script.name)}</td>
+              <td>{checkboxInputTag(script.visible)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

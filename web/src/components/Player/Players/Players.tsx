@@ -50,9 +50,12 @@ const PlayersList = ({ players }: FindPlayers) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Gender</th>
-            <th>Id u</th>
-            <th>Id f</th>
+            <th>Email</th>
+            <th>Gender id</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Hashed password</th>
+            <th>Department id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -60,9 +63,12 @@ const PlayersList = ({ players }: FindPlayers) => {
           {players.map((player) => (
             <tr key={player.id}>
               <td>{truncate(player.id)}</td>
-              <td>{truncate(player.gender)}</td>
-              <td>{truncate(player.idU)}</td>
-              <td>{truncate(player.idF)}</td>
+              <td>{truncate(player.email)}</td>
+              <td>{truncate(player.genderId)}</td>
+              <td>{truncate(player.firstName)}</td>
+              <td>{truncate(player.lastName)}</td>
+              <td>{truncate(player.hashedPassword)}</td>
+              <td>{truncate(player.departmentId)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

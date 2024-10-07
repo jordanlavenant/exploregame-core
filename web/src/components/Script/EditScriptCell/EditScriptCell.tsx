@@ -19,9 +19,8 @@ export const QUERY: TypedDocumentNode<EditScriptById> = gql`
   query EditScriptById($id: String!) {
     script: script(id: $id) {
       id
-      script
-      description
-      word
+      name
+      visible
     }
   }
 `
@@ -33,9 +32,8 @@ const UPDATE_SCRIPT_MUTATION: TypedDocumentNode<
   mutation UpdateScriptMutation($id: String!, $input: UpdateScriptInput!) {
     updateScript(id: $id, input: $input) {
       id
-      script
-      description
-      word
+      name
+      visible
     }
   }
 `

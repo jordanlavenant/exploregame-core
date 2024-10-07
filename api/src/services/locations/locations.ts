@@ -41,7 +41,7 @@ export const deleteLocation: MutationResolvers['deleteLocation'] = ({ id }) => {
 }
 
 export const Location: LocationRelationResolvers = {
-  Question: (_obj, { root }) => {
-    return db.location.findUnique({ where: { id: root?.id } }).Question()
+  Step: (_obj, { root }) => {
+    return db.location.findUnique({ where: { id: root?.id } }).Step()
   },
 }

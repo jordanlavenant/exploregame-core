@@ -1,5 +1,4 @@
 import type { Prisma, Answer } from '@prisma/client'
-
 import type { ScenarioData } from '@redwoodjs/testing/api'
 
 export const standard = defineScenario<Prisma.AnswerCreateArgs>({
@@ -12,8 +11,13 @@ export const standard = defineScenario<Prisma.AnswerCreateArgs>({
           create: {
             question: 'String',
             description: 'String',
+            Step: {
+              create: {
+                name: 'String',
+                Location: { create: { name: 'String', description: 'String' } },
+              },
+            },
             QuestionType: { create: { type: 'String' } },
-            Location: { create: { name: 'String', description: 'String' } },
           },
         },
       },
@@ -26,8 +30,13 @@ export const standard = defineScenario<Prisma.AnswerCreateArgs>({
           create: {
             question: 'String',
             description: 'String',
+            Step: {
+              create: {
+                name: 'String',
+                Location: { create: { name: 'String', description: 'String' } },
+              },
+            },
             QuestionType: { create: { type: 'String' } },
-            Location: { create: { name: 'String', description: 'String' } },
           },
         },
       },

@@ -66,8 +66,8 @@ const Answer = ({ answer }: Props) => {
               <td>{answer.description}</td>
             </tr>
             <tr>
-              <th>Id q</th>
-              <td>{answer.idQ}</td>
+              <th>Question id</th>
+              <td>{answer.questionId}</td>
             </tr>
           </tbody>
         </table>

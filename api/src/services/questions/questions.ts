@@ -41,11 +41,11 @@ export const deleteQuestion: MutationResolvers['deleteQuestion'] = ({ id }) => {
 }
 
 export const Question: QuestionRelationResolvers = {
+  Step: (_obj, { root }) => {
+    return db.question.findUnique({ where: { id: root?.id } }).Step()
+  },
   QuestionType: (_obj, { root }) => {
     return db.question.findUnique({ where: { id: root?.id } }).QuestionType()
-  },
-  Location: (_obj, { root }) => {
-    return db.question.findUnique({ where: { id: root?.id } }).Location()
   },
   Answer: (_obj, { root }) => {
     return db.question.findUnique({ where: { id: root?.id } }).Answer()
