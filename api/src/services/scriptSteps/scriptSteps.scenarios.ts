@@ -6,7 +6,12 @@ export const standard = defineScenario<Prisma.ScriptStepCreateArgs>({
     one: {
       data: {
         lettre: 'String',
-        Script: { create: { name: 'String' } },
+        Script: {
+          create: {
+            name: 'String',
+            Department: { create: { name: 'String', description: 'String' } },
+          },
+        },
         Step: {
           create: {
             name: 'String',
@@ -18,7 +23,12 @@ export const standard = defineScenario<Prisma.ScriptStepCreateArgs>({
     two: {
       data: {
         lettre: 'String',
-        Script: { create: { name: 'String' } },
+        Script: {
+          create: {
+            name: 'String',
+            Department: { create: { name: 'String', description: 'String' } },
+          },
+        },
         Step: {
           create: {
             name: 'String',

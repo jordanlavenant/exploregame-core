@@ -294,6 +294,160 @@ export default async () => {
     ]
     await db.scriptStep.createMany({ data: scriptsSteps })
 
+    const questionTypes = [
+      {
+        id: '1',
+        type: 'Texte',
+      },
+      {
+        id: '2',
+        type: 'Choix',
+      },
+      {
+        id: '3',
+        type: 'Date',
+      },
+    ]
+    await db.questionType.createMany({ data: questionTypes })
+
+    const questions = [
+      {
+        id: '1',
+        question: "Quel est votre nom ?",
+        description: "Entrez votre nom",
+        questionTypeId: '1',
+        stepId: '1',
+      },
+      {
+        id: '2',
+        question: "Quel est votre prénom ?",
+        description: "Entrez votre prénom",
+        questionTypeId: '1',
+        stepId: '2',
+      },
+      {
+        id: '3',
+        question: "Quel est votre âge ?",
+        description: "Entrez votre âge",
+        questionTypeId: '1',
+        stepId: '3',
+      },
+      {
+        id: '4',
+        question: "Quel est votre sexe ?",
+        description: "Entrez votre sexe",
+        questionTypeId: '2',
+        stepId: '4',
+      },
+      {
+        id: '5',
+        question: "Quel est votre date de naissance ?",
+        description: "Entrez votre date de naissance",
+        questionTypeId: '3',
+        stepId: '5',
+      },
+      {
+        id: '6',
+        question: "Quel est votre adresse ?",
+        description: "Entrez votre adresse",
+        questionTypeId: '1',
+        stepId: '6',
+      },
+      {
+        id: '7',
+        question: "Quel est votre code postal ?",
+        description: "Entrez votre code postal",
+        questionTypeId: '1',
+        stepId: '7',
+      },
+      {
+        id: '8',
+        question: "Quel est votre ville ?",
+        description: "Entrez votre ville",
+        questionTypeId: '1',
+        stepId: '8',
+      },
+      {
+        id: '9',
+        question: "Quel est votre numéro de téléphone ?",
+        description: "Entrez votre numéro de téléphone",
+        questionTypeId: '1',
+        stepId: '9',
+      },
+      {
+        id: '10',
+        question: "Quel est votre email ?",
+        description: "Entrez votre email",
+        questionTypeId: '1',
+        stepId: '10',
+      }
+    ]
+    await db.question.createMany({ data: questions })
+
+    const answers = [
+      {
+        id: '1',
+        answer: 'Joe',
+        description: 'Joe Mama',
+        questionId: '1',
+      },
+      {
+        id: '2',
+        answer: 'Mama',
+        description: 'Joe Mama',
+        questionId: '2',
+      },
+      {
+        id: '3',
+        answer: '69',
+        description: 'Joe Mama',
+        questionId: '3',
+      },
+      {
+        id: '4',
+        answer: 'Homme',
+        description: 'Joe Mama',
+        questionId: '4',
+      },
+      {
+        id: '5',
+        answer: '01/01/1970',
+        description: 'Joe Mama',
+        questionId: '5',
+      },
+      {
+        id: '6',
+        answer: '1 rue de la rue',
+        description: 'Joe Mama',
+        questionId: '6',
+      },
+      {
+        id: '7',
+        answer: '90000',
+        description: 'Joe Mama',
+        questionId: '7',
+      },
+      {
+        id: '8',
+        answer: 'Belfort',
+        description: 'Joe Mama',
+        questionId: '8',
+      },
+      {
+        id: '9',
+        answer: '0123456789',
+        description: 'Joe Mama',
+        questionId: '9',
+      },
+      {
+        id: '10',
+        answer: 'joe@gmail.com',
+        description: 'Joe Mama',
+        questionId: '10',
+      },
+    ]
+    await db.answer.createMany({ data: answers })
+
     console.info(
       `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders`
     )

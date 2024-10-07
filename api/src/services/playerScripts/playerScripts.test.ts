@@ -36,15 +36,15 @@ describe('playerScripts', () => {
       input: {
         playerId: scenario.playerScript.two.playerId,
         scriptId: scenario.playerScript.two.scriptId,
-        score: 1693595,
-        remainingTime: 1995377,
+        score: 1610692,
+        remainingTime: 3849843,
       },
     })
 
     expect(result.playerId).toEqual(scenario.playerScript.two.playerId)
     expect(result.scriptId).toEqual(scenario.playerScript.two.scriptId)
-    expect(result.score).toEqual(1693595)
-    expect(result.remainingTime).toEqual(1995377)
+    expect(result.score).toEqual(1610692)
+    expect(result.remainingTime).toEqual(3849843)
   })
 
   scenario('updates a playerScript', async (scenario: StandardScenario) => {
@@ -53,10 +53,10 @@ describe('playerScripts', () => {
     })) as PlayerScript
     const result = await updatePlayerScript({
       id: original.id,
-      input: { score: 2810537 },
+      input: { score: 1204990 },
     })
 
-    expect(result.score).toEqual(2810537)
+    expect(result.score).toEqual(1204990)
   })
 
   scenario('deletes a playerScript', async (scenario: StandardScenario) => {

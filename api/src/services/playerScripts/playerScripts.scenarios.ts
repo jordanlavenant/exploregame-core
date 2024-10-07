@@ -5,11 +5,11 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
   playerScript: {
     one: {
       data: {
-        score: 1264330,
-        remainingTime: 1821310,
+        score: 2773641,
+        remainingTime: 809340,
         Player: {
           create: {
-            email: 'String5567092',
+            email: 'String7727288',
             firstName: 'String',
             lastName: 'String',
             hashedPassword: 'String',
@@ -17,16 +17,21 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
             Department: { create: { name: 'String', description: 'String' } },
           },
         },
-        Script: { create: { name: 'String' } },
+        Script: {
+          create: {
+            name: 'String',
+            Department: { create: { name: 'String', description: 'String' } },
+          },
+        },
       },
     },
     two: {
       data: {
-        score: 1548232,
-        remainingTime: 2198881,
+        score: 9639761,
+        remainingTime: 6526489,
         Player: {
           create: {
-            email: 'String6335476',
+            email: 'String7735180',
             firstName: 'String',
             lastName: 'String',
             hashedPassword: 'String',
@@ -34,7 +39,12 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
             Department: { create: { name: 'String', description: 'String' } },
           },
         },
-        Script: { create: { name: 'String' } },
+        Script: {
+          create: {
+            name: 'String',
+            Department: { create: { name: 'String', description: 'String' } },
+          },
+        },
       },
     },
   },
