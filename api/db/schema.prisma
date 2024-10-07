@@ -7,8 +7,8 @@
 datasource db {
   // provider = "sqlite"
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
+  url      = env("DATABASE_URL")
+  // url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
   // url      = "file:./dev.db"
 }
 
@@ -21,36 +21,38 @@ generator client {
 // to create migrations for them and apply to your dev DB.
 
 model Script {
-  id           String @id @default(uuid())
+  id           String         @id @default(uuid())
   name         String
-  visible      Boolean @default(false)
+  visible      Boolean        @default(false)
+  departmentId String
+  Department   Department     @relation(fields: [departmentId], references: [id])
   ScriptStep   ScriptStep[]
   PlayerScript PlayerScript[]
 }
 
 model Location {
-  id          String   @id @default(uuid())
+  id          String @id @default(uuid())
   name        String
   description String
   Step        Step[]
 }
 
 model Step {
-  id           String     @id @default(uuid())
-  name         String
-  locationId   String
-  ScriptStep   ScriptStep[]
-  Questions    Question[]
-  Location     Location   @relation(fields: [locationId], references: [id])
+  id         String       @id @default(uuid())
+  name       String
+  locationId String
+  ScriptStep ScriptStep[]
+  Questions  Question[]
+  Location   Location     @relation(fields: [locationId], references: [id])
 }
 
 model ScriptStep {
-  id          String @id @default(uuid())
-  scriptId    String
-  stepId      String
-  lettre      String
-  Script      Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
-  Step        Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  id       String @id @default(uuid())
+  scriptId String
+  stepId   String
+  lettre   String
+  Script   Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  Step     Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
 }
 
 model Department {
@@ -58,6 +60,7 @@ model Department {
   name        String
   description String
   Player      Player[]
+  Script      Script[]
 }
 
 model QuestionType {
@@ -72,7 +75,7 @@ model Question {
   description    String
   questionTypeId String
   stepId         String
-  Step           Step @relation(fields: [stepId], references: [id])
+  Step           Step         @relation(fields: [stepId], references: [id])
   QuestionType   QuestionType @relation(fields: [questionTypeId], references: [id])
   Answer         Answer[]
   Hint           Hint[]
@@ -93,12 +96,12 @@ model HintLevel {
 }
 
 model Hint {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   help        String
   questionId  String
   hintLevelId String
   HintLevel   HintLevel @relation(fields: [hintLevelId], references: [id])
-  Question    Question @relation(fields: [questionId], references: [id])
+  Question    Question  @relation(fields: [questionId], references: [id])
 }
 
 model User {
@@ -117,16 +120,16 @@ model Gender {
 }
 
 model Player {
-  id              String @id @default(uuid())
-  email           String @unique
-  genderId        String
-  firstName       String
-  lastName        String
-  hashedPassword  String
-  departmentId    String
-  Gender          Gender @relation(fields: [genderId], references: [id])
-  Department      Department @relation(fields: [departmentId], references: [id])
-  PlayerScript    PlayerScript[]
+  id             String         @id @default(uuid())
+  email          String         @unique
+  genderId       String
+  firstName      String
+  lastName       String
+  hashedPassword String
+  departmentId   String
+  Gender         Gender         @relation(fields: [genderId], references: [id])
+  Department     Department     @relation(fields: [departmentId], references: [id])
+  PlayerScript   PlayerScript[]
 }
 
 model PlayerScript {

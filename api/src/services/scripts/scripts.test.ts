@@ -28,12 +28,13 @@ describe('scripts', () => {
     expect(result).toEqual(scenario.script.one)
   })
 
-  scenario('creates a script', async () => {
+  scenario('creates a script', async (scenario: StandardScenario) => {
     const result = await createScript({
-      input: { name: 'String' },
+      input: { name: 'String', departmentId: scenario.script.two.departmentId },
     })
 
     expect(result.name).toEqual('String')
+    expect(result.departmentId).toEqual(scenario.script.two.departmentId)
   })
 
   scenario('updates a script', async (scenario: StandardScenario) => {

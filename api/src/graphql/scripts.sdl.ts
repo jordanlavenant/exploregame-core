@@ -3,6 +3,8 @@ export const schema = gql`
     id: String!
     name: String!
     visible: Boolean!
+    departmentId: String!
+    Department: Department!
     ScriptStep: [ScriptStep]!
     PlayerScript: [PlayerScript]!
   }
@@ -15,11 +17,13 @@ export const schema = gql`
   input CreateScriptInput {
     name: String!
     visible: Boolean!
+    departmentId: String!
   }
 
   input UpdateScriptInput {
     name: String
     visible: Boolean
+    departmentId: String
   }
 
   type Mutation {

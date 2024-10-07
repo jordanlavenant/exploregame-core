@@ -39,6 +39,9 @@ export const deleteScript: MutationResolvers['deleteScript'] = ({ id }) => {
 }
 
 export const Script: ScriptRelationResolvers = {
+  Department: (_obj, { root }) => {
+    return db.script.findUnique({ where: { id: root?.id } }).Department()
+  },
   ScriptStep: (_obj, { root }) => {
     return db.script.findUnique({ where: { id: root?.id } }).ScriptStep()
   },

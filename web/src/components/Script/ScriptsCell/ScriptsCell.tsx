@@ -15,6 +15,7 @@ export const QUERY: TypedDocumentNode<FindScripts, FindScriptsVariables> = gql`
       id
       name
       visible
+      departmentId
     }
   }
 `

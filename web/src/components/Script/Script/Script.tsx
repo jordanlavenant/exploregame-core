@@ -65,6 +65,10 @@ const Script = ({ script }: Props) => {
               <th>Visible</th>
               <td>{checkboxInputTag(script.visible)}</td>
             </tr>
+            <tr>
+              <th>Department id</th>
+              <td>{script.departmentId}</td>
+            </tr>
           </tbody>
         </table>
       </div>

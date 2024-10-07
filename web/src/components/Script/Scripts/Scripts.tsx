@@ -52,6 +52,7 @@ const ScriptsList = ({ scripts }: FindScripts) => {
             <th>Id</th>
             <th>Name</th>
             <th>Visible</th>
+            <th>Department id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -61,6 +62,7 @@ const ScriptsList = ({ scripts }: FindScripts) => {
               <td>{truncate(script.id)}</td>
               <td>{truncate(script.name)}</td>
               <td>{checkboxInputTag(script.visible)}</td>
+              <td>{truncate(script.departmentId)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

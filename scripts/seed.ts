@@ -10,7 +10,7 @@ export default async () => {
         password: 'admin',
       },
       {
-        email: ' root@root',
+        email: 'root@root',
         password: 'root',
       },
     ]
@@ -26,39 +26,276 @@ export default async () => {
       })
     }
 
-    const courses = [
+    const departments = [
       {
+        id: '1',
         name: 'INFO',
         description: 'BUT Informatique',
       },
       {
+        id: '2',
         name: 'GEA',
         description: 'BUT Gestion des Entreprises et des Administrations',
       },
       {
+        id: '3',
         name: 'GMP',
         description: 'BUT Génie Mécanique et Productique',
       },
       {
+        id: '4',
         name: 'QLIO',
         description: 'BUT Qualité, Logistique Industrielle et Organisation',
       },
       {
+        id: '5',
         name: 'Chimie',
         description: 'BUT Chimie',
       },
       {
+        id: '6',
         name: 'MT2E',
         description:
           "BUT Métiers de la transition et de l'efficacité énergétiques",
       },
     ]
-    await db.department.createMany({ data: courses })
+    await db.department.createMany({ data: departments })
 
-    // Rest ...
+    const locations = [
+      {
+        id: '1',
+        name: 'Belfort',
+        description: 'Belfort',
+      },
+      {
+        id: '2',
+        name: 'Montbéliard',
+        description: 'Montbéliard',
+      },
+      {
+        id: '3',
+        name: 'Sevenans',
+        description: 'Sevenans',
+      },
+    ]
+    await db.location.createMany({ data: locations })
+
+    const hintLevels = [
+      {
+        id: '1',
+        type: 'Petit',
+      },
+      {
+        id: '2',
+        type: 'Normal',
+      },
+      {
+        id: '3',
+        type: 'Grand',
+      },
+    ]
+    await db.hintLevel.createMany({ data: hintLevels })
+
+    const genders = [
+      {
+        id: '1',
+        gender: 'Homme',
+      },
+      {
+        id: '2',
+        gender: 'Femme',
+      },
+      {
+        id: '3',
+        gender: 'Autre',
+      },
+    ]
+    await db.gender.createMany({ data: genders })
+
+    const scripts = [
+      {
+        id: '1',
+        name: 'Script 1',
+        visible: true,
+        departmentId: '1',
+      },
+      {
+        id: '2',
+        name: 'Script 2',
+        visible: true,
+        departmentId: '1',
+      },
+      {
+        id: '3',
+        name: 'Script 3',
+        visible: true,
+        departmentId: '1',
+      },
+      {
+        id: '4',
+        name: 'Script 4',
+        visible: true,
+        departmentId: '2',
+      },
+      {
+        id: '5',
+        name: 'Script 5',
+        visible: true,
+        departmentId: '2',
+      },
+    ]
+    await db.script.createMany({ data: scripts })
+
+    const steps = [
+      {
+        id: '1',
+        name: 'Step 1',
+        locationId: '1',
+      },
+      {
+        id: '2',
+        name: 'Step 2',
+        locationId: '2',
+      },
+      {
+        id: '3',
+        name: 'Step 3',
+        locationId: '3',
+      },
+      {
+        id: '4',
+        name: 'Step 4',
+        locationId: '1',
+      },
+      {
+        id: '5',
+        name: 'Step 5',
+        locationId: '2',
+      },
+      {
+        id: '6',
+        name: 'Step 6',
+        locationId: '3',
+      },
+      {
+        id: '7',
+        name: 'Step 7',
+        locationId: '1',
+      },
+      {
+        id: '8',
+        name: 'Step 8',
+        locationId: '2',
+      },
+      {
+        id: '9',
+        name: 'Step 9',
+        locationId: '3',
+      },
+      {
+        id: '10',
+        name: 'Step 10',
+        locationId: '1',
+      },
+    ]
+    await db.step.createMany({ data: steps })
+
+    const scriptsSteps = [
+      {
+        id: '1',
+        scriptId: '1',
+        stepId: '1',
+        lettre: 'A',
+      },
+      {
+        id: '2',
+        scriptId: '1',
+        stepId: '2',
+        lettre: 'B',
+      },
+      {
+        id: '3',
+        scriptId: '1',
+        stepId: '3',
+        lettre: 'C',
+      },
+      {
+        id: '4',
+        scriptId: '2',
+        stepId: '4',
+        lettre: 'A',
+      },
+      {
+        id: '5',
+        scriptId: '2',
+        stepId: '5',
+        lettre: 'B',
+      },
+      {
+        id: '6',
+        scriptId: '2',
+        stepId: '6',
+        lettre: 'C',
+      },
+      {
+        id: '7',
+        scriptId: '3',
+        stepId: '7',
+        lettre: 'A',
+      },
+      {
+        id: '8',
+        scriptId: '3',
+        stepId: '8',
+        lettre: 'B',
+      },
+      {
+        id: '9',
+        scriptId: '3',
+        stepId: '9',
+        lettre: 'C',
+      },
+      {
+        id: '10',
+        scriptId: '4',
+        stepId: '10',
+        lettre: 'A',
+      },
+      {
+        id: '11',
+        scriptId: '4',
+        stepId: '1',
+        lettre: 'B',
+      },
+      {
+        id: '12',
+        scriptId: '4',
+        stepId: '2',
+        lettre: 'C',
+      },
+      {
+        id: '13',
+        scriptId: '5',
+        stepId: '3',
+        lettre: 'A',
+      },
+      {
+        id: '14',
+        scriptId: '5',
+        stepId: '4',
+        lettre: 'B',
+      },
+      {
+        id: '15',
+        scriptId: '5',
+        stepId: '5',
+        lettre: 'C',
+      },
+    ]
+    await db.scriptStep.createMany({ data: scriptsSteps })
 
     console.info(
-      '\n  No seed data, skipping. See scripts/seed.ts to start seeding your database!\n'
+      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders`
     )
   } catch (error) {
     console.error(error)

@@ -21,6 +21,7 @@ export const QUERY: TypedDocumentNode<EditScriptById> = gql`
       id
       name
       visible
+      departmentId
     }
   }
 `
@@ -34,6 +35,7 @@ const UPDATE_SCRIPT_MUTATION: TypedDocumentNode<
       id
       name
       visible
+      departmentId
     }
   }
 `

@@ -15,6 +15,7 @@ export const QUERY: TypedDocumentNode<FindScriptById, FindScriptByIdVariables> =
         id
         name
         visible
+        departmentId
       }
     }
   `

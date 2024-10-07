@@ -70,6 +70,24 @@ const ScriptForm = (props: ScriptFormProps) => {
 
         <FieldError name="visible" className="rw-field-error" />
 
+        <Label
+          name="departmentId"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Department id
+        </Label>
+
+        <TextField
+          name="departmentId"
+          defaultValue={props.script?.departmentId}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="departmentId" className="rw-field-error" />
+
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save
