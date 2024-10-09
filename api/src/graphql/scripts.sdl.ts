@@ -10,8 +10,8 @@ export const schema = gql`
   }
 
   type Query {
-    scripts: [Script!]! @requireAuth
-    script(id: String!): Script @requireAuth
+    scripts: [Script!]! @skipAuth
+    script(id: String!): Script @skipAuth
   }
 
   input CreateScriptInput {

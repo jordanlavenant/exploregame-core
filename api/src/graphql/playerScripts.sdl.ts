@@ -10,8 +10,8 @@ export const schema = gql`
   }
 
   type Query {
-    playerScripts: [PlayerScript!]! @requireAuth
-    playerScript(id: String!): PlayerScript @requireAuth
+    playerScripts: [PlayerScript!]! @skipAuth
+    playerScript(id: String!): PlayerScript @skipAuth
   }
 
   input CreatePlayerScriptInput {

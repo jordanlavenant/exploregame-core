@@ -7,8 +7,8 @@ export const schema = gql`
   }
 
   type Query {
-    locations: [Location!]! @requireAuth
-    location(id: String!): Location @requireAuth
+    locations: [Location!]! @skipAuth
+    location(id: String!): Location @skipAuth
   }
 
   input CreateLocationInput {

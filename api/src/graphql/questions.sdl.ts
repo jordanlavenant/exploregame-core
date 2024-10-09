@@ -12,8 +12,8 @@ export const schema = gql`
   }
 
   type Query {
-    questions: [Question!]! @requireAuth
-    question(id: String!): Question @requireAuth
+    questions: [Question!]! @skipAuth
+    question(id: String!): Question @skipAuth
   }
 
   input CreateQuestionInput {

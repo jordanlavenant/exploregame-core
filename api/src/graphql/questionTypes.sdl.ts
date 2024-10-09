@@ -6,8 +6,8 @@ export const schema = gql`
   }
 
   type Query {
-    questionTypes: [QuestionType!]! @requireAuth
-    questionType(id: String!): QuestionType @requireAuth
+    questionTypes: [QuestionType!]! @skipAuth
+    questionType(id: String!): QuestionType @skipAuth
   }
 
   input CreateQuestionTypeInput {

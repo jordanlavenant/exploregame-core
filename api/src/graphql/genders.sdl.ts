@@ -6,8 +6,8 @@ export const schema = gql`
   }
 
   type Query {
-    genders: [Gender!]! @requireAuth
-    gender(id: String!): Gender @requireAuth
+    genders: [Gender!]! @skipAuth
+    gender(id: String!): Gender @skipAuth
   }
 
   input CreateGenderInput {

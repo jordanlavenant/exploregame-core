@@ -6,8 +6,8 @@ export const schema = gql`
   }
 
   type Query {
-    hintLevels: [HintLevel!]! @requireAuth
-    hintLevel(id: String!): HintLevel @requireAuth
+    hintLevels: [HintLevel!]! @skipAuth
+    hintLevel(id: String!): HintLevel @skipAuth
   }
 
   input CreateHintLevelInput {

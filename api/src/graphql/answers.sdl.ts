@@ -8,8 +8,8 @@ export const schema = gql`
   }
 
   type Query {
-    answers: [Answer!]! @requireAuth
-    answer(id: String!): Answer @requireAuth
+    answers: [Answer!]! @skipAuth
+    answer(id: String!): Answer @skipAuth
   }
 
   input CreateAnswerInput {
