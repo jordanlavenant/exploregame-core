@@ -49,20 +49,22 @@ const ScriptsList = ({ scripts }: FindScripts) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Id</th>
             <th>Name</th>
             <th>Visible</th>
-            <th>Department id</th>
+            <th>Department</th>
+            <th>Mot secret</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {scripts.map((script) => (
             <tr key={script.id}>
-              <td>{truncate(script.id)}</td>
               <td>{truncate(script.name)}</td>
               <td>{checkboxInputTag(script.visible)}</td>
-              <td>{truncate(script.departmentId)}</td>
+              <td>{truncate(script.Department.name)}</td>
+              <td>
+                {script.ScriptStep.reduce((acc, step) => acc + step.lettre, '')}
+              </td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

@@ -43,6 +43,8 @@ const Script = ({ script }: Props) => {
     }
   }
 
+  const steps = script.ScriptStep
+
   return (
     <>
       <div className="rw-segment">
@@ -66,8 +68,18 @@ const Script = ({ script }: Props) => {
               <td>{checkboxInputTag(script.visible)}</td>
             </tr>
             <tr>
-              <th>Department id</th>
-              <td>{script.departmentId}</td>
+              <th>Department</th>
+              <td>{script.Department.name}</td>
+            </tr>
+            <tr>
+              <th>Etape</th>
+              <td>
+                {steps.map((step) => (
+                  <div key={step.Step.id}>
+                    {step.Step.name} - {step.lettre}
+                  </div>
+                ))}
+              </td>
             </tr>
           </tbody>
         </table>

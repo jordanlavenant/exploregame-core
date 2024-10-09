@@ -51,7 +51,7 @@ const StepsList = ({ steps }: FindSteps) => {
           <tr>
             <th>Id</th>
             <th>Name</th>
-            <th>Location id</th>
+            <th>Location</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -60,7 +60,7 @@ const StepsList = ({ steps }: FindSteps) => {
             <tr key={step.id}>
               <td>{truncate(step.id)}</td>
               <td>{truncate(step.name)}</td>
-              <td>{truncate(step.locationId)}</td>
+              <td>{truncate(step.Location.name)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

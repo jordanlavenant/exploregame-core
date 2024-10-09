@@ -15,7 +15,16 @@ export const QUERY: TypedDocumentNode<FindScripts, FindScriptsVariables> = gql`
       id
       name
       visible
-      departmentId
+      Department {
+        id
+        name
+      }
+      ScriptStep {
+        Step {
+          id
+        }
+        lettre
+      }
     }
   }
 `

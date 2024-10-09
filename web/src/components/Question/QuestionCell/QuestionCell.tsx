@@ -17,8 +17,19 @@ export const QUERY: TypedDocumentNode<
       id
       question
       description
-      questionTypeId
-      stepId
+      QuestionType {
+        id
+        type
+      }
+      Step {
+        id
+        name
+      }
+      Answer {
+        id
+        description
+        answer
+      }
     }
   }
 `

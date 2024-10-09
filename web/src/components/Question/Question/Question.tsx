@@ -43,6 +43,8 @@ const Question = ({ question }: Props) => {
     }
   }
 
+  const answers = question.Answer
+
   return (
     <>
       <div className="rw-segment">
@@ -62,16 +64,27 @@ const Question = ({ question }: Props) => {
               <td>{question.question}</td>
             </tr>
             <tr>
+              <th>Réponse</th>
+              <td>
+                {answers.map((answer) => (
+                  <div key={answer.id}>
+                    <p>{answer.description}</p>
+                    <p>{answer.answer}</p>
+                  </div>
+                ))}
+              </td>
+            </tr>
+            <tr>
               <th>Description</th>
               <td>{question.description}</td>
             </tr>
             <tr>
-              <th>Question type id</th>
-              <td>{question.questionTypeId}</td>
+              <th>Question type</th>
+              <td>{question.QuestionType.type}</td>
             </tr>
             <tr>
-              <th>Step id</th>
-              <td>{question.stepId}</td>
+              <th>Step</th>
+              <td>{question.Step.name}</td>
             </tr>
           </tbody>
         </table>

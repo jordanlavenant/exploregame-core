@@ -16,8 +16,14 @@ export const QUERY: TypedDocumentNode<FindQuestions, FindQuestionsVariables> =
         id
         question
         description
-        questionTypeId
-        stepId
+        QuestionType {
+          id
+          type
+        }
+        Step {
+          id
+          name
+        }
       }
     }
   `

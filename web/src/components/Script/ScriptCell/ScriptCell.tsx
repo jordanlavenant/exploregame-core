@@ -15,7 +15,21 @@ export const QUERY: TypedDocumentNode<FindScriptById, FindScriptByIdVariables> =
         id
         name
         visible
-        departmentId
+        Department {
+          id
+          name
+        }
+        ScriptStep {
+          Step {
+            id
+            name
+            Location {
+              id
+              name
+            }
+          }
+          lettre
+        }
       }
     }
   `
