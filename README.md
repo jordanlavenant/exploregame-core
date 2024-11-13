@@ -100,6 +100,25 @@ Pour installer les dépendances, effectuez la commande à la racine du projet
 yarn install
 ```
 
+# Générer les secrets
+
+Génerer un secret de session
+```bash
+yarn rw g secret
+```
+
+Puis créer un fichier `.env`
+
+```bash
+cp .env.defaults .env
+```
+
+Puis ajouter la ligne
+
+```bash
+SESSION_SECRET = <secret>
+```
+
 # Migrations
 
 Pour récupérer la migration actuelle, effectuez la commande
@@ -110,12 +129,12 @@ yarn rw prisma migrate dev
 
 _Vous n'êtes pas obligé de renseigner un nom à la migration._
 
->**⚠** Cette commande affecte automatiquement la seed initiale. (jeu de données)
+# Seed
 
-Pour générer un `SECRET_TOKEN` pour vous connectez à l'application
+Pour ajouter des données dans la base de donnée, effectuez la commande
 
 ```bash
-yarn
+yarn rw exec seed
 ```
 
 # Lancement
