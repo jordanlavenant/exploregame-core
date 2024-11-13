@@ -126,7 +126,6 @@ model Player {
   firstName      String
   lastName       String
   hashedPassword String
-  salt           String
   departmentId   String
   Gender         Gender         @relation(fields: [genderId], references: [id])
   Department     Department     @relation(fields: [departmentId], references: [id])

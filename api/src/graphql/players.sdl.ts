@@ -6,7 +6,6 @@ export const schema = gql`
     firstName: String!
     lastName: String!
     hashedPassword: String!
-    salt: String!
     departmentId: String!
     Gender: Gender!
     Department: Department!
@@ -24,7 +23,6 @@ export const schema = gql`
     firstName: String!
     lastName: String!
     hashedPassword: String!
-    salt: String!
     departmentId: String!
   }
 
@@ -34,13 +32,23 @@ export const schema = gql`
     firstName: String
     lastName: String
     hashedPassword: String
-    salt: String
     departmentId: String
+  }
+
+  input LoginPlayerInput {
+    email: String!
+    password: String!
   }
 
   type Mutation {
     createPlayer(input: CreatePlayerInput!): Player! @requireAuth
     updatePlayer(id: String!, input: UpdatePlayerInput!): Player! @requireAuth
     deletePlayer(id: String!): Player! @requireAuth
+    loginPlayer(input: LoginPlayerInput!): AuthPayload! @skipAuth
+  }
+
+  type AuthPayload {
+    token: String!
+    player: Player!
   }
 `

@@ -1,4 +1,5 @@
 import { db } from 'api/src/lib/db'
+import bcrypt from 'bcryptjs'
 
 import { hashPassword } from '@redwoodjs/auth-dbauth-api'
 
@@ -401,7 +402,7 @@ export default async () => {
 
     const players = [
       {
-        email: 'joe@doe',
+        email: 'joe@doe.com',
         password: 'joe',
         genderId: '1',
         firstname: 'Joe',
@@ -409,7 +410,7 @@ export default async () => {
         departmentId: '1',
       },
       {
-        email: 'jane@doe',
+        email: 'jane@doe.com',
         password: 'jane',
         genderId: '2',
         firstname: 'Jane',
@@ -417,7 +418,7 @@ export default async () => {
         departmentId: '2',
       },
       {
-        email: 'john@doe',
+        email: 'john@doe.com',
         password: 'john',
         genderId: '1',
         firstname: 'John',
@@ -426,7 +427,6 @@ export default async () => {
       },
     ]
     for (const player of players) {
-      const [hashedPassword, salt] = await hashPassword(player.password)
       await db.player.create({
         data: {
           email: player.email,
@@ -434,8 +434,7 @@ export default async () => {
           firstName: player.firstname,
           lastName: player.lastname,
           departmentId: player.departmentId,
-          hashedPassword,
-          salt,
+          hashedPassword: await bcrypt.hash(player.password, 10),
         },
       })
     }

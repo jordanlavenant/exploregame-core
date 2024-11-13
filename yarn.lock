@@ -7255,6 +7255,7 @@ __metadata:
     "@redwoodjs/api": 8.3.0
     "@redwoodjs/auth-dbauth-api": 8.3.0
     "@redwoodjs/graphql-server": 8.3.0
+    bcryptjs: ^2.4.3
   languageName: unknown
   linkType: soft
 
@@ -9109,6 +9110,13 @@ __metadata:
   dependencies:
     tweetnacl: "npm:^0.14.3"
   checksum: ddfe85230b32df25aeebfdccfbc61d3bc493ace49c884c9c68575de1f5dcf733a5d7de9def3b0f318b786616b8d85bad50a28b1da1750c43e0012c93badcc148
+  languageName: node
+  linkType: hard
+
+"bcryptjs@npm:^2.4.3":
+  version: 2.4.3
+  resolution: "bcryptjs@npm:2.4.3"
+  checksum: b969467087ed7a01ff905a1c6a0c45014ec586248a448ea08370c8ed8bb314bda16a870ca23e0961d7d23bdce1a04c76fa70a9d680be814fa9ac7d8fc61870a3
   languageName: node
   linkType: hard
 

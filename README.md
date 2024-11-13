@@ -107,6 +107,11 @@ Génerer un secret de session
 yarn rw g secret
 ```
 
+Génerer un secret de JWT
+```bash
+openssl rand -base64 32
+```
+
 Puis créer un fichier `.env`
 
 ```bash
