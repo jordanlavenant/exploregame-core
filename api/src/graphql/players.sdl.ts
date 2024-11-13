@@ -6,6 +6,7 @@ export const schema = gql`
     firstName: String!
     lastName: String!
     hashedPassword: String!
+    salt: String!
     departmentId: String!
     Gender: Gender!
     Department: Department!
@@ -13,8 +14,8 @@ export const schema = gql`
   }
 
   type Query {
-    players: [Player!]! @skipAuth
-    player(id: String!): Player @skipAuth
+    players: [Player!]! @requireAuth
+    player(id: String!): Player @requireAuth
   }
 
   input CreatePlayerInput {
@@ -23,6 +24,7 @@ export const schema = gql`
     firstName: String!
     lastName: String!
     hashedPassword: String!
+    salt: String!
     departmentId: String!
   }
 
@@ -32,6 +34,7 @@ export const schema = gql`
     firstName: String
     lastName: String
     hashedPassword: String
+    salt: String
     departmentId: String
   }
 

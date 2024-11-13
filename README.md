@@ -115,7 +115,7 @@ cp .env.defaults .env
 
 Puis ajouter la ligne
 
-```bash
+```
 SESSION_SECRET = <secret>
 ```
 

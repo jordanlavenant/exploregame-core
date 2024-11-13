@@ -14,7 +14,6 @@ export default async () => {
         password: 'root',
       },
     ]
-
     for (const user of users) {
       const [hashedPassword, salt] = await hashPassword(user.password)
       await db.user.create({
@@ -265,74 +264,74 @@ export default async () => {
     const questions = [
       {
         id: '1',
-        question: "Quel est votre nom ?",
-        description: "Entrez votre nom",
+        question: 'Quel est votre nom ?',
+        description: 'Entrez votre nom',
         questionTypeId: '1',
         stepId: '1',
       },
       {
         id: '2',
-        question: "Quel est votre prénom ?",
-        description: "Entrez votre prénom",
+        question: 'Quel est votre prénom ?',
+        description: 'Entrez votre prénom',
         questionTypeId: '1',
         stepId: '2',
       },
       {
         id: '3',
-        question: "Quel est votre âge ?",
-        description: "Entrez votre âge",
+        question: 'Quel est votre âge ?',
+        description: 'Entrez votre âge',
         questionTypeId: '1',
         stepId: '3',
       },
       {
         id: '4',
-        question: "Quel est votre sexe ?",
-        description: "Entrez votre sexe",
+        question: 'Quel est votre sexe ?',
+        description: 'Entrez votre sexe',
         questionTypeId: '2',
         stepId: '4',
       },
       {
         id: '5',
-        question: "Quel est votre date de naissance ?",
-        description: "Entrez votre date de naissance",
+        question: 'Quel est votre date de naissance ?',
+        description: 'Entrez votre date de naissance',
         questionTypeId: '3',
         stepId: '5',
       },
       {
         id: '6',
-        question: "Quel est votre adresse ?",
-        description: "Entrez votre adresse",
+        question: 'Quel est votre adresse ?',
+        description: 'Entrez votre adresse',
         questionTypeId: '1',
         stepId: '6',
       },
       {
         id: '7',
-        question: "Quel est votre code postal ?",
-        description: "Entrez votre code postal",
+        question: 'Quel est votre code postal ?',
+        description: 'Entrez votre code postal',
         questionTypeId: '1',
         stepId: '7',
       },
       {
         id: '8',
-        question: "Quel est votre ville ?",
-        description: "Entrez votre ville",
+        question: 'Quel est votre ville ?',
+        description: 'Entrez votre ville',
         questionTypeId: '1',
         stepId: '8',
       },
       {
         id: '9',
-        question: "Quel est votre numéro de téléphone ?",
-        description: "Entrez votre numéro de téléphone",
+        question: 'Quel est votre numéro de téléphone ?',
+        description: 'Entrez votre numéro de téléphone',
         questionTypeId: '1',
         stepId: '9',
       },
       {
         id: '10',
-        question: "Quel est votre email ?",
-        description: "Entrez votre email",
+        question: 'Quel est votre email ?',
+        description: 'Entrez votre email',
         questionTypeId: '1',
         stepId: '10',
-      }
+      },
     ]
     await db.question.createMany({ data: questions })
 
@@ -400,8 +399,49 @@ export default async () => {
     ]
     await db.answer.createMany({ data: answers })
 
+    const players = [
+      {
+        email: 'joe@doe',
+        password: 'joe',
+        genderId: '1',
+        firstname: 'Joe',
+        lastname: 'Doe',
+        departmentId: '1',
+      },
+      {
+        email: 'jane@doe',
+        password: 'jane',
+        genderId: '2',
+        firstname: 'Jane',
+        lastname: 'Doe',
+        departmentId: '2',
+      },
+      {
+        email: 'john@doe',
+        password: 'john',
+        genderId: '1',
+        firstname: 'John',
+        lastname: 'Doe',
+        departmentId: '3',
+      },
+    ]
+    for (const player of players) {
+      const [hashedPassword, salt] = await hashPassword(player.password)
+      await db.player.create({
+        data: {
+          email: player.email,
+          genderId: player.genderId,
+          firstName: player.firstname,
+          lastName: player.lastname,
+          departmentId: player.departmentId,
+          hashedPassword,
+          salt,
+        },
+      })
+    }
+
     console.info(
-      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders`
+      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players`
     )
   } catch (error) {
     console.error(error)

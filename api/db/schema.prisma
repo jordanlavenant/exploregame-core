@@ -7,8 +7,8 @@
 datasource db {
   // provider = "sqlite"
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
+  url      = env("DATABASE_URL")
+  // url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
   // url      = "file:./dev.db"
 }
 
@@ -126,6 +126,7 @@ model Player {
   firstName      String
   lastName       String
   hashedPassword String
+  salt           String
   departmentId   String
   Gender         Gender         @relation(fields: [genderId], references: [id])
   Department     Department     @relation(fields: [departmentId], references: [id])

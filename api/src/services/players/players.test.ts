@@ -31,20 +31,22 @@ describe('players', () => {
   scenario('creates a player', async (scenario: StandardScenario) => {
     const result = await createPlayer({
       input: {
-        email: 'String596935',
+        email: 'String7967960',
         genderId: scenario.player.two.genderId,
         firstName: 'String',
         lastName: 'String',
         hashedPassword: 'String',
+        salt: 'String',
         departmentId: scenario.player.two.departmentId,
       },
     })
 
-    expect(result.email).toEqual('String596935')
+    expect(result.email).toEqual('String7967960')
     expect(result.genderId).toEqual(scenario.player.two.genderId)
     expect(result.firstName).toEqual('String')
     expect(result.lastName).toEqual('String')
     expect(result.hashedPassword).toEqual('String')
+    expect(result.salt).toEqual('String')
     expect(result.departmentId).toEqual(scenario.player.two.departmentId)
   })
 
@@ -52,10 +54,10 @@ describe('players', () => {
     const original = (await player({ id: scenario.player.one.id })) as Player
     const result = await updatePlayer({
       id: original.id,
-      input: { email: 'String80146442' },
+      input: { email: 'String65988892' },
     })
 
-    expect(result.email).toEqual('String80146442')
+    expect(result.email).toEqual('String65988892')
   })
 
   scenario('deletes a player', async (scenario: StandardScenario) => {
