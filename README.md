@@ -97,7 +97,7 @@ datasource db {
 Pour installer les dépendances, effectuez la commande à la racine du projet
 
 ```bash
-yarn rw g secret
+yarn install
 ```
 
 # Migrations

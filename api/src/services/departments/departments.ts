@@ -46,4 +46,7 @@ export const Department: DepartmentRelationResolvers = {
   Player: (_obj, { root }) => {
     return db.department.findUnique({ where: { id: root?.id } }).Player()
   },
+  Script: (_obj, { root }) => {
+    return db.department.findUnique({ where: { id: root?.id } }).Script()
+  },
 }

@@ -123,25 +123,13 @@ export default async () => {
         id: '2',
         name: 'Script 2',
         visible: true,
-        departmentId: '1',
+        departmentId: '2',
       },
       {
         id: '3',
         name: 'Script 3',
         visible: true,
-        departmentId: '1',
-      },
-      {
-        id: '4',
-        name: 'Script 4',
-        visible: true,
-        departmentId: '2',
-      },
-      {
-        id: '5',
-        name: 'Script 5',
-        visible: true,
-        departmentId: '2',
+        departmentId: '3',
       },
     ]
     await db.script.createMany({ data: scripts })
@@ -254,42 +242,6 @@ export default async () => {
         scriptId: '3',
         stepId: '9',
         lettre: 'C',
-      },
-      {
-        id: '10',
-        scriptId: '4',
-        stepId: '10',
-        lettre: 'A',
-      },
-      {
-        id: '11',
-        scriptId: '4',
-        stepId: '1',
-        lettre: 'H',
-      },
-      {
-        id: '12',
-        scriptId: '4',
-        stepId: '2',
-        lettre: 'C',
-      },
-      {
-        id: '13',
-        scriptId: '5',
-        stepId: '3',
-        lettre: 'P',
-      },
-      {
-        id: '14',
-        scriptId: '5',
-        stepId: '4',
-        lettre: 'F',
-      },
-      {
-        id: '15',
-        scriptId: '5',
-        stepId: '5',
-        lettre: 'Z',
       },
     ]
     await db.scriptStep.createMany({ data: scriptsSteps })
