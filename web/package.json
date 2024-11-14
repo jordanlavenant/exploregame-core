@@ -18,6 +18,7 @@
     "@redwoodjs/forms": "8.3.0",
     "@redwoodjs/router": "8.3.0",
     "@redwoodjs/web": "8.3.0",
+    "@redwoodjs/web-server": "8.3.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "humanize-string": "2.1.0",

@@ -23,3 +23,5 @@ api/db/migrations/*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+postgres

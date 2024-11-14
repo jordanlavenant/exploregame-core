@@ -2,6 +2,22 @@
 
 # Pré-requis
 
+## Docker Compose (Optionnel)
+
+Pour faciliter le développement, il est possible d'utiliser `Docker` pour lancer une base de donnée `PostgreSQL` en local.
+
+Avant, veillez à désactiver si vous avez déjà un service `PostgreSQL` qui tourne sur votre machine.
+
+```bash
+sudo service postgresql stop
+```
+
+Pour lancer le service `PostgreSQL` avec `Docker`, effectuez la commande suivante
+
+```bash
+docker compose -f docker-compose.dev.yml up -d
+```
+
 ## Corepack
 
 Ouvrir une `invite de commande` en **administrateur**.
