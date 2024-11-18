@@ -61,3 +61,13 @@ services:
       - TEST_DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood_test
     depends_on:
       - db
+
+  migrate:
+    build:
+      context: .
+      target: console
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://redwood:redwood@db:5432/redwood
+    command: /bin/bash -c "yarn redwood prisma migrate dev && yarn redwood exec seed"

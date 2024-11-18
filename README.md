@@ -1,32 +1,105 @@
 # Explore Game - Core
 
-# Pré-requis
+Cette application décrit le coeur de l'application `Explore Game`, elle est basée sur le framework `RedwoodJS`.
 
-## Docker Compose (Optionnel)
+Elle intègre une base de donnée `PostgreSQL` ou `SQLite` pour le stockage des données, et une interface `GraphQL` pour les requêtes.
+
+Elle fournie une API pour les autres micro-services de l'application.
+
+# Docker installation
+
+## Pre-requisites
+
+* Docker
+* Docker Compose
+* Node.js 20.11.1+ (included)
+* Yarn (included)
+* Postgresql 16.0+ (included)
+
+## Development environment
 
 Pour faciliter le développement, il est possible d'utiliser `Docker` pour lancer une base de donnée `PostgreSQL` en local.
+
+Si vous ne souhaitez pas utiliser `Docker` pour votre environnement de Développement, veuillez ignorer cette étape.
+
+### Docker compose
 
 Avant, veillez à désactiver si vous avez déjà un service `PostgreSQL` qui tourne sur votre machine.
 
 ```bash
+# /bin/bash
 sudo service postgresql stop
 ```
 
 Pour lancer le service `PostgreSQL` avec `Docker`, effectuez la commande suivante
 
 ```bash
-docker compose -f docker-compose.dev.yml up -d
+# /bin/bash
+docker compose -f docker-compose.dev.yml up --build
 ```
 
-## Corepack
+> Cette commande effectue la **migration** initiale de la base de donnée et exécute la **seed** par défaut.
 
+Cette commande lance 4 conteneurs
+
+```bash
+# /bin/bash
+[+] Running 4/4
+ ✔ Network exploregame-core_default      Created
+ ✔ Container exploregame-core-db-1       Created
+ ✔ Container exploregame-core-redwood-1  Created
+ ✔ Container exploregame-core-console-1  Created
+```
+
+### Migration
+
+Si vous avez besoin d'effectuer des migrations, vous pouvez éteindre le conteneurs, puis le relancer pour effectuer les migrations.
+
+```bash
+# /bin/bash
+docker compose -f ./docker-compose.dev.yml down
+docker compose -f ./docker-compose.dev.yml up --build
+```
+
+## Production environment
+
+Effectuez la commande suivante pour lancer les conteneurs en production, **sur la machine de production**.
+
+### Docker compose
+
+```bash
+# /bin/bash
+docker compose -f docker-compose.prod.yml up --build
+```
+
+### Migration
+
+Si vous avez besoin d'effectuer des migrations, vous pouvez éteindre le conteneurs, puis le relancer pour effectuer les migrations.
+
+```bash
+# /bin/bash
+docker compose -f ./docker-compose.dev.yml down
+docker compose -f ./docker-compose.dev.yml up --build
+```
+
+# Classic installation
+
+## Development environment
+
+### Pre-requisites
+
+* Corepack
+* Yarn
+* Node.js 20.11.1+
+
+### Corepack
 Ouvrir une `invite de commande` en **administrateur**.
 
 ```bash
 corepack enable
 ```
 
-## Yarn
+### Yarn
 
 Toujours dans la même invite de commande, pour initialiser `yarn`, effectuez la commande suivante
 
@@ -37,7 +110,7 @@ yarn
 > Vérifiez que la version de `yarn` est bien `v1.22.22`.
 
 
-## SQLite
+### SQLite
 
 Si vous souhaitez utiliser `SQLite` pour le développement, il vous faudra créer un fichier `.env` à la racine du projet et y écrire cette instruction.
 
@@ -47,15 +120,15 @@ DATABASE_URL=file:./dev.db
 
 Cette instruction permet d'utiliser la base de donnée par défaut du framework `Redwood`, cela hébergera une base de donnée en **locale** sur votre machine. Ainsi les données ne seront pas synchronisées entre les développeurs.
 
-## PostgreSQL
+### PostgreSQL
 
 Si vous souhaitez utiliser `postgreSQL` pour le développement, il faudra suivre les instructions d'installations suivantes
 
-### Linux
+#### Linux
 
 ...
 
-### Windows
+#### Windows
 
 **postgreSQL** - Base de donnée
 
@@ -108,7 +181,7 @@ datasource db {
 }
 ```
 
-# Installation
+### Dependances
 
 Pour installer les dépendances, effectuez la commande à la racine du projet
 
@@ -116,14 +189,14 @@ Pour installer les dépendances, effectuez la commande à la racine du projet
 yarn install
 ```
 
-# Générer les secrets
+### Secrets
 
 Génerer un secret de session
 ```bash
 yarn rw g secret
 ```
 
-Génerer un secret de JWT
+Génerer un secret de `JWT`
 ```bash
 openssl rand -base64 32
 ```
@@ -137,7 +210,10 @@ cp .env.defaults .env
 Puis ajouter la ligne
 
 ```
-SESSION_SECRET = <secret>
+# .env
+DATABASE_URL=file:./dev.db
+SESSION_SECRET=<yarn rw g secret>
+JWT_SECRET_KEY=<openssl rand -base64 32>
 ```
 
 # Migrations
@@ -145,7 +221,7 @@ SESSION_SECRET = <secret>
 Pour récupérer la migration actuelle, effectuez la commande
 
 ```
-yarn rw prisma migrate dev
+yarn redwood prisma migrate dev
 ```
 
 _Vous n'êtes pas obligé de renseigner un nom à la migration._
@@ -155,7 +231,7 @@ _Vous n'êtes pas obligé de renseigner un nom à la migration._
 Pour ajouter des données dans la base de donnée, effectuez la commande
 
 ```bash
-yarn rw exec seed
+yarn redwood exec seed
 ```
 
 # Lancement
@@ -163,7 +239,7 @@ yarn rw exec seed
 Pour lancer l'application, effectuez la commande
 
 ```
-yarn rw dev
+yarn redwood dev
 ```
 
 # Identifiants
@@ -191,20 +267,20 @@ Pour ajouter un `model` à notre base de donnée, il faut ajouter le modèle dan
 ## Appliquer la migration
 
 ```
-yarn rw migrate dev
+yarn redwood migrate dev
 ```
 
 
 ## Générer les types
 ```
-yarn rw g types
+yarn redwood g types
 ```
 
 
 ## Génerer les scaffold (UI)
 
 ```
-yarn rw g scaffold <model>
+yarn redwood g scaffold <model>
 ```
 
 
