@@ -38,12 +38,13 @@ model Location {
 }
 
 model Step {
-  id         String       @id @default(uuid())
-  name       String
-  locationId String
-  ScriptStep ScriptStep[]
-  Questions  Question[]
-  Location   Location     @relation(fields: [locationId], references: [id])
+  id           String         @id @default(uuid())
+  name         String
+  locationId   String
+  ScriptStep   ScriptStep[]
+  Questions    Question[]
+  Location     Location       @relation(fields: [locationId], references: [id])
+  PlayerScript PlayerScript[]
 }
 
 model ScriptStep {
@@ -136,8 +137,10 @@ model PlayerScript {
   id            String @id @default(uuid())
   playerId      String
   scriptId      String
+  stepId        String
   score         Int
   remainingTime Int
   Player        Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   Script        Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  Step          Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
 }
