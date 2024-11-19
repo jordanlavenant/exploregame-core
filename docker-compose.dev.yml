@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
       target: base
-    command: yarn rw dev
+    command: yarn redwood dev
     volumes:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
@@ -14,8 +14,8 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood
-      - TEST_DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood_test
+      - DATABASE_URL=postgresql://redwood:redwood@db:5432/ExploreGame
+      - TEST_DATABASE_URL=postgresql://redwood:redwood@db:5432/ExploreGame_test
       - SESSION_SECRET=super_secret_session_key_change_me_in_production_please
       - CI=
       - NODE_ENV=development
@@ -26,7 +26,7 @@ services:
     environment:
       POSTGRES_USER: redwood
       POSTGRES_PASSWORD: redwood
-      POSTGRES_DB: redwood
+      POSTGRES_DB: ExploreGame
     ports:
       - '5432:5432'
     volumes:
@@ -49,8 +49,8 @@ services:
       - /tmp
     command: 'true'
     environment:
-      - DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood
-      - TEST_DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood_test
+      - DATABASE_URL=postgresql://redwood:redwood@db:5432/ExploreGame
+      - TEST_DATABASE_URL=postgresql://redwood:redwood@db:5432/ExploreGame_test
     depends_on:
       - db
 
@@ -61,7 +61,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://redwood:redwood@db:5432/redwood
+      DATABASE_URL: postgresql://redwood:redwood@db:5432/ExploreGame
     command: /bin/bash -c "yarn redwood prisma migrate dev && yarn redwood exec seed"
 
 volumes:
