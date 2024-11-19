@@ -57,12 +57,17 @@ services:
   migrate:
     build:
       context: .
+      dockerfile: ./Dockerfile
       target: console
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://redwood:redwood@db:5432/ExploreGame
-    command: /bin/bash -c "yarn redwood prisma migrate dev && yarn redwood exec seed"
+      - DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood
+    command: >
+      /bin/bash -c "
+      yarn redwood prisma migrate deploy &&
+      yarn redwood prisma db seed
+      "
 
 volumes:
   node_modules:
