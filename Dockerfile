@@ -152,3 +152,6 @@
   COPY --chown=node:node api api
   COPY --chown=node:node web web
   COPY --chown=node:node scripts scripts
+
+  # RUN yarn redwood prisma migrate dev
+  # RUN yarn redwood exec seed
