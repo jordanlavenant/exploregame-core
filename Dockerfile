@@ -98,8 +98,8 @@
   # command to launch your server instead of the default api-server below.
   # This is important if you intend to configure GraphQL to use Realtime.
   #
-  CMD [ "./api/dist/server.js" ]
-  # CMD [ "node_modules/.bin/rw-server", "api" ]
+  # CMD [ "./api/dist/server.js" ]
+  CMD [ "node_modules/.bin/rw-server", "api" ]
 
   # web serve
   # ---------
