@@ -4,6 +4,9 @@
 
   RUN corepack enable
 
+  # We tried to make the Dockerfile as lean as possible. In some cases, that means we excluded a dependency your project needs.
+  # By far the most common is Python. If you're running into build errors because `python3` isn't available,
+  # add `python3 make gcc \` before the `openssl \` line below and in other stages as necessary:
   RUN apt-get update && apt-get install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
@@ -32,8 +35,20 @@
   # ---------
   FROM base as api_build
 
+  # If your api side build relies on build-time environment variables,
+  # specify them here as ARGs. (But don't put secrets in your Dockerfile!)
+  #
+  # ARG MY_BUILD_TIME_ENV_VAR
+
   COPY --chown=node:node api api
   RUN yarn rw build api
+
+  # web prerender build
+  # -------------------
+  FROM api_build as web_build_with_prerender
+
+  COPY --chown=node:node web web
+  RUN yarn rw build web
 
   # web build
   # ---------
@@ -77,7 +92,14 @@
 
   ENV NODE_ENV=production
 
-  CMD [ "node_modules/.bin/rw-server", "api" ]
+  # default api serve command
+  # ---------
+  # If you are using a custom server file, you must use the following
+  # command to launch your server instead of the default api-server below.
+  # This is important if you intend to configure GraphQL to use Realtime.
+  #
+  CMD [ "./api/dist/server.js" ]
+  # CMD [ "node_modules/.bin/rw-server", "api" ]
 
   # web serve
   # ---------
@@ -109,16 +131,24 @@
   ENV NODE_ENV=production \
     API_PROXY_TARGET=http://api:8911
 
+  # We use the shell form here for variable expansion.
   CMD "node_modules/.bin/rw-web-server" "--api-proxy-target" "$API_PROXY_TARGET"
 
   # console
   # -------
   FROM base as console
 
+  # To add more packages:
+  #
+  # ```
+  # USER root
+  #
+  # RUN apt-get update && apt-get install -y \
+  #     curl
+  #
+  # USER node
+  # ```
+
   COPY --chown=node:node api api
   COPY --chown=node:node web web
   COPY --chown=node:node scripts scripts
-
-  # Ajouter les commandes de migration
-  RUN yarn redwood prisma migrate dev
-  RUN yarn redwood exec seed
