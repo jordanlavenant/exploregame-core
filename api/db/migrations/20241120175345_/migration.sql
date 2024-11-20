@@ -41,6 +41,7 @@ CREATE TABLE "Department" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "colorSetId" TEXT NOT NULL DEFAULT '1',
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("id")
 );
@@ -137,6 +138,16 @@ CREATE TABLE "PlayerScript" (
     CONSTRAINT "PlayerScript_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "ColorSet" (
+    "id" TEXT NOT NULL,
+    "primary" TEXT NOT NULL,
+    "secondary" TEXT NOT NULL,
+    "tertiary" TEXT NOT NULL,
+
+    CONSTRAINT "ColorSet_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -154,6 +165,9 @@ ALTER TABLE "ScriptStep" ADD CONSTRAINT "ScriptStep_scriptId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "ScriptStep" ADD CONSTRAINT "ScriptStep_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "Step"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Department" ADD CONSTRAINT "Department_colorSetId_fkey" FOREIGN KEY ("colorSetId") REFERENCES "ColorSet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Question" ADD CONSTRAINT "Question_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "Step"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
