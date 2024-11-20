@@ -21,6 +21,7 @@ export const QUERY: TypedDocumentNode<EditDepartmentById> = gql`
       id
       name
       description
+      colorSetId
     }
   }
 `
@@ -37,6 +38,7 @@ const UPDATE_DEPARTMENT_MUTATION: TypedDocumentNode<
       id
       name
       description
+      colorSetId
     }
   }
 `

@@ -26,37 +26,77 @@ export default async () => {
       })
     }
 
+    const colorSets = [
+      {
+        id: '1',
+        primary: '#000000',
+        secondary: '#FFFFFF',
+        tertiary: '#000000',
+      },
+      {
+        id: '2',
+        primary: '#FFFFFF',
+        secondary: '#000000',
+        tertiary: '#FFFFFF',
+      },
+      {
+        id: '3',
+        primary: '#0000FF',
+        secondary: '#FF0000',
+        tertiary: '#00FF00',
+      },
+      {
+        id: '4',
+        primary: '#FF0000',
+        secondary: '#00FF00',
+        tertiary: '#0000FF',
+      },
+      {
+        id: '5',
+        primary: '#00FF00',
+        secondary: '#0000FF',
+        tertiary: '#FF0000',
+      },
+    ]
+    await db.colorSet.createMany({ data: colorSets })
+
     const departments = [
       {
         id: '1',
         name: 'INFO',
         description: 'BUT Informatique',
+        colorSetId: '1',
       },
       {
         id: '2',
         name: 'GEA',
         description: 'BUT Gestion des Entreprises et des Administrations',
+        colorSetId: '2',
       },
       {
         id: '3',
         name: 'GMP',
         description: 'BUT Génie Mécanique et Productique',
+        colorSetId: '2',
       },
       {
         id: '4',
         name: 'QLIO',
         description: 'BUT Qualité, Logistique Industrielle et Organisation',
+        colorSetId: '2',
       },
       {
         id: '5',
         name: 'Chimie',
         description: 'BUT Chimie',
+        colorSetId: '3',
       },
       {
         id: '6',
         name: 'MT2E',
         description:
           "BUT Métiers de la transition et de l'efficacité énergétiques",
+        colorSetId: '4',
       },
     ]
     await db.department.createMany({ data: departments })

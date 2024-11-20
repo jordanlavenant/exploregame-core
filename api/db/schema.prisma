@@ -60,8 +60,10 @@ model Department {
   id          String   @id @default(uuid())
   name        String
   description String
+  colorSetId  String @default("1")
   Player      Player[]
   Script      Script[]
+  ColorSet    ColorSet @relation(fields: [colorSetId], references: [id])
 }
 
 model QuestionType {
@@ -143,4 +145,12 @@ model PlayerScript {
   Player        Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   Script        Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
   Step          Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+}
+
+model ColorSet {
+  id        String @id @default(uuid())
+  primary   String
+  secondary String
+  tertiary  String
+  Department Department[]
 }

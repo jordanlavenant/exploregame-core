@@ -1,7 +1,7 @@
 import type {
-  DeleteDepartmentMutation,
-  DeleteDepartmentMutationVariables,
-  FindDepartmentById,
+  DeleteColorSetMutation,
+  DeleteColorSetMutationVariables,
+  FindColorSetById,
 } from 'types/graphql'
 
 import { Link, routes, navigate } from '@redwoodjs/router'
@@ -11,35 +11,35 @@ import { toast } from '@redwoodjs/web/toast'
 
 import {} from 'src/lib/formatters'
 
-const DELETE_DEPARTMENT_MUTATION: TypedDocumentNode<
-  DeleteDepartmentMutation,
-  DeleteDepartmentMutationVariables
+const DELETE_COLOR_SET_MUTATION: TypedDocumentNode<
+  DeleteColorSetMutation,
+  DeleteColorSetMutationVariables
 > = gql`
-  mutation DeleteDepartmentMutation($id: String!) {
-    deleteDepartment(id: $id) {
+  mutation DeleteColorSetMutation($id: String!) {
+    deleteColorSet(id: $id) {
       id
     }
   }
 `
 
 interface Props {
-  department: NonNullable<FindDepartmentById['department']>
+  colorSet: NonNullable<FindColorSetById['colorSet']>
 }
 
-const Department = ({ department }: Props) => {
-  const [deleteDepartment] = useMutation(DELETE_DEPARTMENT_MUTATION, {
+const ColorSet = ({ colorSet }: Props) => {
+  const [deleteColorSet] = useMutation(DELETE_COLOR_SET_MUTATION, {
     onCompleted: () => {
-      toast.success('Department deleted')
-      navigate(routes.departments())
+      toast.success('ColorSet deleted')
+      navigate(routes.colorSets())
     },
     onError: (error) => {
       toast.error(error.message)
     },
   })
 
-  const onDeleteClick = (id: DeleteDepartmentMutationVariables['id']) => {
-    if (confirm('Are you sure you want to delete department ' + id + '?')) {
-      deleteDepartment({ variables: { id } })
+  const onDeleteClick = (id: DeleteColorSetMutationVariables['id']) => {
+    if (confirm('Are you sure you want to delete colorSet ' + id + '?')) {
+      deleteColorSet({ variables: { id } })
     }
   }
 
@@ -48,33 +48,33 @@ const Department = ({ department }: Props) => {
       <div className="rw-segment">
         <header className="rw-segment-header">
           <h2 className="rw-heading rw-heading-secondary">
-            Department {department.id} Detail
+            ColorSet {colorSet.id} Detail
           </h2>
         </header>
         <table className="rw-table">
           <tbody>
             <tr>
               <th>Id</th>
-              <td>{department.id}</td>
+              <td>{colorSet.id}</td>
             </tr>
             <tr>
-              <th>Name</th>
-              <td>{department.name}</td>
+              <th>Primary</th>
+              <td>{colorSet.primary}</td>
             </tr>
             <tr>
-              <th>Description</th>
-              <td>{department.description}</td>
+              <th>Secondary</th>
+              <td>{colorSet.secondary}</td>
             </tr>
             <tr>
-              <th>Color set id</th>
-              <td>{department.colorSetId}</td>
+              <th>Tertiary</th>
+              <td>{colorSet.tertiary}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <nav className="rw-button-group">
         <Link
-          to={routes.editDepartment({ id: department.id })}
+          to={routes.editColorSet({ id: colorSet.id })}
           className="rw-button rw-button-blue"
         >
           Edit
@@ -82,7 +82,7 @@ const Department = ({ department }: Props) => {
         <button
           type="button"
           className="rw-button rw-button-red"
-          onClick={() => onDeleteClick(department.id)}
+          onClick={() => onDeleteClick(colorSet.id)}
         >
           Delete
         </button>
@@ -91,4 +91,4 @@ const Department = ({ department }: Props) => {
   )
 }
 
-export default Department
+export default ColorSet

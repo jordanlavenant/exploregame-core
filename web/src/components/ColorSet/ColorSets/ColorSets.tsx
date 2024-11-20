@@ -1,7 +1,7 @@
 import type {
-  DeleteDepartmentMutation,
-  DeleteDepartmentMutationVariables,
-  FindDepartments,
+  DeleteColorSetMutation,
+  DeleteColorSetMutationVariables,
+  FindColorSets,
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
@@ -9,24 +9,24 @@ import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { QUERY } from 'src/components/Department/DepartmentsCell'
+import { QUERY } from 'src/components/ColorSet/ColorSetsCell'
 import { truncate } from 'src/lib/formatters'
 
-const DELETE_DEPARTMENT_MUTATION: TypedDocumentNode<
-  DeleteDepartmentMutation,
-  DeleteDepartmentMutationVariables
+const DELETE_COLOR_SET_MUTATION: TypedDocumentNode<
+  DeleteColorSetMutation,
+  DeleteColorSetMutationVariables
 > = gql`
-  mutation DeleteDepartmentMutation($id: String!) {
-    deleteDepartment(id: $id) {
+  mutation DeleteColorSetMutation($id: String!) {
+    deleteColorSet(id: $id) {
       id
     }
   }
 `
 
-const DepartmentsList = ({ departments }: FindDepartments) => {
-  const [deleteDepartment] = useMutation(DELETE_DEPARTMENT_MUTATION, {
+const ColorSetsList = ({ colorSets }: FindColorSets) => {
+  const [deleteColorSet] = useMutation(DELETE_COLOR_SET_MUTATION, {
     onCompleted: () => {
-      toast.success('Department deleted')
+      toast.success('ColorSet deleted')
     },
     onError: (error) => {
       toast.error(error.message)
@@ -38,9 +38,9 @@ const DepartmentsList = ({ departments }: FindDepartments) => {
     awaitRefetchQueries: true,
   })
 
-  const onDeleteClick = (id: DeleteDepartmentMutationVariables['id']) => {
-    if (confirm('Are you sure you want to delete department ' + id + '?')) {
-      deleteDepartment({ variables: { id } })
+  const onDeleteClick = (id: DeleteColorSetMutationVariables['id']) => {
+    if (confirm('Are you sure you want to delete colorSet ' + id + '?')) {
+      deleteColorSet({ variables: { id } })
     }
   }
 
@@ -50,40 +50,40 @@ const DepartmentsList = ({ departments }: FindDepartments) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Color set id</th>
+            <th>Primary</th>
+            <th>Secondary</th>
+            <th>Tertiary</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
-          {departments.map((department) => (
-            <tr key={department.id}>
-              <td>{truncate(department.id)}</td>
-              <td>{truncate(department.name)}</td>
-              <td>{truncate(department.description)}</td>
-              <td>{truncate(department.colorSetId)}</td>
+          {colorSets.map((colorSet) => (
+            <tr key={colorSet.id}>
+              <td>{truncate(colorSet.id)}</td>
+              <td>{truncate(colorSet.primary)}</td>
+              <td>{truncate(colorSet.secondary)}</td>
+              <td>{truncate(colorSet.tertiary)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
-                    to={routes.department({ id: department.id })}
-                    title={'Show department ' + department.id + ' detail'}
+                    to={routes.colorSet({ id: colorSet.id })}
+                    title={'Show colorSet ' + colorSet.id + ' detail'}
                     className="rw-button rw-button-small"
                   >
                     Show
                   </Link>
                   <Link
-                    to={routes.editDepartment({ id: department.id })}
-                    title={'Edit department ' + department.id}
+                    to={routes.editColorSet({ id: colorSet.id })}
+                    title={'Edit colorSet ' + colorSet.id}
                     className="rw-button rw-button-small rw-button-blue"
                   >
                     Edit
                   </Link>
                   <button
                     type="button"
-                    title={'Delete department ' + department.id}
+                    title={'Delete colorSet ' + colorSet.id}
                     className="rw-button rw-button-small rw-button-red"
-                    onClick={() => onDeleteClick(department.id)}
+                    onClick={() => onDeleteClick(colorSet.id)}
                   >
                     Delete
                   </button>
@@ -97,4 +97,4 @@ const DepartmentsList = ({ departments }: FindDepartments) => {
   )
 }
 
-export default DepartmentsList
+export default ColorSetsList

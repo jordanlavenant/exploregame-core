@@ -18,6 +18,18 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
+        <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
+        <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
+        <Route path="/departments/{id}" page={DepartmentDepartmentPage} name="department" />
+        <Route path="/departments" page={DepartmentDepartmentsPage} name="departments" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="ColorSets" titleTo="colorSets" buttonLabel="New ColorSet" buttonTo="newColorSet">
+        <Route path="/color-sets/new" page={ColorSetNewColorSetPage} name="newColorSet" />
+        <Route path="/color-sets/{id}/edit" page={ColorSetEditColorSetPage} name="editColorSet" />
+        <Route path="/color-sets/{id}" page={ColorSetColorSetPage} name="colorSet" />
+        <Route path="/color-sets" page={ColorSetColorSetsPage} name="colorSets" />
+      </Set>
       <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
         <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
         <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
@@ -80,12 +92,6 @@ const Routes = () => {
           <Route path="/question-types/{id}" page={QuestionTypeQuestionTypePage} name="questionType" />
           <Route path="/question-types" page={QuestionTypeQuestionTypesPage} name="questionTypes" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
-          <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
-          <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
-          <Route path="/departments/{id}" page={DepartmentDepartmentPage} name="department" />
-          <Route path="/departments" page={DepartmentDepartmentsPage} name="departments" />
-        </Set>&
         <Set wrap={ScaffoldLayout} title="Steps" titleTo="steps" buttonLabel="New Step" buttonTo="newStep">
           <Route path="/steps/new" page={StepNewStepPage} name="newStep" />
           <Route path="/steps/{id}/edit" page={StepEditStepPage} name="editStep" />

@@ -18,6 +18,7 @@ export const QUERY: TypedDocumentNode<
       id
       name
       description
+      colorSetId
     }
   }
 `

@@ -49,4 +49,7 @@ export const Department: DepartmentRelationResolvers = {
   Script: (_obj, { root }) => {
     return db.department.findUnique({ where: { id: root?.id } }).Script()
   },
+  ColorSet: (_obj, { root }) => {
+    return db.department.findUnique({ where: { id: root?.id } }).ColorSet()
+  },
 }

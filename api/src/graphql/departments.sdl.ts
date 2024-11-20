@@ -3,23 +3,27 @@ export const schema = gql`
     id: String!
     name: String!
     description: String!
+    colorSetId: String!
     Player: [Player]!
     Script: [Script]!
+    ColorSet: ColorSet!
   }
 
   type Query {
-    departments: [Department!]! @skipAuth
-    department(id: String!): Department @skipAuth
+    departments: [Department!]! @requireAuth
+    department(id: String!): Department @requireAuth
   }
 
   input CreateDepartmentInput {
     name: String!
     description: String!
+    colorSetId: String!
   }
 
   input UpdateDepartmentInput {
     name: String
     description: String
+    colorSetId: String
   }
 
   type Mutation {

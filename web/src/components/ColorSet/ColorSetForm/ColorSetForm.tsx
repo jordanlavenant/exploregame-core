@@ -1,4 +1,4 @@
-import type { EditDepartmentById, UpdateDepartmentInput } from 'types/graphql'
+import type { EditColorSetById, UpdateColorSetInput } from 'types/graphql'
 
 import type { RWGqlError } from '@redwoodjs/forms'
 import {
@@ -10,23 +10,23 @@ import {
   Submit,
 } from '@redwoodjs/forms'
 
-type FormDepartment = NonNullable<EditDepartmentById['department']>
+type FormColorSet = NonNullable<EditColorSetById['colorSet']>
 
-interface DepartmentFormProps {
-  department?: EditDepartmentById['department']
-  onSave: (data: UpdateDepartmentInput, id?: FormDepartment['id']) => void
+interface ColorSetFormProps {
+  colorSet?: EditColorSetById['colorSet']
+  onSave: (data: UpdateColorSetInput, id?: FormColorSet['id']) => void
   error: RWGqlError
   loading: boolean
 }
 
-const DepartmentForm = (props: DepartmentFormProps) => {
-  const onSubmit = (data: FormDepartment) => {
-    props.onSave(data, props?.department?.id)
+const ColorSetForm = (props: ColorSetFormProps) => {
+  const onSubmit = (data: FormColorSet) => {
+    props.onSave(data, props?.colorSet?.id)
   }
 
   return (
     <div className="rw-form-wrapper">
-      <Form<FormDepartment> onSubmit={onSubmit} error={props.error}>
+      <Form<FormColorSet> onSubmit={onSubmit} error={props.error}>
         <FormError
           error={props.error}
           wrapperClassName="rw-form-error-wrapper"
@@ -35,58 +35,58 @@ const DepartmentForm = (props: DepartmentFormProps) => {
         />
 
         <Label
-          name="name"
+          name="primary"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Name
+          Primary
         </Label>
 
         <TextField
-          name="name"
-          defaultValue={props.department?.name}
+          name="primary"
+          defaultValue={props.colorSet?.primary}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="name" className="rw-field-error" />
+        <FieldError name="primary" className="rw-field-error" />
 
         <Label
-          name="description"
+          name="secondary"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Description
+          Secondary
         </Label>
 
         <TextField
-          name="description"
-          defaultValue={props.department?.description}
+          name="secondary"
+          defaultValue={props.colorSet?.secondary}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="description" className="rw-field-error" />
+        <FieldError name="secondary" className="rw-field-error" />
 
         <Label
-          name="colorSetId"
+          name="tertiary"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Color set id
+          Tertiary
         </Label>
 
         <TextField
-          name="colorSetId"
-          defaultValue={props.department?.colorSetId}
+          name="tertiary"
+          defaultValue={props.colorSet?.tertiary}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="colorSetId" className="rw-field-error" />
+        <FieldError name="tertiary" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
@@ -98,4 +98,4 @@ const DepartmentForm = (props: DepartmentFormProps) => {
   )
 }
 
-export default DepartmentForm
+export default ColorSetForm
