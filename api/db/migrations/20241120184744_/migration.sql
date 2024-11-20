@@ -41,7 +41,7 @@ CREATE TABLE "Department" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "colorSetId" TEXT NOT NULL DEFAULT '1',
+    "colorSetId" TEXT NOT NULL,
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("id")
 );

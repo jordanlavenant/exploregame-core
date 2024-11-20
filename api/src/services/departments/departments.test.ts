@@ -31,13 +31,18 @@ describe('departments', () => {
     }
   )
 
-  scenario('creates a department', async () => {
+  scenario('creates a department', async (scenario: StandardScenario) => {
     const result = await createDepartment({
-      input: { name: 'String', description: 'String' },
+      input: {
+        name: 'String',
+        description: 'String',
+        colorSetId: scenario.department.two.colorSetId,
+      },
     })
 
     expect(result.name).toEqual('String')
     expect(result.description).toEqual('String')
+    expect(result.colorSetId).toEqual(scenario.department.two.colorSetId)
   })
 
   scenario('updates a department', async (scenario: StandardScenario) => {

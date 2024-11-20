@@ -60,7 +60,7 @@ model Department {
   id          String   @id @default(uuid())
   name        String
   description String
-  colorSetId  String @default("1")
+  colorSetId  String
   Player      Player[]
   Script      Script[]
   ColorSet    ColorSet @relation(fields: [colorSetId], references: [id])
@@ -148,9 +148,9 @@ model PlayerScript {
 }
 
 model ColorSet {
-  id        String @id @default(uuid())
-  primary   String
-  secondary String
-  tertiary  String
+  id         String @id @default(uuid())
+  primary    String
+  secondary  String
+  tertiary   String
   Department Department[]
 }

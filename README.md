@@ -38,27 +38,21 @@ Pour lancer le service `PostgreSQL` avec `Docker`, effectuez la commande suivant
 docker compose -f docker-compose.dev.yml up --build
 ```
 
-> Cette commande effectue la **migration** initiale de la base de donnée et exécute la **seed** par défaut.
-
-Cette commande lance 4 conteneurs
-
-```bash
-# /bin/bash
-[+] Running 4/4
- ✔ Network exploregame-core_default      Created
- ✔ Container exploregame-core-db-1       Created
- ✔ Container exploregame-core-redwood-1  Created
- ✔ Container exploregame-core-console-1  Created
-```
-
 ### Migration
 
-Si vous avez besoin d'effectuer des migrations, vous pouvez éteindre le conteneurs, puis le relancer pour effectuer les migrations.
+Entrer dans le conteneur `console` pour effectuer les migrations et les seeds.
+
 
 ```bash
 # /bin/bash
-docker compose -f ./docker-compose.dev.yml down
-docker compose -f ./docker-compose.dev.yml up --build
+docker compose -f ./docker-compose.dev.yml run --rm -it console /bin/bash
+```
+
+Effectuer les migrations puis seed la base de donnée.
+```bash
+# /home/node/app#
+yarn redwood prisma migrate dev
+yarn redwood exec seed
 ```
 
 ## Production environment
@@ -74,12 +68,19 @@ docker compose -f docker-compose.prod.yml up --build
 
 ### Migration
 
-Si vous avez besoin d'effectuer des migrations, vous pouvez éteindre le conteneurs, puis le relancer pour effectuer les migrations.
+Entrer dans le conteneur `console` pour effectuer les migrations et les seeds.
+
 
 ```bash
 # /bin/bash
-docker compose -f ./docker-compose.dev.yml down
-docker compose -f ./docker-compose.dev.yml up --build
+docker compose -f ./docker-compose.prod.yml run --rm -it console /bin/bash
+```
+
+Effectuer les migrations puis seed la base de donnée.
+```bash
+# /home/node/app#
+yarn redwood prisma migrate dev
+yarn redwood exec seed
 ```
 
 # Classic installation
