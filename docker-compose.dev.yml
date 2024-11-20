@@ -62,7 +62,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood
+      - DATABASE_URL=postgresql://redwood:redwood@db:5432/ExploreGame
     command: >
       /bin/bash -c "
       yarn redwood prisma migrate deploy &&
