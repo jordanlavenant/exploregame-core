@@ -18,6 +18,12 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
+        <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
+        <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
+        <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
+        <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
+      </Set>
       <PrivateSet unauthenticated="login">
         <Route path="/" page={HomePage} name="home" />
         <Set wrap={ScaffoldLayout} title="ScriptSteps" titleTo="scriptSteps" buttonLabel="New ScriptStep" buttonTo="newScriptStep">
@@ -31,12 +37,6 @@ const Routes = () => {
           <Route path="/scripts/{id}/edit" page={ScriptEditScriptPage} name="editScript" />
           <Route path="/scripts/{id}" page={ScriptScriptPage} name="script" />
           <Route path="/scripts" page={ScriptScriptsPage} name="scripts" />
-        </Set>
-        <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
-          <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
-          <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
-          <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
-          <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
           <Route path="/players/new" page={PlayerNewPlayerPage} name="newPlayer" />

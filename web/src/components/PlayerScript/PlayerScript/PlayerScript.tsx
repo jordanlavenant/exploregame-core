@@ -66,6 +66,10 @@ const PlayerScript = ({ playerScript }: Props) => {
               <td>{playerScript.scriptId}</td>
             </tr>
             <tr>
+              <th>Step id</th>
+              <td>{playerScript.stepId}</td>
+            </tr>
+            <tr>
               <th>Score</th>
               <td>{playerScript.score}</td>
             </tr>

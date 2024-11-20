@@ -3,20 +3,23 @@ export const schema = gql`
     id: String!
     playerId: String!
     scriptId: String!
+    stepId: String!
     score: Int!
     remainingTime: Int!
     Player: Player!
     Script: Script!
+    Step: Step!
   }
 
   type Query {
-    playerScripts: [PlayerScript!]! @skipAuth
-    playerScript(id: String!): PlayerScript @skipAuth
+    playerScripts: [PlayerScript!]! @requireAuth
+    playerScript(id: String!): PlayerScript @requireAuth
   }
 
   input CreatePlayerScriptInput {
     playerId: String!
     scriptId: String!
+    stepId: String!
     score: Int!
     remainingTime: Int!
   }
@@ -24,6 +27,7 @@ export const schema = gql`
   input UpdatePlayerScriptInput {
     playerId: String
     scriptId: String
+    stepId: String
     score: Int
     remainingTime: Int
   }

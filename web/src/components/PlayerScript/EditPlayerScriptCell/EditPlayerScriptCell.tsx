@@ -21,6 +21,7 @@ export const QUERY: TypedDocumentNode<EditPlayerScriptById> = gql`
       id
       playerId
       scriptId
+      stepId
       score
       remainingTime
     }
@@ -39,6 +40,7 @@ const UPDATE_PLAYER_SCRIPT_MUTATION: TypedDocumentNode<
       id
       playerId
       scriptId
+      stepId
       score
       remainingTime
     }

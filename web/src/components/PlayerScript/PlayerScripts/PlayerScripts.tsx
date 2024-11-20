@@ -52,6 +52,7 @@ const PlayerScriptsList = ({ playerScripts }: FindPlayerScripts) => {
             <th>Id</th>
             <th>Player id</th>
             <th>Script id</th>
+            <th>Step id</th>
             <th>Score</th>
             <th>Remaining time</th>
             <th>&nbsp;</th>
@@ -63,6 +64,7 @@ const PlayerScriptsList = ({ playerScripts }: FindPlayerScripts) => {
               <td>{truncate(playerScript.id)}</td>
               <td>{truncate(playerScript.playerId)}</td>
               <td>{truncate(playerScript.scriptId)}</td>
+              <td>{truncate(playerScript.stepId)}</td>
               <td>{truncate(playerScript.score)}</td>
               <td>{truncate(playerScript.remainingTime)}</td>
               <td>

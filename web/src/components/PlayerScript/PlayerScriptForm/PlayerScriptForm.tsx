@@ -75,6 +75,24 @@ const PlayerScriptForm = (props: PlayerScriptFormProps) => {
         <FieldError name="scriptId" className="rw-field-error" />
 
         <Label
+          name="stepId"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Step id
+        </Label>
+
+        <TextField
+          name="stepId"
+          defaultValue={props.playerScript?.stepId}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="stepId" className="rw-field-error" />
+
+        <Label
           name="score"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
