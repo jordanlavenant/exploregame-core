@@ -1,0 +1,3 @@
+[submodule "exploregame-types"]
+  path = exploregame-types
+  url = https://github.com/jordanlavenant/exploregame-types.git

@@ -6,6 +6,9 @@
       "web"
     ]
   },
+  "scripts": {
+    "push:types": "yarn rw g types && cp api/types/graphql.d.ts exploregame-types/index.d.ts"
+  },
   "devDependencies": {
     "@redwoodjs/auth-dbauth-setup": "8.3.0",
     "@redwoodjs/core": "8.3.0",
