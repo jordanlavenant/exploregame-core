@@ -34,11 +34,11 @@ export const schema = gql`
 
   type Mutation {
     createPlayerScript(input: CreatePlayerScriptInput!): PlayerScript!
-      @requireAuth
+      @skipAuth
     updatePlayerScript(
       id: String!
       input: UpdatePlayerScriptInput!
-    ): PlayerScript! @requireAuth
-    deletePlayerScript(id: String!): PlayerScript! @requireAuth
+    ): PlayerScript! @skipAuth
+    deletePlayerScript(id: String!): PlayerScript! @skipAuth
   }
 `
