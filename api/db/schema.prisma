@@ -145,6 +145,8 @@ model PlayerScript {
   Player        Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   Script        Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
   Step          Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, scriptId])
 }
 
 model ColorSet {

@@ -154,6 +154,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "Player_email_key" ON "Player"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "PlayerScript_playerId_scriptId_key" ON "PlayerScript"("playerId", "scriptId");
+
 -- AddForeignKey
 ALTER TABLE "Script" ADD CONSTRAINT "Script_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
