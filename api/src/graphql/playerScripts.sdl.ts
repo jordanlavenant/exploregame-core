@@ -14,8 +14,8 @@ export const schema = gql`
   }
 
   type Query {
-    playerScripts: [PlayerScript!]! @requireAuth
-    playerScript(id: String!): PlayerScript @requireAuth
+    playerScripts: [PlayerScript!]! @skipAuth
+    playerScript(id: String!): PlayerScript @skipAuth
   }
 
   input CreatePlayerScriptInput {
@@ -38,11 +38,11 @@ export const schema = gql`
 
   type Mutation {
     createPlayerScript(input: CreatePlayerScriptInput!): PlayerScript!
-      @requireAuth
+      @skipAuth
     updatePlayerScript(
       id: String!
       input: UpdatePlayerScriptInput!
-    ): PlayerScript! @requireAuth
-    deletePlayerScript(id: String!): PlayerScript! @requireAuth
+    ): PlayerScript! @skipAuth
+    deletePlayerScript(id: String!): PlayerScript! @skipAuth
   }
 `
