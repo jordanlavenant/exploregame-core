@@ -52,8 +52,8 @@ const QuestionsList = ({ questions }: FindQuestions) => {
             <th>Id</th>
             <th>Question</th>
             <th>Description</th>
-            <th>Question type</th>
-            <th>Étape</th>
+            <th>Question type id</th>
+            <th>Step id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -63,8 +63,8 @@ const QuestionsList = ({ questions }: FindQuestions) => {
               <td>{truncate(question.id)}</td>
               <td>{truncate(question.question)}</td>
               <td>{truncate(question.description)}</td>
-              <td>{truncate(question.QuestionType.type)}</td>
-              <td>{truncate(question.Step.name)}</td>
+              <td>{truncate(question.questionTypeId)}</td>
+              <td>{truncate(question.stepId)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

@@ -4,22 +4,25 @@ export const schema = gql`
     playerId: String!
     scriptId: String!
     stepId: String!
+    questionId: String!
     score: Int!
     remainingTime: Int!
     Player: Player!
     Script: Script!
     Step: Step!
+    Question: Question!
   }
 
   type Query {
-    playerScripts: [PlayerScript!]! @skipAuth
-    playerScript(id: String!): PlayerScript @skipAuth
+    playerScripts: [PlayerScript!]! @requireAuth
+    playerScript(id: String!): PlayerScript @requireAuth
   }
 
   input CreatePlayerScriptInput {
     playerId: String!
     scriptId: String!
     stepId: String!
+    questionId: String!
     score: Int!
     remainingTime: Int!
   }
@@ -28,17 +31,18 @@ export const schema = gql`
     playerId: String
     scriptId: String
     stepId: String
+    questionId: String
     score: Int
     remainingTime: Int
   }
 
   type Mutation {
     createPlayerScript(input: CreatePlayerScriptInput!): PlayerScript!
-      @skipAuth
+      @requireAuth
     updatePlayerScript(
       id: String!
       input: UpdatePlayerScriptInput!
-    ): PlayerScript! @skipAuth
-    deletePlayerScript(id: String!): PlayerScript! @skipAuth
+    ): PlayerScript! @requireAuth
+    deletePlayerScript(id: String!): PlayerScript! @requireAuth
   }
 `

@@ -82,6 +82,7 @@ model Question {
   QuestionType   QuestionType @relation(fields: [questionTypeId], references: [id])
   Answer         Answer[]
   Hint           Hint[]
+  PlayerScript   PlayerScript[]
 }
 
 model Answer {
@@ -140,11 +141,13 @@ model PlayerScript {
   playerId      String
   scriptId      String
   stepId        String
+  questionId    String
   score         Int
   remainingTime Int
   Player        Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   Script        Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
   Step          Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  Question      Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@unique([playerId, scriptId])
 }

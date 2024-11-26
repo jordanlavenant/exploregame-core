@@ -132,6 +132,7 @@ CREATE TABLE "PlayerScript" (
     "playerId" TEXT NOT NULL,
     "scriptId" TEXT NOT NULL,
     "stepId" TEXT NOT NULL,
+    "questionId" TEXT NOT NULL,
     "score" INTEGER NOT NULL,
     "remainingTime" INTEGER NOT NULL,
 
@@ -201,3 +202,6 @@ ALTER TABLE "PlayerScript" ADD CONSTRAINT "PlayerScript_scriptId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "PlayerScript" ADD CONSTRAINT "PlayerScript_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "Step"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PlayerScript" ADD CONSTRAINT "PlayerScript_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;

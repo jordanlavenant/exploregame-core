@@ -9,11 +9,12 @@ export const schema = gql`
     QuestionType: QuestionType!
     Answer: [Answer]!
     Hint: [Hint]!
+    PlayerScript: [PlayerScript]!
   }
 
   type Query {
-    questions: [Question!]! @skipAuth
-    question(id: String!): Question @skipAuth
+    questions: [Question!]! @requireAuth
+    question(id: String!): Question @requireAuth
   }
 
   input CreateQuestionInput {

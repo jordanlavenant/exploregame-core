@@ -23,6 +23,7 @@ export const createPlayerScript: MutationResolvers['createPlayerScript'] = ({
     data: input,
   })
 }
+
 export const updatePlayerScript: MutationResolvers['updatePlayerScript'] = ({
   id,
   input,
@@ -50,5 +51,8 @@ export const PlayerScript: PlayerScriptRelationResolvers = {
   },
   Step: (_obj, { root }) => {
     return db.playerScript.findUnique({ where: { id: root?.id } }).Step()
+  },
+  Question: (_obj, { root }) => {
+    return db.playerScript.findUnique({ where: { id: root?.id } }).Question()
   },
 }

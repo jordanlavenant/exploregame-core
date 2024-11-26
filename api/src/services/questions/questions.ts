@@ -53,4 +53,7 @@ export const Question: QuestionRelationResolvers = {
   Hint: (_obj, { root }) => {
     return db.question.findUnique({ where: { id: root?.id } }).Hint()
   },
+  PlayerScript: (_obj, { root }) => {
+    return db.question.findUnique({ where: { id: root?.id } }).PlayerScript()
+  },
 }

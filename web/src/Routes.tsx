@@ -18,6 +18,12 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion">
+        <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
+        <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
+        <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
+        <Route path="/questions" page={QuestionQuestionsPage} name="questions" />
+      </Set>
       <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
         <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
         <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
@@ -29,12 +35,6 @@ const Routes = () => {
         <Route path="/color-sets/{id}/edit" page={ColorSetEditColorSetPage} name="editColorSet" />
         <Route path="/color-sets/{id}" page={ColorSetColorSetPage} name="colorSet" />
         <Route path="/color-sets" page={ColorSetColorSetsPage} name="colorSets" />
-      </Set>
-      <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
-        <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
-        <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
-        <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
-        <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
       </Set>
       <PrivateSet unauthenticated="login">
         <Route path="/" page={HomePage} name="home" />
@@ -79,12 +79,6 @@ const Routes = () => {
           <Route path="/answers/{id}/edit" page={AnswerEditAnswerPage} name="editAnswer" />
           <Route path="/answers/{id}" page={AnswerAnswerPage} name="answer" />
           <Route path="/answers" page={AnswerAnswersPage} name="answers" />
-        </Set>
-        <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion">
-          <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
-          <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
-          <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
-          <Route path="/questions" page={QuestionQuestionsPage} name="questions" />
         </Set>
         <Set wrap={ScaffoldLayout} title="QuestionTypes" titleTo="questionTypes" buttonLabel="New QuestionType" buttonTo="newQuestionType">
           <Route path="/question-types/new" page={QuestionTypeNewQuestionTypePage} name="newQuestionType" />
