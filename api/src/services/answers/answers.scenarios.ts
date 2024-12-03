@@ -7,6 +7,7 @@ export const standard = defineScenario<Prisma.AnswerCreateArgs>({
       data: {
         answer: 'String',
         description: 'String',
+        isCorrect: true,
         Question: {
           create: {
             question: 'String',
@@ -26,6 +27,7 @@ export const standard = defineScenario<Prisma.AnswerCreateArgs>({
       data: {
         answer: 'String',
         description: 'String',
+        isCorrect: true,
         Question: {
           create: {
             question: 'String',

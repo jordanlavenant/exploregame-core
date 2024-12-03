@@ -22,6 +22,7 @@ export const QUERY: TypedDocumentNode<EditAnswerById> = gql`
       answer
       description
       questionId
+      isCorrect
     }
   }
 `
@@ -36,6 +37,7 @@ const UPDATE_ANSWER_MUTATION: TypedDocumentNode<
       answer
       description
       questionId
+      isCorrect
     }
   }
 `

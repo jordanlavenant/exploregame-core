@@ -34,12 +34,14 @@ describe('answers', () => {
         answer: 'String',
         description: 'String',
         questionId: scenario.answer.two.questionId,
+        isCorrect: true,
       },
     })
 
     expect(result.answer).toEqual('String')
     expect(result.description).toEqual('String')
     expect(result.questionId).toEqual(scenario.answer.two.questionId)
+    expect(result.isCorrect).toEqual(true)
   })
 
   scenario('updates a answer', async (scenario: StandardScenario) => {

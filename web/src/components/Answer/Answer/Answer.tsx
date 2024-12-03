@@ -9,7 +9,7 @@ import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import {} from 'src/lib/formatters'
+import { checkboxInputTag } from 'src/lib/formatters'
 
 const DELETE_ANSWER_MUTATION: TypedDocumentNode<
   DeleteAnswerMutation,
@@ -68,6 +68,10 @@ const Answer = ({ answer }: Props) => {
             <tr>
               <th>Question id</th>
               <td>{answer.questionId}</td>
+            </tr>
+            <tr>
+              <th>Is correct</th>
+              <td>{checkboxInputTag(answer.isCorrect)}</td>
             </tr>
           </tbody>
         </table>

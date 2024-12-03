@@ -4,6 +4,7 @@ export const schema = gql`
     answer: String!
     description: String!
     questionId: String!
+    isCorrect: Boolean!
     Question: Question!
   }
 
@@ -16,12 +17,14 @@ export const schema = gql`
     answer: String!
     description: String!
     questionId: String!
+    isCorrect: Boolean!
   }
 
   input UpdateAnswerInput {
     answer: String
     description: String
     questionId: String
+    isCorrect: Boolean
   }
 
   type Mutation {

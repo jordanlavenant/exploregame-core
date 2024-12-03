@@ -18,6 +18,12 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Answers" titleTo="answers" buttonLabel="New Answer" buttonTo="newAnswer">
+        <Route path="/answers/new" page={AnswerNewAnswerPage} name="newAnswer" />
+        <Route path="/answers/{id}/edit" page={AnswerEditAnswerPage} name="editAnswer" />
+        <Route path="/answers/{id}" page={AnswerAnswerPage} name="answer" />
+        <Route path="/answers" page={AnswerAnswersPage} name="answers" />
+      </Set>
       <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
         <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
         <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
@@ -79,12 +85,6 @@ const Routes = () => {
           <Route path="/hint-levels/{id}/edit" page={HintLevelEditHintLevelPage} name="editHintLevel" />
           <Route path="/hint-levels/{id}" page={HintLevelHintLevelPage} name="hintLevel" />
           <Route path="/hint-levels" page={HintLevelHintLevelsPage} name="hintLevels" />
-        </Set>
-        <Set wrap={ScaffoldLayout} title="Answers" titleTo="answers" buttonLabel="New Answer" buttonTo="newAnswer">
-          <Route path="/answers/new" page={AnswerNewAnswerPage} name="newAnswer" />
-          <Route path="/answers/{id}/edit" page={AnswerEditAnswerPage} name="editAnswer" />
-          <Route path="/answers/{id}" page={AnswerAnswerPage} name="answer" />
-          <Route path="/answers" page={AnswerAnswersPage} name="answers" />
         </Set>
         <Set wrap={ScaffoldLayout} title="QuestionTypes" titleTo="questionTypes" buttonLabel="New QuestionType" buttonTo="newQuestionType">
           <Route path="/question-types/new" page={QuestionTypeNewQuestionTypePage} name="newQuestionType" />

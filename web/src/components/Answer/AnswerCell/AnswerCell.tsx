@@ -16,6 +16,7 @@ export const QUERY: TypedDocumentNode<FindAnswerById, FindAnswerByIdVariables> =
         answer
         description
         questionId
+        isCorrect
       }
     }
   `

@@ -10,7 +10,7 @@ import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Answer/AnswersCell'
-import { truncate } from 'src/lib/formatters'
+import { checkboxInputTag, truncate } from 'src/lib/formatters'
 
 const DELETE_ANSWER_MUTATION: TypedDocumentNode<
   DeleteAnswerMutation,
@@ -53,6 +53,7 @@ const AnswersList = ({ answers }: FindAnswers) => {
             <th>Answer</th>
             <th>Description</th>
             <th>Question id</th>
+            <th>Is correct</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -63,6 +64,7 @@ const AnswersList = ({ answers }: FindAnswers) => {
               <td>{truncate(answer.answer)}</td>
               <td>{truncate(answer.description)}</td>
               <td>{truncate(answer.questionId)}</td>
+              <td>{checkboxInputTag(answer.isCorrect)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

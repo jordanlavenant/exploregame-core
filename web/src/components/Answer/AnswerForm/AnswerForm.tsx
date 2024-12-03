@@ -7,6 +7,7 @@ import {
   FieldError,
   Label,
   TextField,
+  CheckboxField,
   Submit,
 } from '@redwoodjs/forms'
 
@@ -87,6 +88,23 @@ const AnswerForm = (props: AnswerFormProps) => {
         />
 
         <FieldError name="questionId" className="rw-field-error" />
+
+        <Label
+          name="isCorrect"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Is correct
+        </Label>
+
+        <CheckboxField
+          name="isCorrect"
+          defaultChecked={props.answer?.isCorrect}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+        />
+
+        <FieldError name="isCorrect" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

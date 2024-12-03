@@ -90,6 +90,7 @@ model Answer {
   answer      String
   description String
   questionId  String
+  isCorrect   Boolean
   Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
