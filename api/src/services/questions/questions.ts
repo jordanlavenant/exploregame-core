@@ -40,6 +40,19 @@ export const deleteQuestion: MutationResolvers['deleteQuestion'] = ({ id }) => {
   })
 }
 
+export const checkAnswer: MutationResolvers['checkAnswer'] = async ({ input }) => {
+  const question = await db.question.findUnique({
+    where: { id: input.questionId },
+    include: {
+      Answer: true,
+    },
+  })
+  if (!question) {
+    throw new Error('Question not found')
+  }
+  return question.Answer.some((answer) => answer.answer === input.answer)
+}
+
 export const Question: QuestionRelationResolvers = {
   Step: (_obj, { root }) => {
     return db.question.findUnique({ where: { id: root?.id } }).Step()
