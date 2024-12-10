@@ -45,6 +45,7 @@ model Step {
   Questions    Question[]
   Location     Location       @relation(fields: [locationId], references: [id])
   PlayerScript PlayerScript[]
+  CharacterStep CharacterStep[]
 }
 
 model ScriptStep {
@@ -159,4 +160,22 @@ model ColorSet {
   secondary  String
   tertiary   String
   Department Department[]
+}
+
+model Character {
+  id           String @id @default(uuid())
+  nomPerso     String
+  descriptionL String?
+  image        String?
+  CharacterStep CharacterStep[]
+}
+
+model CharacterStep {
+  id           String @id @default(uuid())
+  characterId  String
+  stepId       String
+  textOrder    Int
+
+  Character Character @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  Step      Step      @relation(fields: [characterId], references: [id], onDelete: Cascade)
 }

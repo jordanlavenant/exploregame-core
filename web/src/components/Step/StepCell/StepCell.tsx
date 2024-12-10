@@ -14,17 +14,7 @@ export const QUERY: TypedDocumentNode<FindStepById, FindStepByIdVariables> =
       step: step(id: $id) {
         id
         name
-        Location {
-          id
-          name
-        }
-        ScriptStep {
-          Script {
-            id
-            name
-          }
-          lettre
-        }
+        locationId
       }
     }
   `
