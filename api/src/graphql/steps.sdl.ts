@@ -11,8 +11,8 @@ export const schema = gql`
   }
 
   type Query {
-    steps: [Step!]! @requireAuth
-    step(id: String!): Step @requireAuth
+    steps: [Step!]! @skipAuth
+    step(id: String!): Step @skipAuth
   }
 
   input CreateStepInput {
