@@ -1,162 +1,163 @@
-// Don't forget to tell Prisma about your edits to this file using
-// `yarn rw prisma migrate dev` or `yarn rw prisma db push`.
-// `migrate` is like committing while `push` is for prototyping.
-// Read more about both here:
-// https://www.prisma.io/docs/orm/prisma-migrate
+  // Don't forget to tell Prisma about your edits to this file using
+  // `yarn rw prisma migrate dev` or `yarn rw prisma db push`.
+  // `migrate` is like committing while `push` is for prototyping.
+  // Read more about both here:
+  // https://www.prisma.io/docs/orm/prisma-migrate
 
-datasource db {
-  // provider = "sqlite"
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
-  // url      = "file:./dev.db"
-}
+  datasource db {
+    // provider = "sqlite"
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+    // url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
+    // url      = "file:./dev.db"
+  }
 
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = "native"
-}
+  generator client {
+    provider      = "prisma-client-js"
+    binaryTargets = "native"
+  }
 
-// Define your own datamodels here and run `yarn redwood prisma migrate dev`
-// to create migrations for them and apply to your dev DB.
+  // Define your own datamodels here and run `yarn redwood prisma migrate dev`
+  // to create migrations for them and apply to your dev DB.
 
-model Script {
-  id           String         @id @default(uuid())
-  name         String
-  visible      Boolean        @default(false)
-  departmentId String
-  Department   Department     @relation(fields: [departmentId], references: [id])
-  ScriptStep   ScriptStep[]
-  PlayerScript PlayerScript[]
-}
+  model Script {
+    id           String         @id @default(uuid())
+    name         String
+    visible      Boolean        @default(false)
+    departmentId String
+    Department   Department     @relation(fields: [departmentId], references: [id])
+    ScriptStep   ScriptStep[]
+    PlayerScript PlayerScript[]
+  }
 
-model Location {
-  id          String @id @default(uuid())
-  name        String
-  description String
-  Step        Step[]
-}
+  model Location {
+    id          String @id @default(uuid())
+    name        String
+    description String
+    Step        Step[]
+  }
 
-model Step {
-  id           String         @id @default(uuid())
-  name         String
-  locationId   String
-  ScriptStep   ScriptStep[]
-  Questions    Question[]
-  Location     Location       @relation(fields: [locationId], references: [id])
-  PlayerScript PlayerScript[]
-}
+  model Step {
+    id           String         @id @default(uuid())
+    name         String
+    locationId   String
+    ScriptStep   ScriptStep[]
+    Questions    Question[]
+    Location     Location       @relation(fields: [locationId], references: [id])
+    PlayerScript PlayerScript[]
+  }
 
-model ScriptStep {
-  id       String @id @default(uuid())
-  scriptId String
-  stepId   String
-  lettre   String
-  Script   Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
-  Step     Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
-}
+  model ScriptStep {
+    id       String @id @default(uuid())
+    scriptId String
+    stepId   String
+    lettre   String
+    Script   Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+    Step     Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  }
 
-model Department {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  colorSetId  String
-  Player      Player[]
-  Script      Script[]
-  ColorSet    ColorSet @relation(fields: [colorSetId], references: [id])
-}
+  model Department {
+    id          String   @id @default(uuid())
+    name        String
+    description String
+    colorSetId  String
+    Player      Player[]
+    Script      Script[]
+    ColorSet    ColorSet @relation(fields: [colorSetId], references: [id])
+  }
 
-model QuestionType {
-  id       String     @id @default(uuid())
-  type     String
-  Question Question[]
-}
+  model QuestionType {
+    id       String     @id @default(uuid())
+    type     String
+    Question Question[]
+  }
 
-model Question {
-  id             String       @id @default(uuid())
-  question       String
-  description    String
-  questionTypeId String
-  stepId         String
-  Step           Step         @relation(fields: [stepId], references: [id])
-  QuestionType   QuestionType @relation(fields: [questionTypeId], references: [id])
-  Answer         Answer[]
-  Hint           Hint[]
-  PlayerScript   PlayerScript[]
-}
+  model Question {
+    id             String       @id @default(uuid())
+    question       String
+    description    String
+    questionTypeId String
+    stepId         String
+    Step           Step         @relation(fields: [stepId], references: [id])
+    QuestionType   QuestionType @relation(fields: [questionTypeId], references: [id])
+    Answer         Answer[]
+    Hint           Hint[]
+    PlayerScript   PlayerScript[]
+  }
 
-model Answer {
-  id          String   @id @default(uuid())
-  answer      String
-  description String
-  questionId  String
-  isCorrect   Boolean
-  Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-}
+  model Answer {
+    id          String   @id @default(uuid())
+    answer      String
+    description String
+    questionId  String
+    isCorrect   Boolean
+    Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  }
 
-model HintLevel {
-  id   String @id @default(uuid())
-  type String
-  Hint Hint[]
-}
+  model HintLevel {
+    id   String @id @default(uuid())
+    type String
+    Hint Hint[]
+  }
 
-model Hint {
-  id          String    @id @default(uuid())
-  help        String
-  questionId  String
-  hintLevelId String
-  HintLevel   HintLevel @relation(fields: [hintLevelId], references: [id])
-  Question    Question  @relation(fields: [questionId], references: [id])
-}
+  model Hint {
+    id          String    @id @default(uuid())
+    help        String
+    questionId  String
+    hintLevelId String
+    HintLevel   HintLevel @relation(fields: [hintLevelId], references: [id])
+    Question    Question  @relation(fields: [questionId], references: [id])
+  }
 
-model User {
-  id                  String    @id @default(uuid())
-  email               String    @unique
-  hashedPassword      String
-  salt                String
-  resetToken          String?
-  resetTokenExpiresAt DateTime?
-}
+  model User {
+    id                  String    @id @default(uuid())
+    email               String    @unique
+    hashedPassword      String
+    salt                String
+    resetToken          String?
+    resetTokenExpiresAt DateTime?
+  }
 
-model Gender {
-  id     String   @id @default(uuid())
-  gender String
-  Player Player[]
-}
+  model Gender {
+    id     String   @id @default(uuid())
+    gender String
+    Player Player[]
+  }
 
-model Player {
-  id             String         @id @default(uuid())
-  email          String         @unique
-  genderId       String
-  firstName      String
-  lastName       String
-  hashedPassword String
-  departmentId   String
-  Gender         Gender         @relation(fields: [genderId], references: [id])
-  Department     Department     @relation(fields: [departmentId], references: [id])
-  PlayerScript   PlayerScript[]
-}
+  model Player {
+    id                String         @id @default(uuid())
+    email             String         @unique
+    genderId          String
+    firstName         String
+    lastName          String
+    hashedPassword    String
+    departmentId      String
+    profilePictureUrl String?
+    Gender            Gender         @relation(fields: [genderId], references: [id])
+    Department        Department     @relation(fields: [departmentId], references: [id])
+    PlayerScript      PlayerScript[]
+  }
 
-model PlayerScript {
-  id            String @id @default(uuid())
-  playerId      String
-  scriptId      String
-  stepId        String
-  questionId    String
-  score         Int
-  remainingTime Int
-  Player        Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-  Script        Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
-  Step          Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
-  Question      Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  model PlayerScript {
+    id            String @id @default(uuid())
+    playerId      String
+    scriptId      String
+    stepId        String
+    questionId    String
+    score         Int
+    remainingTime Int
+    Player        Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+    Script        Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+    Step          Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+    Question      Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
-  @@unique([playerId, scriptId])
-}
+    @@unique([playerId, scriptId])
+  }
 
-model ColorSet {
-  id         String @id @default(uuid())
-  primary    String
-  secondary  String
-  tertiary   String
-  Department Department[]
-}
+  model ColorSet {
+    id         String @id @default(uuid())
+    primary    String
+    secondary  String
+    tertiary   String
+    Department Department[]
+  }

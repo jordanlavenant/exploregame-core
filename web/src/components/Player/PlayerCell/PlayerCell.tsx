@@ -19,6 +19,7 @@ export const QUERY: TypedDocumentNode<FindPlayerById, FindPlayerByIdVariables> =
         lastName
         hashedPassword
         departmentId
+        profilePictureUrl
       }
     }
   `

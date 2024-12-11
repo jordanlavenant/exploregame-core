@@ -25,6 +25,7 @@ export const QUERY: TypedDocumentNode<EditPlayerById> = gql`
       lastName
       hashedPassword
       departmentId
+      profilePictureUrl
     }
   }
 `
@@ -42,6 +43,7 @@ const UPDATE_PLAYER_MUTATION: TypedDocumentNode<
       lastName
       hashedPassword
       departmentId
+      profilePictureUrl
     }
   }
 `

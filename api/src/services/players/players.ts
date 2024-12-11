@@ -9,8 +9,10 @@ import type {
 import { AuthenticationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
+import { uploadFile } from 'src/lib/minio'
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+const PLAYER_PROFILE_PICTURE_BUCKET = process.env.REDWOOD_ENV_PLAYER_PROFILE_PICTURE_BUCKET
 
 export const players: QueryResolvers['players'] = () => {
   return db.player.findMany()

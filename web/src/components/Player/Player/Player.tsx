@@ -81,6 +81,10 @@ const Player = ({ player }: Props) => {
               <th>Department id</th>
               <td>{player.departmentId}</td>
             </tr>
+            <tr>
+              <th>Profile picture url</th>
+              <td>{player.profilePictureUrl}</td>
+            </tr>
           </tbody>
         </table>
       </div>

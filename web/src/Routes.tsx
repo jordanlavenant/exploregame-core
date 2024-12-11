@@ -18,6 +18,12 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+        <Route path="/players/new" page={PlayerNewPlayerPage} name="newPlayer" />
+        <Route path="/players/{id}/edit" page={PlayerEditPlayerPage} name="editPlayer" />
+        <Route path="/players/{id}" page={PlayerPlayerPage} name="player" />
+        <Route path="/players" page={PlayerPlayersPage} name="players" />
+      </Set>
       <Set wrap={ScaffoldLayout} title="Answers" titleTo="answers" buttonLabel="New Answer" buttonTo="newAnswer">
         <Route path="/answers/new" page={AnswerNewAnswerPage} name="newAnswer" />
         <Route path="/answers/{id}/edit" page={AnswerEditAnswerPage} name="editAnswer" />
@@ -61,12 +67,6 @@ const Routes = () => {
           <Route path="/scripts/{id}/edit" page={ScriptEditScriptPage} name="editScript" />
           <Route path="/scripts/{id}" page={ScriptScriptPage} name="script" />
           <Route path="/scripts" page={ScriptScriptsPage} name="scripts" />
-        </Set>
-        <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
-          <Route path="/players/new" page={PlayerNewPlayerPage} name="newPlayer" />
-          <Route path="/players/{id}/edit" page={PlayerEditPlayerPage} name="editPlayer" />
-          <Route path="/players/{id}" page={PlayerPlayerPage} name="player" />
-          <Route path="/players" page={PlayerPlayersPage} name="players" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Genders" titleTo="genders" buttonLabel="New Gender" buttonTo="newGender">
           <Route path="/genders/new" page={GenderNewGenderPage} name="newGender" />

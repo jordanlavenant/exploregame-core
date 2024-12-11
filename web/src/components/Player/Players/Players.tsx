@@ -56,6 +56,7 @@ const PlayersList = ({ players }: FindPlayers) => {
             <th>Last name</th>
             <th>Hashed password</th>
             <th>Department id</th>
+            <th>Profile picture url</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -69,6 +70,7 @@ const PlayersList = ({ players }: FindPlayers) => {
               <td>{truncate(player.lastName)}</td>
               <td>{truncate(player.hashedPassword)}</td>
               <td>{truncate(player.departmentId)}</td>
+              <td>{truncate(player.profilePictureUrl)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
