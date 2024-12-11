@@ -6,11 +6,13 @@ export const schema = gql`
     ScriptStep: [ScriptStep]!
     Questions: [Question]!
     Location: Location!
+    PlayerScript: [PlayerScript]!
+    CharacterStep: [CharacterStep]!
   }
 
   type Query {
-    steps: [Step!]! @skipAuth
-    step(id: String!): Step @skipAuth
+    steps: [Step!]! @requireAuth
+    step(id: String!): Step @requireAuth
   }
 
   input CreateStepInput {

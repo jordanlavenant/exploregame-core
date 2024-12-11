@@ -43,8 +43,6 @@ const Step = ({ step }: Props) => {
     }
   }
 
-  const scripts = step.ScriptStep
-
   return (
     <>
       <div className="rw-segment">
@@ -64,18 +62,8 @@ const Step = ({ step }: Props) => {
               <td>{step.name}</td>
             </tr>
             <tr>
-              <th>Location</th>
-              <td>{step.Location.name}</td>
-            </tr>
-            <tr>
-              <th>Scénario</th>
-              <td>
-                {scripts.map((script) => (
-                  <div key={script.Script.id}>
-                    {script.Script.name} - {script.lettre}
-                  </div>
-                ))}
-              </td>
+              <th>Location id</th>
+              <td>{step.locationId}</td>
             </tr>
           </tbody>
         </table>

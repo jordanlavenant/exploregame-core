@@ -45,4 +45,10 @@ export const Step: StepRelationResolvers = {
   Location: (_obj, { root }) => {
     return db.step.findUnique({ where: { id: root?.id } }).Location()
   },
+  PlayerScript: (_obj, { root }) => {
+    return db.step.findUnique({ where: { id: root?.id } }).PlayerScript()
+  },
+  CharacterStep: (_obj, { root }) => {
+    return db.step.findUnique({ where: { id: root?.id } }).CharacterStep()
+  },
 }

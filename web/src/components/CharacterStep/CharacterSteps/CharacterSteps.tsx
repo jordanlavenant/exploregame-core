@@ -1,7 +1,7 @@
 import type {
-  DeleteStepMutation,
-  DeleteStepMutationVariables,
-  FindSteps,
+  DeleteCharacterStepMutation,
+  DeleteCharacterStepMutationVariables,
+  FindCharacterSteps,
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
@@ -9,24 +9,24 @@ import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { QUERY } from 'src/components/Step/StepsCell'
+import { QUERY } from 'src/components/CharacterStep/CharacterStepsCell'
 import { truncate } from 'src/lib/formatters'
 
-const DELETE_STEP_MUTATION: TypedDocumentNode<
-  DeleteStepMutation,
-  DeleteStepMutationVariables
+const DELETE_CHARACTER_STEP_MUTATION: TypedDocumentNode<
+  DeleteCharacterStepMutation,
+  DeleteCharacterStepMutationVariables
 > = gql`
-  mutation DeleteStepMutation($id: String!) {
-    deleteStep(id: $id) {
+  mutation DeleteCharacterStepMutation($id: String!) {
+    deleteCharacterStep(id: $id) {
       id
     }
   }
 `
 
-const StepsList = ({ steps }: FindSteps) => {
-  const [deleteStep] = useMutation(DELETE_STEP_MUTATION, {
+const CharacterStepsList = ({ characterSteps }: FindCharacterSteps) => {
+  const [deleteCharacterStep] = useMutation(DELETE_CHARACTER_STEP_MUTATION, {
     onCompleted: () => {
-      toast.success('Step deleted')
+      toast.success('CharacterStep deleted')
     },
     onError: (error) => {
       toast.error(error.message)
@@ -38,9 +38,9 @@ const StepsList = ({ steps }: FindSteps) => {
     awaitRefetchQueries: true,
   })
 
-  const onDeleteClick = (id: DeleteStepMutationVariables['id']) => {
-    if (confirm('Are you sure you want to delete step ' + id + '?')) {
-      deleteStep({ variables: { id } })
+  const onDeleteClick = (id: DeleteCharacterStepMutationVariables['id']) => {
+    if (confirm('Are you sure you want to delete characterStep ' + id + '?')) {
+      deleteCharacterStep({ variables: { id } })
     }
   }
 
@@ -50,38 +50,40 @@ const StepsList = ({ steps }: FindSteps) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Name</th>
-            <th>Location id</th>
+            <th>Character id</th>
+            <th>Step id</th>
+            <th>Text order</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
-          {steps.map((step) => (
-            <tr key={step.id}>
-              <td>{truncate(step.id)}</td>
-              <td>{truncate(step.name)}</td>
-              <td>{truncate(step.locationId)}</td>
+          {characterSteps.map((characterStep) => (
+            <tr key={characterStep.id}>
+              <td>{truncate(characterStep.id)}</td>
+              <td>{truncate(characterStep.characterId)}</td>
+              <td>{truncate(characterStep.stepId)}</td>
+              <td>{truncate(characterStep.textOrder)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
-                    to={routes.step({ id: step.id })}
-                    title={'Show step ' + step.id + ' detail'}
+                    to={routes.characterStep({ id: characterStep.id })}
+                    title={'Show characterStep ' + characterStep.id + ' detail'}
                     className="rw-button rw-button-small"
                   >
                     Show
                   </Link>
                   <Link
-                    to={routes.editStep({ id: step.id })}
-                    title={'Edit step ' + step.id}
+                    to={routes.editCharacterStep({ id: characterStep.id })}
+                    title={'Edit characterStep ' + characterStep.id}
                     className="rw-button rw-button-small rw-button-blue"
                   >
                     Edit
                   </Link>
                   <button
                     type="button"
-                    title={'Delete step ' + step.id}
+                    title={'Delete characterStep ' + characterStep.id}
                     className="rw-button rw-button-small rw-button-red"
-                    onClick={() => onDeleteClick(step.id)}
+                    onClick={() => onDeleteClick(characterStep.id)}
                   >
                     Delete
                   </button>
@@ -95,4 +97,4 @@ const StepsList = ({ steps }: FindSteps) => {
   )
 }
 
-export default StepsList
+export default CharacterStepsList

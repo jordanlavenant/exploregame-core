@@ -14,10 +14,7 @@ export const QUERY: TypedDocumentNode<FindSteps, FindStepsVariables> = gql`
     steps {
       id
       name
-      Location {
-        id
-        name
-      }
+      locationId
     }
   }
 `
