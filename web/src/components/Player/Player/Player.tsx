@@ -82,8 +82,8 @@ const Player = ({ player }: Props) => {
               <td>{player.departmentId}</td>
             </tr>
             <tr>
-              <th>Profile picture url</th>
-              <td>{player.profilePictureUrl}</td>
+              <th>Picture asset id</th>
+              <td>{player.pictureAssetId}</td>
             </tr>
           </tbody>
         </table>

@@ -7,10 +7,8 @@ import {
   FieldError,
   Label,
   TextField,
-  FileField,
   Submit,
 } from '@redwoodjs/forms'
-import { uploadFile } from 'api/src/lib/minio'
 
 type FormPlayer = NonNullable<EditPlayerById['player']>
 
@@ -21,29 +19,9 @@ interface PlayerFormProps {
   loading: boolean
 }
 
-const MINIO_ENDPOINT = process.env.REDWOOD_ENV_MINIO_ENDPOINT
-const PLAYER_PROFILE_PICTURE_BUCKET = process.env.REDWOOD_ENV_PLAYER_PROFILE_PICTURE_BUCKET
-
 const PlayerForm = (props: PlayerFormProps) => {
-  const onSubmit = async (data: FormPlayer) => {
-    const file = data.profilePictureUrl?.[0]
-    data.profilePictureUrl = props.player?.profilePictureUrl || ''
-
-    if (file) {
-      const objectName = `${data.email}-${Date.now()}`;
-      console.log(file)
-      // await uploadFile(PLAYER_PROFILE_PICTURE_BUCKET, objectName, file, {
-      //   'Content-Type': file.type,
-      // })
-      data.profilePictureUrl = `
-        ${MINIO_ENDPOINT}
-        /${PLAYER_PROFILE_PICTURE_BUCKET}
-        /${objectName}`
-    }
-
-    console.log(data)
-
-    props.onSave({ ...data }, props?.player?.id);
+  const onSubmit = (data: FormPlayer) => {
+    props.onSave(data, props?.player?.id)
   }
 
   return (
@@ -165,20 +143,22 @@ const PlayerForm = (props: PlayerFormProps) => {
         <FieldError name="departmentId" className="rw-field-error" />
 
         <Label
-          name="profilePictureUrl"
+          name="pictureAssetId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Profile Picture
+          Picture asset id
         </Label>
 
-        <FileField
-          name="profilePictureUrl"
+        <TextField
+          name="pictureAssetId"
+          defaultValue={props.player?.pictureAssetId}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
+          emptyAs={'undefined'}
         />
 
-        <FieldError name="profilePictureUrl" className="rw-field-error" />
+        <FieldError name="pictureAssetId" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

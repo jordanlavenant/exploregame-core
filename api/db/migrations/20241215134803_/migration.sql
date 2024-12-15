@@ -123,6 +123,7 @@ CREATE TABLE "Player" (
     "lastName" TEXT NOT NULL,
     "hashedPassword" TEXT NOT NULL,
     "departmentId" TEXT NOT NULL,
+    "pictureAssetId" TEXT,
 
     CONSTRAINT "Player_pkey" PRIMARY KEY ("id")
 );
@@ -148,6 +149,14 @@ CREATE TABLE "ColorSet" (
     "tertiary" TEXT NOT NULL,
 
     CONSTRAINT "ColorSet_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Asset" (
+    "id" TEXT NOT NULL,
+    "filename" TEXT,
+
+    CONSTRAINT "Asset_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -188,6 +197,9 @@ ALTER TABLE "Hint" ADD CONSTRAINT "Hint_hintLevelId_fkey" FOREIGN KEY ("hintLeve
 
 -- AddForeignKey
 ALTER TABLE "Hint" ADD CONSTRAINT "Hint_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Player" ADD CONSTRAINT "Player_pictureAssetId_fkey" FOREIGN KEY ("pictureAssetId") REFERENCES "Asset"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Player" ADD CONSTRAINT "Player_genderId_fkey" FOREIGN KEY ("genderId") REFERENCES "Gender"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -7060,6 +7060,7 @@ __metadata:
     "@redwoodjs/auth-dbauth-api": "npm:8.3.0"
     "@redwoodjs/graphql-server": "npm:8.3.0"
     bcryptjs: "npm:^2.4.3"
+    minio: "npm:^8.0.0"
   languageName: unknown
   linkType: soft
 
@@ -19438,7 +19439,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minio@npm:^8.0.2":
+"minio@npm:^8.0.0":
   version: 8.0.2
   resolution: "minio@npm:8.0.2"
   dependencies:
@@ -23588,7 +23589,7 @@ __metadata:
     "@redwoodjs/auth-dbauth-setup": "npm:8.3.0"
     "@redwoodjs/core": "npm:8.3.0"
     "@redwoodjs/project-config": "npm:8.3.0"
-    minio: "npm:^8.0.2"
+    minio: "npm:^8.0.0"
     tailwindcss: "npm:^3.4.13"
     web: "workspace:^"
   languageName: unknown

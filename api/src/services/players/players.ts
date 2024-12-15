@@ -1,18 +1,10 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import type {
   QueryResolvers,
   MutationResolvers,
   PlayerRelationResolvers,
 } from 'types/graphql'
 
-import { AuthenticationError } from '@redwoodjs/graphql-server'
-
 import { db } from 'src/lib/db'
-import { uploadFile } from 'src/lib/minio'
-
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
-const PLAYER_PROFILE_PICTURE_BUCKET = process.env.REDWOOD_ENV_PLAYER_PROFILE_PICTURE_BUCKET
 
 export const players: QueryResolvers['players'] = () => {
   return db.player.findMany()
@@ -47,6 +39,9 @@ export const deletePlayer: MutationResolvers['deletePlayer'] = ({ id }) => {
 }
 
 export const Player: PlayerRelationResolvers = {
+  picture: (_obj, { root }) => {
+    return db.player.findUnique({ where: { id: root?.id } }).picture()
+  },
   Gender: (_obj, { root }) => {
     return db.player.findUnique({ where: { id: root?.id } }).Gender()
   },
@@ -56,37 +51,4 @@ export const Player: PlayerRelationResolvers = {
   PlayerScript: (_obj, { root }) => {
     return db.player.findUnique({ where: { id: root?.id } }).PlayerScript()
   },
-}
-
-export const loginPlayer: MutationResolvers['loginPlayer'] = async ({
-  input,
-}) => {
-  const { email, password } = input
-
-  const player = await db.player.findUnique({ where: { email } })
-
-  if (!player) {
-    throw new AuthenticationError(`L'email est incorrect ${email}`)
-  }
-
-  // Comparaison du mot de passe haché
-  const isPasswordValid = await bcrypt.compare(password, player.hashedPassword)
-
-  if (!isPasswordValid) {
-    throw new AuthenticationError(
-      `Mot de passe incorrect pour la tentaive de connexion avec l'email: ${email}`
-    )
-  }
-
-  console.log(`🟢 L'utilisateur ${player.email} s'est connecté avec succès`)
-
-  // Génération d'un token JWT
-  const token = jwt.sign({ userId: player.id }, JWT_SECRET_KEY, {
-    expiresIn: '1h',
-  })
-
-  return {
-    token,
-    player,
-  }
 }

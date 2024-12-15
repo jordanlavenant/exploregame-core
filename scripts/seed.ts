@@ -450,6 +450,59 @@ export default async () => {
     ]
     await db.answer.createMany({ data: answers })
 
+    const hints = [
+      {
+        id: '1',
+        help: 'Hint 1',
+        questionId: '1',
+        hintLevelId: '1',
+      },
+      {
+        id: '2',
+        help: 'Hint 2',
+        questionId: '1',
+        hintLevelId: '2',
+      },
+      {
+        id: '3',
+        help: 'Hint 3',
+        questionId: '1',
+        hintLevelId: '3',
+      },
+      {
+        id: '4',
+        help: 'Hint 4',
+        questionId: '2',
+        hintLevelId: '1',
+      },
+      {
+        id: '5',
+        help: 'Hint 5',
+        questionId: '2',
+        hintLevelId: '2',
+      },
+      {
+        id: '6',
+        help: 'Hint 6',
+        questionId: '2',
+        hintLevelId: '3',
+      },
+      {
+        id: '7',
+        help: 'Hint 7',
+        questionId: '3',
+        hintLevelId: '1',
+      },
+      {
+        id: '8',
+        help: 'Hint 8',
+        questionId: '3',
+        hintLevelId: '3',
+      },
+    ]
+
+    await db.hint.createMany({ data: hints })
+
     const players = [
       {
         email: 'joe@doe.com',
@@ -490,7 +543,7 @@ export default async () => {
     }
 
     console.info(
-      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players`
+      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players, ${hints.length} hints`
     )
   } catch (error) {
     console.error(error)

@@ -13,6 +13,7 @@
     "@redwoodjs/auth-dbauth-setup": "8.3.0",
     "@redwoodjs/core": "8.3.0",
     "@redwoodjs/project-config": "8.3.0",
+    "minio": "^8.0.0",
     "tailwindcss": "^3.4.13",
     "web": "workspace:^"
   },
@@ -31,6 +32,6 @@
     "@storybook/react-dom-shim@npm:7.6.17": "https://verdaccio.tobbe.dev/@storybook/react-dom-shim/-/react-dom-shim-8.0.8.tgz"
   },
   "dependencies": {
-    "minio": "^8.0.2"
+    "minio": "^8.0.0"
   }
 }

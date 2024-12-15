@@ -132,7 +132,8 @@
     lastName          String
     hashedPassword    String
     departmentId      String
-    profilePictureUrl String?
+    picture           Asset?        @relation(fields: [pictureAssetId], references: [id])
+    pictureAssetId    String?
     Gender            Gender         @relation(fields: [genderId], references: [id])
     Department        Department     @relation(fields: [departmentId], references: [id])
     PlayerScript      PlayerScript[]
@@ -160,4 +161,10 @@
     secondary  String
     tertiary   String
     Department Department[]
+  }
+
+  model Asset {
+    id          String @id @default(uuid())
+    filename    String?
+    Player      Player[]
   }

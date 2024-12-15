@@ -1,3 +1,10 @@
+x-api-vars: &api-vars
+  DATABASE_URL: postgresql://redwood:redwood@db:5432/ExploreGame
+  TEST_DATABASE_URL: postgresql://redwood:redwood@db:5432/ExploreGame_test
+  SESSION_SECRET: super_secret_session_key_change_me_in_production_please
+  MINIO_ACCESS_KEY: root
+  MINIO_BUCKET: exploregame-assets
+
 services:
   api:
     build:
@@ -9,9 +16,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql://redwood:redwood@db:5432/ExploreGame
-      - TEST_DATABASE_URL=postgresql://redwood:redwood@db:5432/ExploreGame_test
-      - SESSION_SECRET=super_secret_session_key_change_me_in_production_please
+      <<: *api-vars
 
   web:
     build:
@@ -51,17 +56,20 @@ services:
     depends_on:
       - db
 
-  # migrate:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #     target: console
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - DATABASE_URL=postgresql://redwood:redwood@db:5432/redwood
-  #   command: >
-  #     /bin/bash -c "
-  #     yarn redwood prisma migrate deploy &&
-  #     yarn redwood prisma db seed
-  #     "
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio_storage:/data
+    env_file:
+      - .env
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: $MINIO_ROOT_PASSWORD
+      # MINIO_NOTIFY_WEBHOOK_ENABLE: on
+      # MINIO_NOTIFY_WEBHOOK_ENDPOINT: http://172.19.0.1:8911/webhook
+    command: server --console-address ":9001" /data
+    networks:
+      - default

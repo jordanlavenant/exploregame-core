@@ -19,7 +19,7 @@ export const QUERY: TypedDocumentNode<FindPlayers, FindPlayersVariables> = gql`
       lastName
       hashedPassword
       departmentId
-      profilePictureUrl
+      pictureAssetId
     }
   }
 `
