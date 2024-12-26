@@ -27,35 +27,41 @@ if (!MINIO_BUCKET) {
   throw new Error('Missing REDWOOD_ENV_MINIO_BUCKET');
 }
 
-const minioClient = new Client({
+const minio = new Client({
   endPoint: MINIO_ENDPOINT || 'localhost',
   port: parseInt(MINIO_PORT || '9000', 10),
   useSSL: MINIO_USE_SSL === 'true',
   accessKey: MINIO_ACCESS_KEY,
   secretKey: MINIO_SECRET_KEY,
-});
+})
 
-export const uploadFile = async (bucketName: string, fileName: string, file: File, metaData = {}) => {
+export const checkIfBucketExists = async () => {
   try {
-    // Transforme le fichier en flux Blob pour MinIO
-    const fileBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(fileBuffer);
-    const fileSize = buffer.length;
-
-    await minioClient.putObject(bucketName, fileName, buffer, fileSize, metaData);
-    return `File ${fileName} uploaded successfully to ${bucketName}`;
-  } catch (error) {
-    throw new Error(`Error uploading file: ${error.message}`);
+    await minio.bucketExists(process.env.MINIO_BUCKET)
+    minioLogger.info(`Bucket ${process.env.MINIO_BUCKET} exists`)
+  } catch {
+    minioLogger.error(`Bucket ${process.env.MINIO_BUCKET} does not exist`)
+    process.exit(1)
   }
-};
+}
 
-export const getFileUrl = async (bucketName: string, fileName: string) => {
-  try {
-    const url = await minioClient.presignedGetObject(bucketName, fileName);
-    return url;
-  } catch (error) {
-    throw new Error(`Error generating file URL: ${error.message}`);
-  }
-};
+checkIfBucketExists().catch(() => {
+  process.exit(1)
+})
 
-export default minioClient;
+export const getUrl = (objectName: string) => {
+  return `${process.env.MINIO_USESSL === 'true' ? 'https' : 'http'}://${
+    process.env.MINIO_ENDPOINT
+  }:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET}/${objectName}`
+}
+export const getUploadUrl = async (objectName: string) => {
+  const url = await minio.presignedPutObject(
+    process.env.MINIO_BUCKET,
+    objectName
+  )
+  minioLogger.info(`Generating presigned upload URL for ${objectName}: ${url}`)
+  return url
+}
+minioLogger.info('Client created')
+
+export default minio

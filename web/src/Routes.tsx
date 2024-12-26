@@ -14,8 +14,6 @@ import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
 import { useAuth } from './auth'
 
 const Routes = () => {
-
-
   return (
     <Router useAuth={useAuth}>
       <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
@@ -29,12 +27,6 @@ const Routes = () => {
         <Route path="/players/{id}/edit" page={PlayerEditPlayerPage} name="editPlayer" />
         <Route path="/players/{id}" page={PlayerPlayerPage} name="player" />
         <Route path="/players" page={PlayerPlayersPage} name="players" />
-      </Set>
-      <Set wrap={ScaffoldLayout} title="Assets" titleTo="assets" buttonLabel="New Asset" buttonTo="newAsset">
-        <Route path="/assets/new" page={AssetNewAssetPage} name="newAsset" />
-        <Route path="/assets/{id}/edit" page={AssetEditAssetPage} name="editAsset" />
-        <Route path="/assets/{id}" page={AssetAssetPage} name="asset" />
-        <Route path="/assets" page={AssetAssetsPage} name="assets" />
       </Set>
       <Set wrap={ScaffoldLayout} title="Answers" titleTo="answers" buttonLabel="New Answer" buttonTo="newAnswer">
         <Route path="/answers/new" page={AnswerNewAnswerPage} name="newAnswer" />

@@ -5,6 +5,7 @@ import type {
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+import { getUploadUrl, getUrl } from 'src/lib/minio'
 
 export const assets: QueryResolvers['assets'] = () => {
   return db.asset.findMany()
@@ -39,6 +40,20 @@ export const deleteAsset: MutationResolvers['deleteAsset'] = ({ id }) => {
 }
 
 export const Asset: AssetRelationResolvers = {
+  uploadUrl: async (_obj, { id }) => {
+    const asset = await db.asset.findUnique({ where: { id } })
+    if (!asset) {
+      throw new Error('Asset not found')
+    }
+    return getUploadUrl(asset.filename)
+  },
+  url: async (_obj, { id }) => {
+    const asset = await db.asset.findUnique({ where: { id } })
+    if (!asset) {
+      throw new Error('Asset not found')
+    }
+    return getUrl(asset.filename)
+  },
   Player: (_obj, { root }) => {
     return db.asset.findUnique({ where: { id: root?.id } }).Player()
   },
