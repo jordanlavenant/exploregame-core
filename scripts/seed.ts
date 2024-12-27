@@ -29,33 +29,39 @@ export default async () => {
     const colorSets = [
       {
         id: '1',
-        primary: '#000000',
-        secondary: '#FFFFFF',
-        tertiary: '#000000',
+        primary: '#8776b6',
+        secondary: '#8776b6',
+        tertiary: '#8776b6',
       },
       {
         id: '2',
-        primary: '#FFFFFF',
-        secondary: '#000000',
-        tertiary: '#FFFFFF',
+        primary: '#00acc8',
+        secondary: '#00acc8',
+        tertiary: '#00acc8',
       },
       {
         id: '3',
-        primary: '#0000FF',
-        secondary: '#FF0000',
-        tertiary: '#00FF00',
+        primary: '#d87c27',
+        secondary: '#d87c27',
+        tertiary: '#d87c27',
       },
       {
         id: '4',
-        primary: '#FF0000',
-        secondary: '#00FF00',
-        tertiary: '#0000FF',
+        primary: '#d9a72b',
+        secondary: '#d9a72b',
+        tertiary: '#d9a72b',
       },
       {
         id: '5',
-        primary: '#00FF00',
-        secondary: '#0000FF',
-        tertiary: '#FF0000',
+        primary: '#afbf3c',
+        secondary: '#afbf3c',
+        tertiary: '##afbf3c',
+      },
+      {
+        id: '6',
+        primary: '#e472ac',
+        secondary: '#e472ac',
+        tertiary: '#e472ac',
       },
     ]
     await db.colorSet.createMany({ data: colorSets })
@@ -77,26 +83,26 @@ export default async () => {
         id: '3',
         name: 'GMP',
         description: 'BUT Génie Mécanique et Productique',
-        colorSetId: '2',
+        colorSetId: '3',
       },
       {
         id: '4',
         name: 'QLIO',
         description: 'BUT Qualité, Logistique Industrielle et Organisation',
-        colorSetId: '2',
+        colorSetId: '4',
       },
       {
         id: '5',
         name: 'Chimie',
         description: 'BUT Chimie',
-        colorSetId: '3',
+        colorSetId: '6',
       },
       {
         id: '6',
         name: 'MT2E',
         description:
           "BUT Métiers de la transition et de l'efficacité énergétiques",
-        colorSetId: '4',
+        colorSetId: '5',
       },
     ]
     await db.department.createMany({ data: departments })
