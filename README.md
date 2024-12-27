@@ -45,7 +45,7 @@ Entrer dans le conteneur `console` pour effectuer les migrations et les seeds.
 
 ```bash
 # /bin/bash
-docker compose -f ./docker-compose.dev.yml run --rm -it console /bin/bash
+docker compose -f ./docker-compose.dev.yml run --rm -it console bash
 ```
 
 Effectuer les migrations puis seed la base de donnée.
