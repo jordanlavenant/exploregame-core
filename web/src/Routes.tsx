@@ -18,6 +18,12 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="CharacterSteps" titleTo="characterSteps" buttonLabel="New CharacterStep" buttonTo="newCharacterStep">
+        <Route path="/character-steps/new" page={CharacterStepNewCharacterStepPage} name="newCharacterStep" />
+        <Route path="/character-steps/{id}/edit" page={CharacterStepEditCharacterStepPage} name="editCharacterStep" />
+        <Route path="/character-steps/{id}" page={CharacterStepCharacterStepPage} name="characterStep" />
+        <Route path="/character-steps" page={CharacterStepCharacterStepsPage} name="characterSteps" />
+      </Set>
       <Set wrap={ScaffoldLayout} title="Steps" titleTo="steps" buttonLabel="New Step" buttonTo="newStep">
         <Route path="/steps/new" page={StepNewStepPage} name="newStep" />
         <Route path="/steps/{id}/edit" page={StepEditStepPage} name="editStep" />
@@ -25,10 +31,6 @@ const Routes = () => {
         <Route path="/steps" page={StepStepsPage} name="steps" />
       </Set>
       <Set wrap={ScaffoldLayout} title="CharacterSteps" titleTo="characterSteps" buttonLabel="New CharacterStep" buttonTo="newCharacterStep">
-        <Route path="/character-steps/new" page={CharacterStepNewCharacterStepPage} name="newCharacterStep" />
-        <Route path="/character-steps/{id}/edit" page={CharacterStepEditCharacterStepPage} name="editCharacterStep" />
-        <Route path="/character-steps/{id}" page={CharacterStepCharacterStepPage} name="characterStep" />
-        <Route path="/character-steps" page={CharacterStepCharacterStepsPage} name="characterSteps" />
       </Set>
       <Set wrap={ScaffoldLayout} title="Characters" titleTo="characters" buttonLabel="New Character" buttonTo="newCharacter">
         <Route path="/characters/new" page={CharacterNewCharacterPage} name="newCharacter" />

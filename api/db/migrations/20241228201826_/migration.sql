@@ -228,7 +228,7 @@ ALTER TABLE "PlayerScript" ADD CONSTRAINT "PlayerScript_stepId_fkey" FOREIGN KEY
 ALTER TABLE "PlayerScript" ADD CONSTRAINT "PlayerScript_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Step"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "Step"("id") ON DELETE CASCADE ON UPDATE CASCADE;
