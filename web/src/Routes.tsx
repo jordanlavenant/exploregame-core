@@ -30,8 +30,6 @@ const Routes = () => {
         <Route path="/steps/{id}" page={StepStepPage} name="step" />
         <Route path="/steps" page={StepStepsPage} name="steps" />
       </Set>
-      <Set wrap={ScaffoldLayout} title="CharacterSteps" titleTo="characterSteps" buttonLabel="New CharacterStep" buttonTo="newCharacterStep">
-      </Set>
       <Set wrap={ScaffoldLayout} title="Characters" titleTo="characters" buttonLabel="New Character" buttonTo="newCharacter">
         <Route path="/characters/new" page={CharacterNewCharacterPage} name="newCharacter" />
         <Route path="/characters/{id}/edit" page={CharacterEditCharacterPage} name="editCharacter" />

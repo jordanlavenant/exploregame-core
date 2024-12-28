@@ -10,7 +10,6 @@ import {
   FieldError,
   Label,
   TextField,
-  NumberField,
   Submit,
 } from '@redwoodjs/forms'
 
@@ -75,22 +74,22 @@ const CharacterStepForm = (props: CharacterStepFormProps) => {
         <FieldError name="stepId" className="rw-field-error" />
 
         <Label
-          name="textOrder"
+          name="text"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Text order
+          Text
         </Label>
 
-        <NumberField
-          name="textOrder"
-          defaultValue={props.characterStep?.textOrder}
+        <TextField
+          name="text"
+          defaultValue={props.characterStep?.text}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="textOrder" className="rw-field-error" />
+        <FieldError name="text" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

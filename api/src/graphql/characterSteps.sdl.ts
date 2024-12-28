@@ -3,26 +3,26 @@ export const schema = gql`
     id: String!
     characterId: String!
     stepId: String!
-    textOrder: Int!
+    text: String!
     Character: Character!
     Step: Step!
   }
 
   type Query {
-    characterSteps: [CharacterStep!]! @skipAuth
-    characterStep(id: String!): CharacterStep @skipAuth
+    characterSteps: [CharacterStep!]! @requireAuth
+    characterStep(id: String!): CharacterStep @requireAuth
   }
 
   input CreateCharacterStepInput {
     characterId: String!
     stepId: String!
-    textOrder: Int!
+    text: String!
   }
 
   input UpdateCharacterStepInput {
     characterId: String
     stepId: String
-    textOrder: Int
+    text: String
   }
 
   type Mutation {

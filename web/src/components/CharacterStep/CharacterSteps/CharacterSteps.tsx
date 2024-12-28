@@ -52,7 +52,7 @@ const CharacterStepsList = ({ characterSteps }: FindCharacterSteps) => {
             <th>Id</th>
             <th>Character id</th>
             <th>Step id</th>
-            <th>Text order</th>
+            <th>Text</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -62,7 +62,7 @@ const CharacterStepsList = ({ characterSteps }: FindCharacterSteps) => {
               <td>{truncate(characterStep.id)}</td>
               <td>{truncate(characterStep.characterId)}</td>
               <td>{truncate(characterStep.stepId)}</td>
-              <td>{truncate(characterStep.textOrder)}</td>
+              <td>{truncate(characterStep.text)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

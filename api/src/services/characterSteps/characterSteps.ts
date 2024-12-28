@@ -19,7 +19,6 @@ export const characterStep: QueryResolvers['characterStep'] = ({ id }) => {
 export const createCharacterStep: MutationResolvers['createCharacterStep'] = ({
   input,
 }) => {
-  console.log(input)
   return db.characterStep.create({
     data: input,
   })
