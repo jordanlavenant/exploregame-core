@@ -5,7 +5,7 @@ export const standard = defineScenario<Prisma.CharacterStepCreateArgs>({
   characterStep: {
     one: {
       data: {
-        textOrder: 1678635,
+        text: 'String',
         Character: { create: { nomPerso: 'String' } },
         Step: {
           create: {
@@ -17,7 +17,7 @@ export const standard = defineScenario<Prisma.CharacterStepCreateArgs>({
     },
     two: {
       data: {
-        textOrder: 6850958,
+        text: 'String',
         Character: { create: { nomPerso: 'String' } },
         Step: {
           create: {

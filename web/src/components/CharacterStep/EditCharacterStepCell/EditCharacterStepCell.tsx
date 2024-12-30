@@ -21,7 +21,7 @@ export const QUERY: TypedDocumentNode<EditCharacterStepById> = gql`
       id
       characterId
       stepId
-      textOrder
+      text
     }
   }
 `
@@ -38,7 +38,7 @@ const UPDATE_CHARACTER_STEP_MUTATION: TypedDocumentNode<
       id
       characterId
       stepId
-      textOrder
+      text
     }
   }
 `

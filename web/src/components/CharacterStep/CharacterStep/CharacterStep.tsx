@@ -66,8 +66,8 @@ const CharacterStep = ({ characterStep }: Props) => {
               <td>{characterStep.stepId}</td>
             </tr>
             <tr>
-              <th>Text order</th>
-              <td>{characterStep.textOrder}</td>
+              <th>Text</th>
+              <td>{characterStep.text}</td>
             </tr>
           </tbody>
         </table>

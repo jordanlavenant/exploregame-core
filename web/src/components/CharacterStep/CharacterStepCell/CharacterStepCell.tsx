@@ -20,7 +20,7 @@ export const QUERY: TypedDocumentNode<
       id
       characterId
       stepId
-      textOrder
+      text
     }
   }
 `

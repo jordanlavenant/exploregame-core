@@ -36,13 +36,13 @@ describe('characterSteps', () => {
       input: {
         characterId: scenario.characterStep.two.characterId,
         stepId: scenario.characterStep.two.stepId,
-        textOrder: 8539999,
+        text: 'String',
       },
     })
 
     expect(result.characterId).toEqual(scenario.characterStep.two.characterId)
     expect(result.stepId).toEqual(scenario.characterStep.two.stepId)
-    expect(result.textOrder).toEqual(8539999)
+    expect(result.text).toEqual('String')
   })
 
   scenario('updates a characterStep', async (scenario: StandardScenario) => {
@@ -51,10 +51,10 @@ describe('characterSteps', () => {
     })) as CharacterStep
     const result = await updateCharacterStep({
       id: original.id,
-      input: { textOrder: 8132960 },
+      input: { text: 'String2' },
     })
 
-    expect(result.textOrder).toEqual(8132960)
+    expect(result.text).toEqual('String2')
   })
 
   scenario('deletes a characterStep', async (scenario: StandardScenario) => {
