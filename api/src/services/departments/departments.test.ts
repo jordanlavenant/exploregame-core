@@ -37,12 +37,16 @@ describe('departments', () => {
         name: 'String',
         description: 'String',
         colorSetId: scenario.department.two.colorSetId,
+        latitude: 6375235.659517522,
+        longitude: 6898035.263732176,
       },
     })
 
     expect(result.name).toEqual('String')
     expect(result.description).toEqual('String')
     expect(result.colorSetId).toEqual(scenario.department.two.colorSetId)
+    expect(result.latitude).toEqual(6375235.659517522)
+    expect(result.longitude).toEqual(6898035.263732176)
   })
 
   scenario('updates a department', async (scenario: StandardScenario) => {

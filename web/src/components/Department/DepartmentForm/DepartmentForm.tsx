@@ -88,6 +88,42 @@ const DepartmentForm = (props: DepartmentFormProps) => {
 
         <FieldError name="colorSetId" className="rw-field-error" />
 
+        <Label
+          name="latitude"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Latitude
+        </Label>
+
+        <TextField
+          name="latitude"
+          defaultValue={props.department?.latitude}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ valueAsNumber: true, required: true }}
+        />
+
+        <FieldError name="latitude" className="rw-field-error" />
+
+        <Label
+          name="longitude"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Longitude
+        </Label>
+
+        <TextField
+          name="longitude"
+          defaultValue={props.department?.longitude}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ valueAsNumber: true, required: true }}
+        />
+
+        <FieldError name="longitude" className="rw-field-error" />
+
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save

@@ -62,6 +62,8 @@ model Department {
   name        String
   description String
   colorSetId  String
+  latitude    Float
+  longitude   Float
   Player      Player[]
   Script      Script[]
   ColorSet    ColorSet @relation(fields: [colorSetId], references: [id])

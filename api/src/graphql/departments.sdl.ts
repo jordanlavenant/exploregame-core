@@ -4,6 +4,8 @@ export const schema = gql`
     name: String!
     description: String!
     colorSetId: String!
+    latitude: Float!
+    longitude: Float!
     Player: [Player]!
     Script: [Script]!
     ColorSet: ColorSet!
@@ -18,12 +20,16 @@ export const schema = gql`
     name: String!
     description: String!
     colorSetId: String!
+    latitude: Float!
+    longitude: Float!
   }
 
   input UpdateDepartmentInput {
     name: String
     description: String
     colorSetId: String
+    latitude: Float
+    longitude: Float
   }
 
   type Mutation {

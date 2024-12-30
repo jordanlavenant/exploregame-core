@@ -18,6 +18,12 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
+        <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
+        <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
+        <Route path="/departments/{id}" page={DepartmentDepartmentPage} name="department" />
+        <Route path="/departments" page={DepartmentDepartmentsPage} name="departments" />
+      </Set>
       <Set wrap={ScaffoldLayout} title="CharacterSteps" titleTo="characterSteps" buttonLabel="New CharacterStep" buttonTo="newCharacterStep">
         <Route path="/character-steps/new" page={CharacterStepNewCharacterStepPage} name="newCharacterStep" />
         <Route path="/character-steps/{id}/edit" page={CharacterStepEditCharacterStepPage} name="editCharacterStep" />
@@ -55,10 +61,6 @@ const Routes = () => {
         <Route path="/questions" page={QuestionQuestionsPage} name="questions" />
       </Set>
       <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
-        <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
-        <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
-        <Route path="/departments/{id}" page={DepartmentDepartmentPage} name="department" />
-        <Route path="/departments" page={DepartmentDepartmentsPage} name="departments" />
       </Set>
       <Set wrap={ScaffoldLayout} title="ColorSets" titleTo="colorSets" buttonLabel="New ColorSet" buttonTo="newColorSet">
         <Route path="/color-sets/new" page={ColorSetNewColorSetPage} name="newColorSet" />

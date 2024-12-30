@@ -69,6 +69,14 @@ const Department = ({ department }: Props) => {
               <th>Color set id</th>
               <td>{department.colorSetId}</td>
             </tr>
+            <tr>
+              <th>Latitude</th>
+              <td>{department.latitude}</td>
+            </tr>
+            <tr>
+              <th>Longitude</th>
+              <td>{department.longitude}</td>
+            </tr>
           </tbody>
         </table>
       </div>

@@ -19,6 +19,8 @@ export const QUERY: TypedDocumentNode<
       name
       description
       colorSetId
+      latitude
+      longitude
     }
   }
 `

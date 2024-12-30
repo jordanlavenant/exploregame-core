@@ -72,30 +72,40 @@ export default async () => {
         name: 'INFO',
         description: 'BUT Informatique',
         colorSetId: '1',
+        latitude: 47.8433084,
+        longitude: 1.9267556,
       },
       {
         id: '2',
         name: 'GEA',
         description: 'BUT Gestion des Entreprises et des Administrations',
         colorSetId: '2',
+        latitude: 47.8437317,
+        longitude: 1.9263861,
       },
       {
         id: '3',
         name: 'GMP',
         description: 'BUT Génie Mécanique et Productique',
         colorSetId: '3',
+        latitude: 47.8440098,
+        longitude: 1.9263063,
       },
       {
         id: '4',
         name: 'QLIO',
         description: 'BUT Qualité, Logistique Industrielle et Organisation',
         colorSetId: '4',
+        latitude: 47.8441395,
+        longitude: 1.927583,
       },
       {
         id: '5',
         name: 'Chimie',
         description: 'BUT Chimie',
         colorSetId: '6',
+        latitude: 47.8439269,
+        longitude: 1.927661,
       },
       {
         id: '6',
@@ -103,6 +113,8 @@ export default async () => {
         description:
           "BUT Métiers de la transition et de l'efficacité énergétiques",
         colorSetId: '5',
+        latitude: 47.8435985,
+        longitude: 1.9257699,
       },
     ]
     await db.department.createMany({ data: departments })

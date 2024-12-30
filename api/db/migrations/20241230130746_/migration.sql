@@ -42,6 +42,8 @@ CREATE TABLE "Department" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "colorSetId" TEXT NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("id")
 );
@@ -165,7 +167,7 @@ CREATE TABLE "CharacterStep" (
     "id" TEXT NOT NULL,
     "characterId" TEXT NOT NULL,
     "stepId" TEXT NOT NULL,
-    "textOrder" INTEGER NOT NULL,
+    "text" TEXT NOT NULL,
 
     CONSTRAINT "CharacterStep_pkey" PRIMARY KEY ("id")
 );

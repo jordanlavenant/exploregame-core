@@ -22,6 +22,8 @@ export const QUERY: TypedDocumentNode<EditDepartmentById> = gql`
       name
       description
       colorSetId
+      latitude
+      longitude
     }
   }
 `
@@ -39,6 +41,8 @@ const UPDATE_DEPARTMENT_MUTATION: TypedDocumentNode<
       name
       description
       colorSetId
+      latitude
+      longitude
     }
   }
 `

@@ -53,6 +53,8 @@ const DepartmentsList = ({ departments }: FindDepartments) => {
             <th>Name</th>
             <th>Description</th>
             <th>Color set id</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -63,6 +65,8 @@ const DepartmentsList = ({ departments }: FindDepartments) => {
               <td>{truncate(department.name)}</td>
               <td>{truncate(department.description)}</td>
               <td>{truncate(department.colorSetId)}</td>
+              <td>{truncate(department.latitude)}</td>
+              <td>{truncate(department.longitude)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
