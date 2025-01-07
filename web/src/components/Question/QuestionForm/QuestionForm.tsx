@@ -9,6 +9,8 @@ import {
   TextField,
   Submit,
 } from '@redwoodjs/forms'
+import { useQuery } from '@apollo/client'
+import { Select } from '@/components/ui/select'
 
 type FormQuestion = NonNullable<EditQuestionById['question']>
 
@@ -19,7 +21,29 @@ interface QuestionFormProps {
   loading: boolean
 }
 
+const QUESTION_FORM_QUERY = gql`
+  query QuestionForm {
+    questionTypes {
+      id
+      type
+    }
+    steps {
+      id
+      name
+    }
+  }
+`
+
 const QuestionForm = (props: QuestionFormProps) => {
+
+  const { data, loading, error } = useQuery(QUESTION_FORM_QUERY)
+
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error...</p>
+
+  const questionTypes = data.questionTypes
+  const steps = data.steps
+
   const onSubmit = (data: FormQuestion) => {
     props.onSave(data, props?.question?.id)
   }
@@ -77,14 +101,6 @@ const QuestionForm = (props: QuestionFormProps) => {
         >
           Question type id
         </Label>
-
-        <TextField
-          name="questionTypeId"
-          defaultValue={props.question?.questionTypeId}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
-        />
 
         <FieldError name="questionTypeId" className="rw-field-error" />
 

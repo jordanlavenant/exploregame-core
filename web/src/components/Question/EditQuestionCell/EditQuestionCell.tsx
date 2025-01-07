@@ -24,6 +24,14 @@ export const QUERY: TypedDocumentNode<EditQuestionById> = gql`
       questionTypeId
       stepId
     }
+    questionTypes {
+      id
+      type
+    }
+    steps {
+      id
+      name
+    }
   }
 `
 
