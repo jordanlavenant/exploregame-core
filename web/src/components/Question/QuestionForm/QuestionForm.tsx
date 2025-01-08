@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown, Minus, Plus } from 'lucide-react'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
 import { useEffect, useState } from 'react'
 import { back } from '@redwoodjs/router'
 import { Card } from '@/components/ui/card'
@@ -85,6 +85,12 @@ const QuestionForm = (props: QuestionFormProps) => {
     isCorrect: boolean
   }[] | undefined>(props.question?.Answer || undefined)
 
+  useEffect(() => {
+    if (form.getValues('questionTypeId') === '1') {
+      setCurrentAnswers([])
+    }
+  }, [form.watch('questionTypeId')])
+
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error...</p>
 
@@ -111,7 +117,7 @@ const QuestionForm = (props: QuestionFormProps) => {
         {
           id: answer.id,
           answer: answer.answer,
-          isCorrect: false,
+          isCorrect: form.getValues('questionTypeId') === '1' ? true : false,
         },
       ]
     })
@@ -138,6 +144,9 @@ const QuestionForm = (props: QuestionFormProps) => {
   }
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
+    if (!currentAnswers || currentAnswers.length === 0) {
+      return
+    }
     props.onSave(data, props?.question?.id)
   }
 
@@ -314,18 +323,19 @@ const QuestionForm = (props: QuestionFormProps) => {
           <H3 className='mb-8'>Réponses associées</H3>
           <section className='max-h-[300px] overflow-y-auto'>
             <H4>Possibilitées</H4>
-            {!currentAnswers && (
+            {(!currentAnswers || currentAnswers.length === 0) && (
               <p className='text-muted-foreground'>Pas de réponse associées</p>
             )}
             {currentAnswers && currentAnswers.map((answer: Answer) => (
               <div
                 key={answer.id}
-                className='cursor-pointer p-2 flex justify-between items-center gap-4 select-none'
+                className='cursor-pointer p-1 flex justify-between items-center select-none'
               >
                 <p>{answer.answer}</p>
                 <div className='space-x-2'>
                   <Switch
-                    checked={currentAnswers?.some((a) => a.id === answer.id)}
+                    disabled={currentAnswers.some((a) => a.isCorrect) && !answer.isCorrect}
+                    checked={answer.isCorrect}
                     onCheckedChange={() => toggleCorrect(answer)}
                   />
                   <Button
@@ -349,6 +359,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               >
                 <p>{answer.answer}</p>
                 <Button
+                  disabled={form.getValues('questionTypeId') === '1' && currentAnswers?.length === 1}
                   type='button'
                   variant='outline'
                   onClick={() => addAnswer(answer)}
