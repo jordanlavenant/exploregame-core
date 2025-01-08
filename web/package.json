@@ -11,12 +11,15 @@
     ]
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-dialog": "^1.1.4",
+    "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-popover": "^1.1.4",
     "@radix-ui/react-select": "^2.1.4",
     "@radix-ui/react-separator": "^1.1.0",
-    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-switch": "^1.1.2",
     "@redwoodjs/auth-dbauth-web": "8.3.0",
     "@redwoodjs/forms": "8.3.0",
     "@redwoodjs/router": "8.3.0",
@@ -25,14 +28,18 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
+    "form": "^0.2.5",
     "humanize-string": "2.1.0",
+    "input": "^1.0.1",
     "lucide-react": "^0.447.0",
     "navigation-menu": "^1.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "shadcn": "^2.1.0",
+    "react-hook-form": "^7.54.2",
+    "shadcn": "^2.1.8",
     "tailwind-merge": "^2.5.3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@redwoodjs/vite": "8.3.0",

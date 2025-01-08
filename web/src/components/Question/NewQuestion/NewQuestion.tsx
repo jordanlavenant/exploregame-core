@@ -41,14 +41,7 @@ const NewQuestion = () => {
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">New Question</h2>
-      </header>
-      <div className="rw-segment-main">
-        <QuestionForm onSave={onSave} loading={loading} error={error} />
-      </div>
-    </div>
+    <QuestionForm onSave={onSave} loading={loading} error={error} />
   )
 }
 
