@@ -1,24 +1,53 @@
-import type { Answer, EditQuestionById, Hint, HintLevel, QuestionType, Step, UpdateQuestionInput } from 'types/graphql'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import type { RWGqlError } from '@redwoodjs/forms'
-import { useQuery } from '@apollo/client'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { Check, ChevronsUpDown, Minus, Plus } from 'lucide-react'
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
 import { useEffect, useState } from 'react'
+
+import { useQuery } from '@apollo/client'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Check, ChevronsUpDown, Minus, Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import type {
+  Answer,
+  EditQuestionById,
+  Hint,
+  HintLevel,
+  QuestionType,
+  Step,
+  UpdateQuestionInput,
+} from 'types/graphql'
+import { v4 as uuidv4 } from 'uuid'
+import { z } from 'zod'
+
+import type { RWGqlError } from '@redwoodjs/forms'
 import { back } from '@redwoodjs/router'
+
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { H3, H4 } from '@/components/ui/typography'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
+import { H3 } from '@/components/ui/typography'
+import { cn } from '@/lib/utils'
 
 type FormQuestion = NonNullable<EditQuestionById['question']>
 
@@ -39,11 +68,6 @@ const QUESTION_FORM_QUERY = gql`
       id
       name
     }
-    answers {
-      id
-      answer
-      isCorrect
-    }
     hints {
       id
       help
@@ -63,7 +87,6 @@ export const formSchema = z.object({
 })
 
 const QuestionForm = (props: QuestionFormProps) => {
-
   const { data, loading, error } = useQuery(QUESTION_FORM_QUERY)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -79,11 +102,21 @@ const QuestionForm = (props: QuestionFormProps) => {
     }
   }, [form])
 
-  const [currentAnswers, setCurrentAnswers] = useState<{
-    id: string
-    answer: string
-    isCorrect: boolean
-  }[] | undefined>(props.question?.Answer || undefined)
+  const [currentAnswers, setCurrentAnswers] = useState<
+    | {
+        id: string
+        answer: string
+        isCorrect: boolean
+      }[]
+    | undefined
+  >(props.question?.Answer || undefined)
+
+  useEffect(() => {
+    console.log(currentAnswers)
+  }, [currentAnswers])
+
+  const [newAnswer, setNewAnswer] = useState<string>('')
+  const [newAnswerDescription, setNewAnswerDescription] = useState<string>('')
 
   useEffect(() => {
     if (form.getValues('questionTypeId') === '1') {
@@ -97,29 +130,18 @@ const QuestionForm = (props: QuestionFormProps) => {
   const questionTypes: QuestionType[] = data.questionTypes
   const steps: Step[] = data.steps
   const hintLevels: HintLevel[] = data.hintLevels
-  const answers: Answer[] = data.answers
   const hints: Hint[] = data.hints
   const currentHints = props.question?.Hint
 
-  const answersDisplayed = answers.filter(
-    (answer) =>
-      !currentAnswers?.some((a) => a.id === answer.id)
-    )
-
-  const addAnswer = (answer: Answer) => {
-    if (!currentAnswers) {
-      setCurrentAnswers([answer])
-      return
+  const addAnswer = async () => {
+    const answer = {
+      id: uuidv4(),
+      answer: newAnswer,
+      description: newAnswerDescription,
+      isCorrect: false,
     }
     setCurrentAnswers((prev) => {
-      return [
-        ...(prev || []),
-        {
-          id: answer.id,
-          answer: answer.answer,
-          isCorrect: form.getValues('questionTypeId') === '1' ? true : false,
-        },
-      ]
+      return [...(prev || []), answer]
     })
   }
 
@@ -154,13 +176,13 @@ const QuestionForm = (props: QuestionFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='grid md:grid-cols-3  gap-4 p-4 *:p-4'
+        className="grid md:grid-cols-3  gap-4 p-4 *:p-4"
       >
         <Card>
-          <H3 className='mb-8'>Question</H3>
+          <H3 className="mb-8">Question</H3>
           <FormField
             control={form.control}
-            name='question'
+            name="question"
             defaultValue={props.question?.question}
             render={({ field }) => (
               <FormItem>
@@ -174,7 +196,7 @@ const QuestionForm = (props: QuestionFormProps) => {
           />
           <FormField
             control={form.control}
-            name='description'
+            name="description"
             defaultValue={props.question?.description}
             render={({ field }) => (
               <FormItem>
@@ -258,9 +280,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Etape associée</FormLabel>
-                {(loading || !steps) && (
-                  <Skeleton className="w-[200px] h-10" />
-                )}
+                {(loading || !steps) && <Skeleton className="w-[200px] h-10" />}
                 {steps && (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -274,9 +294,8 @@ const QuestionForm = (props: QuestionFormProps) => {
                           )}
                         >
                           {field.value
-                            ? steps.find(
-                                (step) => step.id === field.value
-                              )?.name
+                            ? steps.find((step) => step.id === field.value)
+                                ?.name
                             : 'Choisir une étape...'}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
@@ -320,54 +339,64 @@ const QuestionForm = (props: QuestionFormProps) => {
           />
         </Card>
         <Card>
-          <H3 className='mb-8'>Réponses associées</H3>
-          <section className='max-h-[300px] overflow-y-auto'>
-            <H4>Possibilitées</H4>
-            {(!currentAnswers || currentAnswers.length === 0) && (
-              <p className='text-muted-foreground'>Pas de réponse associées</p>
-            )}
-            {currentAnswers && currentAnswers.map((answer: Answer) => (
-              <div
-                key={answer.id}
-                className='cursor-pointer p-1 flex justify-between items-center select-none'
-              >
-                <p>{answer.answer}</p>
-                <div className='space-x-2'>
-                  <Switch
-                    disabled={currentAnswers.some((a) => a.isCorrect) && !answer.isCorrect}
-                    checked={answer.isCorrect}
-                    onCheckedChange={() => toggleCorrect(answer)}
-                  />
-                  <Button
-                    type='button'
-                    variant='outline'
-                    onClick={() => removeAnswer(answer)}
-                  >
-                    <Minus   />
-                  </Button>
-                </div>
-              </div>
-            ))}
+          <H3 className="mb-8">Réponses associées</H3>
+          <section className="grid grid-cols-3 gap-2">
+            <Input
+              value={newAnswer}
+              onChange={(e) => setNewAnswer(e.target.value)}
+              placeholder="Nouvelle réponse"
+              className="col-span-2"
+            />
+            <Button
+              className="bg-blue-500 text-white hover:bg-blue-600"
+              disabled={!newAnswer || !newAnswerDescription}
+              onClick={() => {
+                addAnswer().then(() => {
+                  setNewAnswer('')
+                  setNewAnswerDescription('')
+                })
+              }}
+            >
+              Ajouter
+            </Button>
+            <Input
+              value={newAnswerDescription}
+              onChange={(e) => setNewAnswerDescription(e.target.value)}
+              placeholder="Description"
+              className="col-span-full"
+            />
           </section>
-          <Separator className='my-4' />
-          <section className='max-h-[250px] overflow-y-auto'>
-            <H4>Autres réponses</H4>
-            {answersDisplayed.map((answer) => (
-              <div
-                key={answer.id}
-                className='cursor-pointer p-1 flex justify-between items-center select-none'
-              >
-                <p>{answer.answer}</p>
-                <Button
-                  disabled={form.getValues('questionTypeId') === '1' && currentAnswers?.length === 1}
-                  type='button'
-                  variant='outline'
-                  onClick={() => addAnswer(answer)}
+          <Separator className="my-4" />
+          <section className="max-h-[300px] overflow-y-auto">
+            {(!currentAnswers || currentAnswers.length === 0) && (
+              <p className="text-muted-foreground">Pas de réponse associées</p>
+            )}
+            {currentAnswers &&
+              currentAnswers.map((answer: Answer) => (
+                <div
+                  key={answer.id}
+                  className="cursor-pointer p-1 flex justify-between items-center select-none"
                 >
-                  <Plus />
-                </Button>
-              </div>
-            ))}
+                  <p>{answer.answer}</p>
+                  <div className="space-x-2">
+                    <Switch
+                      disabled={
+                        currentAnswers.some((a) => a.isCorrect) &&
+                        !answer.isCorrect
+                      }
+                      checked={answer.isCorrect}
+                      onCheckedChange={() => toggleCorrect(answer)}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => removeAnswer(answer)}
+                    >
+                      <Minus />
+                    </Button>
+                  </div>
+                </div>
+              ))}
           </section>
         </Card>
         <Card>
