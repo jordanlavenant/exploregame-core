@@ -521,6 +521,61 @@ export default async () => {
 
     await db.hint.createMany({ data: hints })
 
+    const charactersData = [
+      {
+        nomPerso: 'Jérémie',
+        descriptionL: "Jérémie est un futur étudiant de l'iut d'Orléans",
+      },
+      {
+        nomPerso: 'Panda',
+        descriptionL: 'Panda est la mascotte officiel de l\'Infasso',
+      }
+    ]
+    const characters = [];
+    for (const characterData of charactersData) {
+      const character = await db.character.create({ data: characterData });
+      characters.push(character);
+    }
+    console.log(characters);
+    const characterSteps = [
+      {
+        characterId: characters[0].id,
+        stepId: '1',
+        text: 'Bonjour, je m\'appelle Jérémie, je suis un futur étudiant de l\'iut d\'Orléans',
+      },
+      {
+        characterId: characters[1].id,
+        stepId: '1',
+        text: 'Salut, je suis Panda, la mascotte officiel de l\'Infasso',
+      },
+      {
+        characterId: characters[0].id,
+        stepId: '1',
+        text: 'Je suis là pour découvrir les différents départements de l\'iut d\'Orléans',
+      },
+      {
+        characterId: characters[1].id,
+        stepId: '1',
+        text: 'Je suis là pour t\'aider à trouver les différentes étapes de ton aventure',
+      },
+      {
+        characterId: characters[1].id,
+        stepId: '1',
+        text: 'Tu devras répondre aux questions avec les informations qui sont dans ce bâtiment.',
+      },
+      {
+        characterId: characters[1].id,
+        stepId: '1',
+        text: 'Bonne chance ! :)',
+      },
+      {
+        characterId: characters[0].id,
+        stepId: '1',
+        text: 'Merci Panda !',
+      }
+    ]
+    await db.characterStep.createMany({ data: characterSteps })
+
     const players = [
       {
         email: 'joe@doe.com',
