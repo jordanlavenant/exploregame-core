@@ -536,7 +536,6 @@ export default async () => {
       const character = await db.character.create({ data: characterData });
       characters.push(character);
     }
-    console.log(characters);
     const characterSteps = [
       {
         characterId: characters[0].id,
