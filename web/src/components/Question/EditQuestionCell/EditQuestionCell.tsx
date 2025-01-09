@@ -31,6 +31,10 @@ export const QUERY: TypedDocumentNode<EditQuestionById> = gql`
       Hint {
         id
         help
+        HintLevel {
+          id
+          type
+        }
       }
     }
   }

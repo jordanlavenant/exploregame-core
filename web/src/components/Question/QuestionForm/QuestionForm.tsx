@@ -115,14 +115,25 @@ const QuestionForm = (props: QuestionFormProps) => {
     console.log(currentAnswers)
   }, [currentAnswers])
 
+  const [isFormModified, setIsFormModified] = useState<boolean>(false)
+
   const [newAnswer, setNewAnswer] = useState<string>('')
   const [newAnswerDescription, setNewAnswerDescription] = useState<string>('')
 
   useEffect(() => {
-    if (form.getValues('questionTypeId') === '1') {
+    const subscription = form.watch((value, { name }) => {
+      if (name === 'questionTypeId') {
+        setIsFormModified(true)
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [form])
+
+  useEffect(() => {
+    if (isFormModified && form.watch('questionTypeId') === '1') {
       setCurrentAnswers([])
     }
-  }, [form.watch('questionTypeId')])
+  }, [form.watch('questionTypeId'), isFormModified])
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error...</p>
@@ -400,13 +411,15 @@ const QuestionForm = (props: QuestionFormProps) => {
           </section>
         </Card>
         <Card>
-          <H3>Indices associées</H3>
+          <H3 className='mb-8'>Indices associées</H3>
           <div>
             {currentHints?.map((hint) => (
-              <div key={hint.id}>
+              <div key={hint.id} className='grid grid-cols-2'>
+                <p>{hint.HintLevel.type}</p>
                 <p>{hint.help}</p>
               </div>
             ))}
+            <p className='text-red-500'>Work in progres...</p>
           </div>
         </Card>
         <footer
