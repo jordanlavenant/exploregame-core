@@ -400,14 +400,14 @@ const QuestionForm = (props: QuestionFormProps) => {
           </section>
         </Card>
         <Card>
-          <H3>Indices associées</H3>
-          <div>
+          <H3>Indices associés</H3>
+          {/* <div>
             {currentHints?.map((hint) => (
               <div key={hint.id}>
                 <p>{hint.help}</p>
               </div>
             ))}
-          </div>
+          </div> */}
         </Card>
         <footer
           className="border-t-2 py-8 lg:fixed lg:w-screen left-0 bottom-0 flex justify-center items-center gap-4"
