@@ -26,6 +26,7 @@ export const QUERY: TypedDocumentNode<EditQuestionById> = gql`
       Answer {
         id
         answer
+        description
         isCorrect
       }
       Hint {

@@ -353,7 +353,7 @@ export default async () => {
         id: '5',
         question: 'Quel est votre date de naissance ?',
         description: 'Entrez votre date de naissance',
-        questionTypeId: '3',
+        questionTypeId: '2',
         stepId: '2',
       },
       {
