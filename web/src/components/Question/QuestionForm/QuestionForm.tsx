@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown, Minus, Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -76,6 +76,40 @@ const QUESTION_FORM_QUERY = gql`
       id
       type
     }
+    answers {
+      id
+    }
+  }
+`
+
+const CREATE_ANSWER_MUTATION = gql`
+  mutation CreateAnswerFunc($input: CreateAnswerInput!) {
+    createAnswer(input: $input) {
+      answer
+      description
+      questionId
+      isCorrect
+    }
+  }
+`
+
+const UPDATE_ANSWER_MUTATION = gql`
+  mutation UpdateAnswerFunc($id: String!, $input: UpdateAnswerInput!) {
+    updateAnswer(id: $id, input: $input) {
+      id
+      answer
+      description
+      questionId
+      isCorrect
+    }
+  }
+`
+
+const DELETE_ANSWER_MUTATION = gql`
+  mutation DeleteAnswerFunc($id: String!) {
+    deleteAnswer(id: $id) {
+      id
+    }
   }
 `
 
@@ -88,6 +122,9 @@ export const formSchema = z.object({
 
 const QuestionForm = (props: QuestionFormProps) => {
   const { data, loading, error } = useQuery(QUESTION_FORM_QUERY)
+  const [createAnswer] = useMutation(CREATE_ANSWER_MUTATION)
+  const [updateAnswer] = useMutation(UPDATE_ANSWER_MUTATION)
+  const [deleteAnswer] = useMutation(DELETE_ANSWER_MUTATION)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -106,6 +143,7 @@ const QuestionForm = (props: QuestionFormProps) => {
     | {
         id: string
         answer: string
+        description: string
         isCorrect: boolean
       }[]
     | undefined
@@ -115,14 +153,25 @@ const QuestionForm = (props: QuestionFormProps) => {
     console.log(currentAnswers)
   }, [currentAnswers])
 
+  const [isFormModified, setIsFormModified] = useState<boolean>(false)
+
   const [newAnswer, setNewAnswer] = useState<string>('')
   const [newAnswerDescription, setNewAnswerDescription] = useState<string>('')
 
   useEffect(() => {
-    if (form.getValues('questionTypeId') === '1') {
+    const subscription = form.watch((value, { name }) => {
+      if (name === 'questionTypeId') {
+        setIsFormModified(true)
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [form])
+
+  useEffect(() => {
+    if (isFormModified && form.watch('questionTypeId') === '1') {
       setCurrentAnswers([])
     }
-  }, [form.watch('questionTypeId')])
+  }, [form.watch('questionTypeId'), isFormModified])
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error...</p>
@@ -132,6 +181,7 @@ const QuestionForm = (props: QuestionFormProps) => {
   const hintLevels: HintLevel[] = data.hintLevels
   const hints: Hint[] = data.hints
   const currentHints = props.question?.Hint
+  const answers: Answer[] = data.answers
 
   const addAnswer = async () => {
     const answer = {
@@ -165,11 +215,66 @@ const QuestionForm = (props: QuestionFormProps) => {
     })
   }
 
+
+  // ! à faire dans un utils
+  const updateAnswers = async () => {
+    if (!currentAnswers || currentAnswers.length === 0) {
+      return
+    }
+
+    // Suppression des réponses qui ne sont plus présentes
+    answers.forEach((answer) => {
+      if (!currentAnswers.some((a) => a.id === answer.id)) {
+        deleteAnswer({
+          variables: {
+            id: answer.id,
+          },
+        })
+      }
+    })
+
+    // Ajout ou modification des réponses
+    currentAnswers.forEach((answer) => {
+      const existingAnswer = answers.find((a) => a.id === answer.id)
+      if (existingAnswer) {
+        if (
+          existingAnswer.answer !== answer.answer ||
+          existingAnswer.description !== answer.description ||
+          existingAnswer.isCorrect !== answer.isCorrect
+        ) {
+          updateAnswer({
+            variables: {
+              id: answer.id,
+              input: {
+                answer: answer.answer,
+                description: answer.description,
+                isCorrect: answer.isCorrect,
+              },
+            },
+          })
+        }
+      } else {
+        createAnswer({
+          variables: {
+            input: {
+              answer: answer.answer,
+              description: answer.description,
+              questionId: props?.question?.id || '',
+              isCorrect: answer.isCorrect,
+            },
+          },
+        })
+      }
+    })
+  }
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (!currentAnswers || currentAnswers.length === 0) {
       return
     }
-    props.onSave(data, props?.question?.id)
+    updateAnswers().then(() => {
+      props.onSave(data, props?.question?.id)
+    })
   }
 
   return (
@@ -403,7 +508,8 @@ const QuestionForm = (props: QuestionFormProps) => {
           <H3>Indices associés</H3>
           {/* <div>
             {currentHints?.map((hint) => (
-              <div key={hint.id}>
+              <div key={hint.id} className='grid grid-cols-2'>
+                <p>{hint.HintLevel.type}</p>
                 <p>{hint.help}</p>
               </div>
             ))}
