@@ -32,10 +32,15 @@ export const schema = gql`
     answer: String!
   }
 
+  type CheckAnswerOutput {
+    isCorrect: Boolean!
+    correctAnswer: String
+  }
+
   type Mutation {
     createAnswer(input: CreateAnswerInput!): Answer! @requireAuth
     updateAnswer(id: String!, input: UpdateAnswerInput!): Answer! @requireAuth
     deleteAnswer(id: String!): Answer! @requireAuth
-    checkAnswer(input: CheckAnswerInput!): Boolean! @skipAuth
+    checkAnswer(input: CheckAnswerInput!): CheckAnswerOutput! @skipAuth
   }
 `
