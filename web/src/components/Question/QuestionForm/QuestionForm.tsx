@@ -178,9 +178,9 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   const questionTypes: QuestionType[] = data.questionTypes
   const steps: Step[] = data.steps
-  const hintLevels: HintLevel[] = data.hintLevels
-  const hints: Hint[] = data.hints
-  const currentHints = props.question?.Hint
+  // const hintLevels: HintLevel[] = data.hintLevels
+  // const hints: Hint[] = data.hints
+  // const currentHints = props.question?.Hint
   const answers: Answer[] = data.answers
 
   const addAnswer = async () => {
@@ -214,7 +214,6 @@ const QuestionForm = (props: QuestionFormProps) => {
       })
     })
   }
-
 
   // ! à faire dans un utils
   const updateAnswers = async () => {
