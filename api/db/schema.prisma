@@ -146,6 +146,7 @@ model PlayerScript {
   scriptId      String
   stepId        String
   questionId    String
+  completed     Boolean  @default(false)
   score         Int
   remainingTime Int
   Player        Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)

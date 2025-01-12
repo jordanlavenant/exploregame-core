@@ -136,6 +136,7 @@ CREATE TABLE "PlayerScript" (
     "scriptId" TEXT NOT NULL,
     "stepId" TEXT NOT NULL,
     "questionId" TEXT NOT NULL,
+    "completed" BOOLEAN NOT NULL DEFAULT false,
     "score" INTEGER NOT NULL,
     "remainingTime" INTEGER NOT NULL,
 

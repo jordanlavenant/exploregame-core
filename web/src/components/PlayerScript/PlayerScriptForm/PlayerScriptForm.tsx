@@ -10,6 +10,7 @@ import {
   FieldError,
   Label,
   TextField,
+  CheckboxField,
   NumberField,
   Submit,
 } from '@redwoodjs/forms'
@@ -109,6 +110,23 @@ const PlayerScriptForm = (props: PlayerScriptFormProps) => {
         />
 
         <FieldError name="questionId" className="rw-field-error" />
+
+        <Label
+          name="completed"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Completed
+        </Label>
+
+        <CheckboxField
+          name="completed"
+          defaultChecked={props.playerScript?.completed}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+        />
+
+        <FieldError name="completed" className="rw-field-error" />
 
         <Label
           name="score"

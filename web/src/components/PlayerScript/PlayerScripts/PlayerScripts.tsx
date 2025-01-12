@@ -10,7 +10,7 @@ import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/PlayerScript/PlayerScriptsCell'
-import { truncate } from 'src/lib/formatters'
+import { checkboxInputTag, truncate } from 'src/lib/formatters'
 
 const DELETE_PLAYER_SCRIPT_MUTATION: TypedDocumentNode<
   DeletePlayerScriptMutation,
@@ -54,6 +54,7 @@ const PlayerScriptsList = ({ playerScripts }: FindPlayerScripts) => {
             <th>Script id</th>
             <th>Step id</th>
             <th>Question id</th>
+            <th>Completed</th>
             <th>Score</th>
             <th>Remaining time</th>
             <th>&nbsp;</th>
@@ -67,6 +68,7 @@ const PlayerScriptsList = ({ playerScripts }: FindPlayerScripts) => {
               <td>{truncate(playerScript.scriptId)}</td>
               <td>{truncate(playerScript.stepId)}</td>
               <td>{truncate(playerScript.questionId)}</td>
+              <td>{checkboxInputTag(playerScript.completed)}</td>
               <td>{truncate(playerScript.score)}</td>
               <td>{truncate(playerScript.remainingTime)}</td>
               <td>

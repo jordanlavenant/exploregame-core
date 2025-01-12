@@ -18,12 +18,18 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
-      <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion">
+      <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
+        <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
+        <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
+        <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
+        <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
+      </Set>
+      <PrivateSet wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion" unauthenticated='login'>
         <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
         <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
         <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
         <Route path="/questions" page={QuestionQuestionsPage} name="questions" />
-      </Set>
+      </PrivateSet>
       <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
         <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
         <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
@@ -55,10 +61,6 @@ const Routes = () => {
         <Route path="/answers" page={AnswerAnswersPage} name="answers" />
       </Set>
       <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
-        <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
-        <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
-        <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
-        <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
       </Set>
       <Set wrap={ScaffoldLayout} title="ColorSets" titleTo="colorSets" buttonLabel="New ColorSet" buttonTo="newColorSet">
         <Route path="/color-sets/new" page={ColorSetNewColorSetPage} name="newColorSet" />
