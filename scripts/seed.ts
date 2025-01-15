@@ -267,7 +267,8 @@ export default async () => {
       // Lieu numéro 2
       {
         id: '5',
-        question: 'Combien de radiateurs sont présents dans le hall géo-climatique ?',
+        question:
+          'Combien de radiateurs sont présents dans le hall géo-climatique ?',
         description: '',
         questionTypeId: '1',
         stepId: '2',
@@ -290,7 +291,8 @@ export default async () => {
       },
       {
         id: '8',
-        question: "À qui dois-je m'adresser si je souhaite prévenir d'une absence ?",
+        question:
+          "À qui dois-je m'adresser si je souhaite prévenir d'une absence ?",
         description: '',
         questionTypeId: '1',
         stepId: '3',
@@ -444,7 +446,7 @@ export default async () => {
       {
         id: '20',
         answer: 'Madame Martin',
-        description: 'Personne à contacter en cas d’absence.',
+        description: "Personne à contacter en cas d'absence.",
         questionId: '8',
         isCorrect: true,
       },
@@ -456,8 +458,7 @@ export default async () => {
         isCorrect: true,
       },
     ]
-    await db.answer.createMany({ data: answers });
-
+    await db.answer.createMany({ data: answers })
 
     const hints = [
       {
@@ -519,34 +520,34 @@ export default async () => {
       },
       {
         nomPerso: 'Panda',
-        descriptionL: 'Panda est la mascotte officiel de l\'Infasso',
-      }
+        descriptionL: "Panda est la mascotte officiel de l'Infasso",
+      },
     ]
-    const characters = [];
+    const characters = []
     for (const characterData of charactersData) {
-      const character = await db.character.create({ data: characterData });
-      characters.push(character);
+      const character = await db.character.create({ data: characterData })
+      characters.push(character)
     }
     const characterSteps = [
       {
         characterId: characters[0].id,
         stepId: '1',
-        text: 'Bonjour, je m\'appelle Jérémie, je suis un futur étudiant de l\'iut d\'Orléans',
+        text: "Bonjour, je m'appelle Jérémie, je suis un futur étudiant de l'iut d'Orléans",
       },
       {
         characterId: characters[1].id,
         stepId: '1',
-        text: 'Salut, je suis Panda, la mascotte officiel de l\'Infasso',
+        text: "Salut, je suis Panda, la mascotte officiel de l'Infasso",
       },
       {
         characterId: characters[0].id,
         stepId: '1',
-        text: 'Je suis là pour découvrir les différents départements de l\'iut d\'Orléans',
+        text: "Je suis là pour découvrir les différents départements de l'iut d'Orléans",
       },
       {
         characterId: characters[1].id,
         stepId: '1',
-        text: 'Je suis là pour t\'aider à trouver les différentes étapes de ton aventure',
+        text: "Je suis là pour t'aider à trouver les différentes étapes de ton aventure",
       },
       {
         characterId: characters[1].id,
@@ -562,7 +563,7 @@ export default async () => {
         characterId: characters[0].id,
         stepId: '1',
         text: 'Merci Panda !',
-      }
+      },
     ]
     await db.characterStep.createMany({ data: characterSteps })
 
