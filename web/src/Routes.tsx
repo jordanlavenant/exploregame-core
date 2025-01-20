@@ -18,13 +18,19 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
+        <Route path="/hints/new" page={HintNewHintPage} name="newHint" />
+        <Route path="/hints/{id}/edit" page={HintEditHintPage} name="editHint" />
+        <Route path="/hints/{id}" page={HintHintPage} name="hint" />
+        <Route path="/hints" page={HintHintsPage} name="hints" />
+      </Set>
       <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
         <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
         <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
         <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
         <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
       </Set>
-      <PrivateSet wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion" unauthenticated='login'>
+      <PrivateSet wrap={ScaffoldLayout} title="Paramètres Question" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion" unauthenticated='login'>
         <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
         <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
         <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
@@ -95,10 +101,6 @@ const Routes = () => {
           <Route path="/genders" page={GenderGendersPage} name="genders" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
-          <Route path="/hints/new" page={HintNewHintPage} name="newHint" />
-          <Route path="/hints/{id}/edit" page={HintEditHintPage} name="editHint" />
-          <Route path="/hints/{id}" page={HintHintPage} name="hint" />
-          <Route path="/hints" page={HintHintsPage} name="hints" />
         </Set>
         <Set wrap={ScaffoldLayout} title="HintLevels" titleTo="hintLevels" buttonLabel="New HintLevel" buttonTo="newHintLevel">
           <Route path="/hint-levels/new" page={HintLevelNewHintLevelPage} name="newHintLevel" />

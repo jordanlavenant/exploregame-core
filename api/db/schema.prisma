@@ -109,7 +109,7 @@ model Hint {
   questionId  String
   hintLevelId String
   HintLevel   HintLevel @relation(fields: [hintLevelId], references: [id])
-  Question    Question  @relation(fields: [questionId], references: [id])
+  Question    Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model User {

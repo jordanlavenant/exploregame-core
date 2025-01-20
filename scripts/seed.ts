@@ -224,11 +224,15 @@ export default async () => {
     const questionTypes = [
       {
         id: '1',
-        type: 'Texte',
+        type: 'Question ouverte',
       },
       {
         id: '2',
-        type: 'Choix',
+        type: 'Choix unique',
+      },
+      {
+        id: '3',
+        type: 'Choix multiple',
       },
     ]
     await db.questionType.createMany({ data: questionTypes })
