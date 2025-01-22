@@ -121,21 +121,11 @@ model User {
   resetTokenExpiresAt DateTime?
 }
 
-model Gender {
-  id     String   @id @default(uuid())
-  gender String
-  Player Player[]
-}
-
 model Player {
   id             String         @id @default(uuid())
-  email          String         @unique
-  genderId       String
-  firstName      String
-  lastName       String
+  username       String         @unique
   hashedPassword String
   departmentId   String
-  Gender         Gender         @relation(fields: [genderId], references: [id])
   Department     Department     @relation(fields: [departmentId], references: [id])
   PlayerScript   PlayerScript[]
 }

@@ -18,6 +18,18 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+        <Route path="/players/new" page={PlayerNewPlayerPage} name="newPlayer" />
+        <Route path="/players/{id}/edit" page={PlayerEditPlayerPage} name="editPlayer" />
+        <Route path="/players/{id}" page={PlayerPlayerPage} name="player" />
+        <Route path="/players" page={PlayerPlayersPage} name="players" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+      </Set>
       <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
         <Route path="/hints/new" page={HintNewHintPage} name="newHint" />
         <Route path="/hints/{id}/edit" page={HintEditHintPage} name="editHint" />
@@ -89,16 +101,8 @@ const Routes = () => {
           <Route path="/scripts" page={ScriptScriptsPage} name="scripts" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
-          <Route path="/players/new" page={PlayerNewPlayerPage} name="newPlayer" />
-          <Route path="/players/{id}/edit" page={PlayerEditPlayerPage} name="editPlayer" />
-          <Route path="/players/{id}" page={PlayerPlayerPage} name="player" />
-          <Route path="/players" page={PlayerPlayersPage} name="players" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Genders" titleTo="genders" buttonLabel="New Gender" buttonTo="newGender">
-          <Route path="/genders/new" page={GenderNewGenderPage} name="newGender" />
-          <Route path="/genders/{id}/edit" page={GenderEditGenderPage} name="editGender" />
-          <Route path="/genders/{id}" page={GenderGenderPage} name="gender" />
-          <Route path="/genders" page={GenderGendersPage} name="genders" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
         </Set>

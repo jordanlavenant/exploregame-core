@@ -5,22 +5,44 @@ export const standard = defineScenario<Prisma.PlayerCreateArgs>({
   player: {
     one: {
       data: {
-        email: 'String4232529',
-        firstName: 'String',
-        lastName: 'String',
+        username: 'String1713743',
         hashedPassword: 'String',
-        Gender: { create: { gender: 'String' } },
-        Department: { create: { name: 'String', description: 'String' } },
+        Department: {
+          create: {
+            name: 'String',
+            description: 'String',
+            latitude: 2776741.0850526253,
+            longitude: 9832456.867650997,
+            ColorSet: {
+              create: {
+                primary: 'String',
+                secondary: 'String',
+                tertiary: 'String',
+              },
+            },
+          },
+        },
       },
     },
     two: {
       data: {
-        email: 'String3162010',
-        firstName: 'String',
-        lastName: 'String',
+        username: 'String3301227',
         hashedPassword: 'String',
-        Gender: { create: { gender: 'String' } },
-        Department: { create: { name: 'String', description: 'String' } },
+        Department: {
+          create: {
+            name: 'String',
+            description: 'String',
+            latitude: 5474484.72516233,
+            longitude: 5514217.463926623,
+            ColorSet: {
+              create: {
+                primary: 'String',
+                secondary: 'String',
+                tertiary: 'String',
+              },
+            },
+          },
+        },
       },
     },
   },

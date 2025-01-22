@@ -154,22 +154,6 @@ export default async () => {
     ]
     await db.hintLevel.createMany({ data: hintLevels })
 
-    const genders = [
-      {
-        id: '1',
-        gender: 'Homme',
-      },
-      {
-        id: '2',
-        gender: 'Femme',
-      },
-      {
-        id: '3',
-        gender: 'Autre',
-      },
-    ]
-    await db.gender.createMany({ data: genders })
-
     const scripts = [
       {
         id: '1',
@@ -223,6 +207,10 @@ export default async () => {
 
     const questionTypes = [
       {
+        id: '1',
+        type: 'Réponse texte',
+      },
+      {
         id: '2',
         type: 'Choix unique',
       },
@@ -238,7 +226,7 @@ export default async () => {
         id: '1',
         question: 'Dans quel bâtiment se trouve la cafétéria ?',
         description: '',
-        questionTypeId: '2',
+        questionTypeId: '3',
         stepId: '1',
       },
       {
@@ -319,7 +307,7 @@ export default async () => {
         answer: 'Bâtiment GEO',
         description: "Ce n'est pas le bon bâtiment.",
         questionId: '1',
-        isCorrect: false,
+        isCorrect: true,
       },
       {
         id: '3',
@@ -568,37 +556,30 @@ export default async () => {
 
     const players = [
       {
-        email: 'joe@doe.com',
-        password: 'joe',
-        genderId: '1',
-        firstname: 'Joe',
-        lastname: 'Doe',
+        username: 'jordanlavenant',
+        password: 'jordan',
         departmentId: '1',
       },
       {
-        email: 'jane@doe.com',
-        password: 'jane',
-        genderId: '2',
-        firstname: 'Jane',
-        lastname: 'Doe',
+        username: 'danielmalleron',
+        password: 'daniel',
         departmentId: '2',
       },
       {
-        email: 'john@doe.com',
-        password: 'john',
-        genderId: '1',
-        firstname: 'John',
-        lastname: 'Doe',
-        departmentId: '3',
+        username: 'leolucidor',
+        password: 'leo',
+        departmentId: '2',
+      },
+      {
+        username: 'nathanpigoreau',
+        password: 'nathan',
+        departmentId: '2',
       },
     ]
     for (const player of players) {
       await db.player.create({
         data: {
-          email: player.email,
-          genderId: player.genderId,
-          firstName: player.firstname,
-          lastName: player.lastname,
+          username: player.username,
           departmentId: player.departmentId,
           hashedPassword: await bcrypt.hash(player.password, 10),
         },
@@ -606,7 +587,7 @@ export default async () => {
     }
 
     console.info(
-      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players, ${hints.length} hints`
+      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players, ${hints.length} hints`
     )
   } catch (error) {
     console.error(error)
