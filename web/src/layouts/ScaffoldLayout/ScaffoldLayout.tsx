@@ -1,5 +1,6 @@
 import { Link, routes } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
+import NavBar from 'src/components/NavBar'
 
 type LayoutProps = {
   title: string
@@ -19,6 +20,7 @@ const ScaffoldLayout = ({
   return (
     <div className="">
       <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
+      <NavBar /> 
       <header className="rw-header">
         <h1 className="rw-heading rw-heading-primary">
           <Link to={routes[titleTo]()} className="rw-link">
