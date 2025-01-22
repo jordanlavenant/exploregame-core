@@ -5,11 +5,11 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
   playerScript: {
     one: {
       data: {
-        score: 3787358,
-        remainingTime: 9494707,
+        score: 7278934,
+        remainingTime: 6291749,
         Player: {
           create: {
-            email: 'String6327265',
+            email: 'String9597003',
             firstName: 'String',
             lastName: 'String',
             hashedPassword: 'String',
@@ -18,6 +18,8 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
               create: {
                 name: 'String',
                 description: 'String',
+                latitude: 5871443.959538194,
+                longitude: 9440288.22151149,
                 ColorSet: {
                   create: {
                     primary: 'String',
@@ -36,6 +38,8 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
               create: {
                 name: 'String',
                 description: 'String',
+                latitude: 2953128.150397708,
+                longitude: 2581350.84783274,
                 ColorSet: {
                   create: {
                     primary: 'String',
@@ -70,11 +74,11 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
     },
     two: {
       data: {
-        score: 7955319,
-        remainingTime: 3454462,
+        score: 3888966,
+        remainingTime: 3088175,
         Player: {
           create: {
-            email: 'String3268695',
+            email: 'String5784312',
             firstName: 'String',
             lastName: 'String',
             hashedPassword: 'String',
@@ -83,6 +87,8 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
               create: {
                 name: 'String',
                 description: 'String',
+                latitude: 5958530.841138434,
+                longitude: 3924809.527139408,
                 ColorSet: {
                   create: {
                     primary: 'String',
@@ -101,6 +107,8 @@ export const standard = defineScenario<Prisma.PlayerScriptCreateArgs>({
               create: {
                 name: 'String',
                 description: 'String',
+                latitude: 936330.8376612745,
+                longitude: 8335385.426969599,
                 ColorSet: {
                   create: {
                     primary: 'String',

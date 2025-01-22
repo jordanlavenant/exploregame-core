@@ -13,10 +13,7 @@ export const QUERY: TypedDocumentNode<FindPlayers, FindPlayersVariables> = gql`
   query FindPlayers {
     players {
       id
-      email
-      genderId
-      firstName
-      lastName
+      username
       hashedPassword
       departmentId
     }

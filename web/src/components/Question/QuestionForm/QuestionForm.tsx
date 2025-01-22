@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown, Minus, Plus } from 'lucide-react'
+import { Check, ChevronsUpDown, Edit, Minus, Plus, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import type {
   Answer,
@@ -46,8 +46,10 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
-import { H3 } from '@/components/ui/typography'
+import { H3, H4 } from '@/components/ui/typography'
 import { cn } from '@/lib/utils'
+import { saveAnswers } from '@/utils/answers'
+import { saveHints } from '@/utils/hints'
 
 type FormQuestion = NonNullable<EditQuestionById['question']>
 
@@ -76,6 +78,49 @@ const QUESTION_FORM_QUERY = gql`
       id
       type
     }
+    answers {
+      id
+    }
+  }
+`
+
+const CREATE_ANSWER_MUTATION = gql`
+  mutation CreateAnswerFunc($input: CreateAnswerInput!) {
+    createAnswer(input: $input) {
+      answer
+      description
+      questionId
+      isCorrect
+    }
+  }
+`
+
+const DELETE_ANSWER_MUTATION = gql`
+  mutation DeleteAnswerFunc($id: String!) {
+    deleteAnswer(id: $id) {
+      id
+    }
+  }
+`
+
+const CREATE_HINT_MUTATION = gql`
+  mutation CreateHintFunc($input: CreateHintInput!) {
+    createHint(input: $input) {
+      help
+      questionId
+      HintLevel {
+        id
+        type
+      }
+    }
+  }
+`
+
+const DELETE_HINT_MUTATION = gql`
+  mutation DeleteHintFunc($id: String!) {
+    deleteHint(id: $id) {
+      id
+    }
   }
 `
 
@@ -88,6 +133,12 @@ export const formSchema = z.object({
 
 const QuestionForm = (props: QuestionFormProps) => {
   const { data, loading, error } = useQuery(QUESTION_FORM_QUERY)
+  // Answers
+  const [createAnswer] = useMutation(CREATE_ANSWER_MUTATION)
+  const [deleteAnswer] = useMutation(DELETE_ANSWER_MUTATION)
+  // Hints
+  const [createHint] = useMutation(CREATE_HINT_MUTATION)
+  const [deleteHint] = useMutation(DELETE_HINT_MUTATION)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -103,17 +154,44 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, [form])
 
   const [currentAnswers, setCurrentAnswers] = useState<
-    | {
-        id: string
-        answer: string
-        isCorrect: boolean
-      }[]
-    | undefined
+    {
+      id: string
+      answer: string
+      description: string
+      isCorrect: boolean
+    }[] | undefined
   >(props.question?.Answer || undefined)
+  const [currentHints, setCurrentHints] = useState<
+    {
+      id: string
+      help: string
+      hintLevelId: string
+    }[] | undefined>(
+    props.question?.Hint || undefined
+  )
 
   useEffect(() => {
-    console.log(currentAnswers)
-  }, [currentAnswers])
+    console.log(currentHints)
+  }, [currentHints])
+
+  useEffect(() => {
+    if (currentHints) {
+      const sortedHints = [...currentHints].sort((a, b) => Number(a.hintLevelId) - Number(b.hintLevelId))
+      const filledHints = new Array(3).fill(undefined)
+      sortedHints.forEach(hint => {
+        if (hint === undefined) return
+        filledHints[Number(hint.hintLevelId) - 1] = hint
+      })
+      setCurrentHints(filledHints)
+    }
+  }, [props.question?.Hint])
+
+  const [hintOneEdit, setHintOneEdit] = useState<boolean>(false)
+  const [hintOneValue, setHintOneValue] = useState(currentHints?.[0]?.help || '');
+  const [hintTwoEdit, setHintTwoEdit] = useState<boolean>(false)
+  const [hintTwoValue, setHintTwoValue] = useState(currentHints?.[1]?.help || '');
+  const [hintThreeEdit, setHintThreeEdit] = useState<boolean>(false)
+  const [hintThreeValue, setHintThreeValue] = useState(currentHints?.[2]?.help || '');
 
   const [isFormModified, setIsFormModified] = useState<boolean>(false)
 
@@ -141,8 +219,6 @@ const QuestionForm = (props: QuestionFormProps) => {
   const questionTypes: QuestionType[] = data.questionTypes
   const steps: Step[] = data.steps
   const hintLevels: HintLevel[] = data.hintLevels
-  const hints: Hint[] = data.hints
-  const currentHints = props.question?.Hint
 
   const addAnswer = async () => {
     const answer = {
@@ -176,11 +252,51 @@ const QuestionForm = (props: QuestionFormProps) => {
     })
   }
 
+  const handleSaveHint = (index: number, newHint: string) => {
+    if (newHint === '') return
+    const hint = {
+      id: uuidv4(),
+      help: newHint,
+      hintLevelId: hintLevels?.[index].id,
+    }
+    setCurrentHints((prev) => {
+      const newHints = [...(prev || [])]
+      newHints[index] = hint
+      return newHints
+    })
+  }
+
+  const handleDeleteHint = (index: number) => {
+    setCurrentHints((prev) => {
+      const newHints = [...(prev || [])]
+      newHints[index] = undefined
+      return newHints
+    })
+  }
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (!currentAnswers || currentAnswers.length === 0) {
       return
     }
-    props.onSave(data, props?.question?.id)
+    saveAnswers(
+      {
+        currentAnswers,
+        question: props.question,
+        deleteAnswer,
+        createAnswer,
+      }
+    ).then(() => {
+      saveHints(
+        {
+          currentHints,
+          question: props.question,
+          deleteHint,
+          createHint,
+        }
+      )
+    }).then(() => {
+      props.onSave(data, props?.question?.id)
+    })
   }
 
   return (
@@ -199,7 +315,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               <FormItem>
                 <FormLabel>Intitulé</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder='Intitulé de la question' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -213,7 +329,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder='Description de la question' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -350,7 +466,7 @@ const QuestionForm = (props: QuestionFormProps) => {
           />
         </Card>
         <Card>
-          <H3 className="mb-8">Réponses associées</H3>
+          <H3 className="mb-8">Réponse(s) associée(s)</H3>
           <section className="grid grid-cols-3 gap-2">
             <Input
               value={newAnswer}
@@ -358,8 +474,14 @@ const QuestionForm = (props: QuestionFormProps) => {
               placeholder="Nouvelle réponse"
               className="col-span-2"
             />
+            <Input
+              value={newAnswerDescription}
+              onChange={(e) => setNewAnswerDescription(e.target.value)}
+              placeholder="Description"
+              className="col-span-full"
+            />
             <Button
-              className="bg-blue-500 text-white hover:bg-blue-600"
+              className="bg-blue-500 text-white hover:bg-blue-600 row-start-1 col-start-3"
               disabled={!newAnswer || !newAnswerDescription}
               onClick={() => {
                 addAnswer().then(() => {
@@ -370,12 +492,6 @@ const QuestionForm = (props: QuestionFormProps) => {
             >
               Ajouter
             </Button>
-            <Input
-              value={newAnswerDescription}
-              onChange={(e) => setNewAnswerDescription(e.target.value)}
-              placeholder="Description"
-              className="col-span-full"
-            />
           </section>
           <Separator className="my-4" />
           <section className="max-h-[300px] overflow-y-auto">
@@ -403,24 +519,141 @@ const QuestionForm = (props: QuestionFormProps) => {
                       variant="outline"
                       onClick={() => removeAnswer(answer)}
                     >
-                      <Minus />
+                      <X size={16} />
                     </Button>
                   </div>
                 </div>
               ))}
           </section>
         </Card>
-        <Card>
-          <H3 className='mb-8'>Indices associées</H3>
-          <div>
-            {currentHints?.map((hint) => (
-              <div key={hint.id} className='grid grid-cols-2'>
-                <p>{hint.HintLevel.type}</p>
-                <p>{hint.help}</p>
-              </div>
-            ))}
-            <p className='text-red-500'>Work in progres...</p>
-          </div>
+        <Card className="space-y-8">
+          <H3>Indice(s) associé(s)</H3>
+          <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
+            <H4 className='col-span-full absolute -top-4 -left-2 bg-card px-2'>Indice faible</H4>
+            <div className='col-span-2'>
+              {hintOneEdit ? (
+                <Input
+                  placeholder="Petit indice"
+                  value={hintOneValue}
+                  onChange={(e) => setHintOneValue(e.target.value)}
+                />
+              ) : currentHints?.[0]?.help ? (
+                <p>{currentHints?.[0]?.help}</p>
+              ) : (
+                <p className='text-muted-foreground text-sm'>Pas d'indice associé</p>
+              )}
+            </div>
+            <div className='grid grid-cols-2 gap-2'>
+              <Button
+                variant='outline'
+                type='button'
+                onClick={() => {
+                  if (hintOneEdit) {
+                    handleSaveHint(0, hintOneValue)
+                    setHintOneEdit(false)
+                  } else {
+                    setHintOneEdit(true)
+                  }
+                }}
+              >
+                {hintOneEdit ? <Check /> : <Edit />}
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => {
+                  setHintOneEdit(false)
+                  handleDeleteHint(0)
+                }}
+              >
+                <X />
+              </Button>
+            </div>
+          </Card>
+          <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
+            <H4 className='col-span-full absolute -top-4 -left-2 bg-card px-2'>Indice moyen</H4>
+            <div className='col-span-2'>
+              {hintTwoEdit ? (
+                <Input
+                  placeholder="Indice moyen"
+                  value={hintTwoValue}
+                  onChange={(e) => setHintTwoValue(e.target.value)}
+                />
+              ) : currentHints?.[1]?.help ? (
+                <p>{currentHints?.[1]?.help}</p>
+              ) : (
+                <p className='text-muted-foreground text-sm'>Pas d'indice associé</p>
+              )}
+            </div>
+            <div className='grid grid-cols-2 gap-2'>
+              <Button
+                variant='outline'
+                type='button'
+                onClick={() => {
+                  if (hintTwoEdit) {
+                    handleSaveHint(1, hintTwoValue)
+                    setHintTwoEdit(false)
+                  } else {
+                    setHintTwoEdit(true)
+                  }
+                }}
+              >
+                {hintTwoEdit ? <Check /> : <Edit />}
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => {
+                  setHintTwoEdit(false)
+                  handleDeleteHint(1)
+                }}
+              >
+                <X />
+              </Button>
+            </div>
+          </Card>
+          <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
+            <H4 className='col-span-full absolute -top-4 -left-2 bg-card px-2'>Indice fort</H4>
+            <div className='col-span-2'>
+              {hintThreeEdit ? (
+                <Input
+                  placeholder="Grand indice"
+                  value={hintThreeValue}
+                  onChange={(e) => setHintThreeValue(e.target.value)}
+                />
+              ) : currentHints?.[2]?.help ? (
+                <p>{currentHints?.[2]?.help}</p>
+              ) : (
+                <p className='text-muted-foreground text-sm'>Pas d'indice associé</p>
+              )}
+            </div>
+            <div className='grid grid-cols-2 gap-2'>
+              <Button
+                variant='outline'
+                type='button'
+                onClick={() => {
+                  if (hintThreeEdit) {
+                    handleSaveHint(2, hintThreeValue)
+                    setHintThreeEdit(false)
+                  } else {
+                    setHintThreeEdit(true)
+                  }
+                }}
+              >
+                {hintThreeEdit ? <Check /> : <Edit />}
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => {
+                  setHintThreeEdit(false)
+                  handleDeleteHint(2)
+                }}
+              >
+                <X />
+              </Button>
+            </div>
+          </Card>
         </Card>
         <footer
           className="border-t-2 py-8 lg:fixed lg:w-screen left-0 bottom-0 flex justify-center items-center gap-4"

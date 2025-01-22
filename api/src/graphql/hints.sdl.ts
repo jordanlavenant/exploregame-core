@@ -9,8 +9,8 @@ export const schema = gql`
   }
 
   type Query {
-    hints: [Hint!]! @skipAuth
-    hint(id: String!): Hint @skipAuth
+    hints: [Hint!]! @requireAuth
+    hint(id: String!): Hint @requireAuth
   }
 
   input CreateHintInput {

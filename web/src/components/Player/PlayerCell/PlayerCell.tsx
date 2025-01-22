@@ -13,10 +13,7 @@ export const QUERY: TypedDocumentNode<FindPlayerById, FindPlayerByIdVariables> =
     query FindPlayerById($id: String!) {
       player: player(id: $id) {
         id
-        email
-        genderId
-        firstName
-        lastName
+        username
         hashedPassword
         departmentId
       }

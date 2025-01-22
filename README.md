@@ -6,6 +6,20 @@ Elle intègre une base de donnée `PostgreSQL` ou `SQLite` pour le stockage des 
 
 Elle fournie une API pour les autres micro-services de l'application.
 
+# Clone
+
+Pour cloner le projet, effectuez la commande suivante
+
+```bash
+git clone https://github.com/jordanlavenant/exploregame-core.git
+```
+
+Dans le dossier du projet, effectuez la commande suivante pour récupérer le sous-module [exploregame-types](https://github.com/jordanlavenant/exploregame-types.git)
+
+```bash
+git submodule update --init --recursive
+```
+
 # Docker installation
 
 ## Pre-requisites

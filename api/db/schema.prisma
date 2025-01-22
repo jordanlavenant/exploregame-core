@@ -109,7 +109,7 @@ model Hint {
   questionId  String
   hintLevelId String
   HintLevel   HintLevel @relation(fields: [hintLevelId], references: [id])
-  Question    Question  @relation(fields: [questionId], references: [id])
+  Question    Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -121,21 +121,11 @@ model User {
   resetTokenExpiresAt DateTime?
 }
 
-model Gender {
-  id     String   @id @default(uuid())
-  gender String
-  Player Player[]
-}
-
 model Player {
   id             String         @id @default(uuid())
-  email          String         @unique
-  genderId       String
-  firstName      String
-  lastName       String
+  username       String         @unique
   hashedPassword String
   departmentId   String
-  Gender         Gender         @relation(fields: [genderId], references: [id])
   Department     Department     @relation(fields: [departmentId], references: [id])
   PlayerScript   PlayerScript[]
 }
@@ -146,6 +136,7 @@ model PlayerScript {
   scriptId      String
   stepId        String
   questionId    String
+  completed     Boolean  @default(false)
   score         Int
   remainingTime Int
   Player        Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)

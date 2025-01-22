@@ -45,9 +45,6 @@ export const deletePlayer: MutationResolvers['deletePlayer'] = ({ id }) => {
 }
 
 export const Player: PlayerRelationResolvers = {
-  Gender: (_obj, { root }) => {
-    return db.player.findUnique({ where: { id: root?.id } }).Gender()
-  },
   Department: (_obj, { root }) => {
     return db.player.findUnique({ where: { id: root?.id } }).Department()
   },
@@ -59,12 +56,12 @@ export const Player: PlayerRelationResolvers = {
 export const loginPlayer: MutationResolvers['loginPlayer'] = async ({
   input,
 }) => {
-  const { email, password } = input
+  const { username, password } = input
 
-  const player = await db.player.findUnique({ where: { email } })
+  const player = await db.player.findUnique({ where: { username } })
 
   if (!player) {
-    throw new AuthenticationError(`L'email est incorrect ${email}`)
+    throw new AuthenticationError(`L'utilisateur est incorrect ${username}`)
   }
 
   // Comparaison du mot de passe haché
@@ -72,11 +69,11 @@ export const loginPlayer: MutationResolvers['loginPlayer'] = async ({
 
   if (!isPasswordValid) {
     throw new AuthenticationError(
-      `Mot de passe incorrect pour la tentaive de connexion avec l'email: ${email}`
+      `Mot de passe incorrect pour la tentaive de connexion avec le username: ${username}`
     )
   }
 
-  console.log(`🟢 L'utilisateur ${player.email} s'est connecté avec succès`)
+  console.log(`🟢 L'utilisateur ${player.username} s'est connecté avec succès`)
 
   // Génération d'un token JWT
   const token = jwt.sign({ userId: player.id }, JWT_SECRET_KEY, {

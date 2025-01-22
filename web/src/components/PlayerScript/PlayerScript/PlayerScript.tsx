@@ -9,7 +9,7 @@ import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import {} from 'src/lib/formatters'
+import { checkboxInputTag } from 'src/lib/formatters'
 
 const DELETE_PLAYER_SCRIPT_MUTATION: TypedDocumentNode<
   DeletePlayerScriptMutation,
@@ -72,6 +72,10 @@ const PlayerScript = ({ playerScript }: Props) => {
             <tr>
               <th>Question id</th>
               <td>{playerScript.questionId}</td>
+            </tr>
+            <tr>
+              <th>Completed</th>
+              <td>{checkboxInputTag(playerScript.completed)}</td>
             </tr>
             <tr>
               <th>Score</th>

@@ -5,6 +5,7 @@ export const schema = gql`
     scriptId: String!
     stepId: String!
     questionId: String!
+    completed: Boolean!
     score: Int!
     remainingTime: Int!
     Player: Player!
@@ -23,6 +24,7 @@ export const schema = gql`
     scriptId: String!
     stepId: String!
     questionId: String!
+    completed: Boolean!
     score: Int!
     remainingTime: Int!
   }
@@ -32,6 +34,7 @@ export const schema = gql`
     scriptId: String
     stepId: String
     questionId: String
+    completed: Boolean
     score: Int
     remainingTime: Int
   }
@@ -43,6 +46,6 @@ export const schema = gql`
       id: String!
       input: UpdatePlayerScriptInput!
     ): PlayerScript! @skipAuth
-    deletePlayerScript(id: String!): PlayerScript! @skipAuth
+    deletePlayerScript(id: String!): PlayerScript! @requireAuth
   }
 `

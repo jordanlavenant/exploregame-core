@@ -18,12 +18,36 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
-      <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion">
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+        <Route path="/players/new" page={PlayerNewPlayerPage} name="newPlayer" />
+        <Route path="/players/{id}/edit" page={PlayerEditPlayerPage} name="editPlayer" />
+        <Route path="/players/{id}" page={PlayerPlayerPage} name="player" />
+        <Route path="/players" page={PlayerPlayersPage} name="players" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
+        <Route path="/hints/new" page={HintNewHintPage} name="newHint" />
+        <Route path="/hints/{id}/edit" page={HintEditHintPage} name="editHint" />
+        <Route path="/hints/{id}" page={HintHintPage} name="hint" />
+        <Route path="/hints" page={HintHintsPage} name="hints" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
+        <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
+        <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
+        <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
+        <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
+      </Set>
+      <PrivateSet wrap={ScaffoldLayout} title="Paramètres Question" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion" unauthenticated='login'>
         <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
         <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
         <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
         <Route path="/questions" page={QuestionQuestionsPage} name="questions" />
-      </Set>
+      </PrivateSet>
       <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
         <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
         <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
@@ -55,10 +79,6 @@ const Routes = () => {
         <Route path="/answers" page={AnswerAnswersPage} name="answers" />
       </Set>
       <Set wrap={ScaffoldLayout} title="PlayerScripts" titleTo="playerScripts" buttonLabel="New PlayerScript" buttonTo="newPlayerScript">
-        <Route path="/player-scripts/new" page={PlayerScriptNewPlayerScriptPage} name="newPlayerScript" />
-        <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
-        <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
-        <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
       </Set>
       <Set wrap={ScaffoldLayout} title="ColorSets" titleTo="colorSets" buttonLabel="New ColorSet" buttonTo="newColorSet">
         <Route path="/color-sets/new" page={ColorSetNewColorSetPage} name="newColorSet" />
@@ -81,22 +101,10 @@ const Routes = () => {
           <Route path="/scripts" page={ScriptScriptsPage} name="scripts" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
-          <Route path="/players/new" page={PlayerNewPlayerPage} name="newPlayer" />
-          <Route path="/players/{id}/edit" page={PlayerEditPlayerPage} name="editPlayer" />
-          <Route path="/players/{id}" page={PlayerPlayerPage} name="player" />
-          <Route path="/players" page={PlayerPlayersPage} name="players" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Genders" titleTo="genders" buttonLabel="New Gender" buttonTo="newGender">
-          <Route path="/genders/new" page={GenderNewGenderPage} name="newGender" />
-          <Route path="/genders/{id}/edit" page={GenderEditGenderPage} name="editGender" />
-          <Route path="/genders/{id}" page={GenderGenderPage} name="gender" />
-          <Route path="/genders" page={GenderGendersPage} name="genders" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Hints" titleTo="hints" buttonLabel="New Hint" buttonTo="newHint">
-          <Route path="/hints/new" page={HintNewHintPage} name="newHint" />
-          <Route path="/hints/{id}/edit" page={HintEditHintPage} name="editHint" />
-          <Route path="/hints/{id}" page={HintHintPage} name="hint" />
-          <Route path="/hints" page={HintHintsPage} name="hints" />
         </Set>
         <Set wrap={ScaffoldLayout} title="HintLevels" titleTo="hintLevels" buttonLabel="New HintLevel" buttonTo="newHintLevel">
           <Route path="/hint-levels/new" page={HintLevelNewHintLevelPage} name="newHintLevel" />

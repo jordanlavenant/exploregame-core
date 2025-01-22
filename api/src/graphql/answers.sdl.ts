@@ -29,13 +29,18 @@ export const schema = gql`
 
   input CheckAnswerInput {
     questionId: String!
-    answer: String!
+    answers: [String!]
+  }
+
+  type CheckAnswerOutput {
+    isCorrect: Boolean!
+    correctAnswers: [String]
   }
 
   type Mutation {
     createAnswer(input: CreateAnswerInput!): Answer! @requireAuth
     updateAnswer(id: String!, input: UpdateAnswerInput!): Answer! @requireAuth
     deleteAnswer(id: String!): Answer! @requireAuth
-    checkAnswer(input: CheckAnswerInput!): Boolean! @skipAuth
+    checkAnswer(input: CheckAnswerInput!): CheckAnswerOutput! @skipAuth
   }
 `

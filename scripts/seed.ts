@@ -122,18 +122,18 @@ export default async () => {
     const locations = [
       {
         id: '1',
-        name: 'Belfort',
-        description: 'Belfort',
+        name: 'Batiment CAP',
+        description: 'Batiment CAP',
       },
       {
         id: '2',
-        name: 'Montbéliard',
-        description: 'Montbéliard',
+        name: 'Accueil',
+        description: 'Accueil',
       },
       {
         id: '3',
-        name: 'Sevenans',
-        description: 'Sevenans',
+        name: 'Bâtiment GEA',
+        description: 'Bâtiment GEA',
       },
     ]
     await db.location.createMany({ data: locations })
@@ -154,40 +154,12 @@ export default async () => {
     ]
     await db.hintLevel.createMany({ data: hintLevels })
 
-    const genders = [
-      {
-        id: '1',
-        gender: 'Homme',
-      },
-      {
-        id: '2',
-        gender: 'Femme',
-      },
-      {
-        id: '3',
-        gender: 'Autre',
-      },
-    ]
-    await db.gender.createMany({ data: genders })
-
     const scripts = [
       {
         id: '1',
         name: 'Script 1',
         visible: true,
         departmentId: '1',
-      },
-      {
-        id: '2',
-        name: 'Script 2',
-        visible: true,
-        departmentId: '2',
-      },
-      {
-        id: '3',
-        name: 'Script 3',
-        visible: true,
-        departmentId: '3',
       },
     ]
     await db.script.createMany({ data: scripts })
@@ -208,41 +180,6 @@ export default async () => {
         name: 'Step 3',
         locationId: '3',
       },
-      {
-        id: '4',
-        name: 'Step 4',
-        locationId: '1',
-      },
-      {
-        id: '5',
-        name: 'Step 5',
-        locationId: '2',
-      },
-      {
-        id: '6',
-        name: 'Step 6',
-        locationId: '3',
-      },
-      {
-        id: '7',
-        name: 'Step 7',
-        locationId: '1',
-      },
-      {
-        id: '8',
-        name: 'Step 8',
-        locationId: '2',
-      },
-      {
-        id: '9',
-        name: 'Step 9',
-        locationId: '3',
-      },
-      {
-        id: '10',
-        name: 'Step 10',
-        locationId: '1',
-      },
     ]
     await db.step.createMany({ data: steps })
 
@@ -251,55 +188,19 @@ export default async () => {
         id: '1',
         scriptId: '1',
         stepId: '1',
-        lettre: 'A',
+        lettre: 'I',
       },
       {
         id: '2',
         scriptId: '1',
         stepId: '2',
-        lettre: 'R',
+        lettre: 'U',
       },
       {
         id: '3',
         scriptId: '1',
         stepId: '3',
-        lettre: 'K',
-      },
-      {
-        id: '4',
-        scriptId: '2',
-        stepId: '4',
-        lettre: 'H',
-      },
-      {
-        id: '5',
-        scriptId: '2',
-        stepId: '5',
         lettre: 'T',
-      },
-      {
-        id: '6',
-        scriptId: '2',
-        stepId: '6',
-        lettre: 'S',
-      },
-      {
-        id: '7',
-        scriptId: '3',
-        stepId: '7',
-        lettre: 'N',
-      },
-      {
-        id: '8',
-        scriptId: '3',
-        stepId: '8',
-        lettre: 'N',
-      },
-      {
-        id: '9',
-        scriptId: '3',
-        stepId: '9',
-        lettre: 'C',
       },
     ]
     await db.scriptStep.createMany({ data: scriptsSteps })
@@ -307,15 +208,15 @@ export default async () => {
     const questionTypes = [
       {
         id: '1',
-        type: 'Texte',
+        type: 'Réponse texte',
       },
       {
         id: '2',
-        type: 'Choix',
+        type: 'Choix unique',
       },
       {
         id: '3',
-        type: 'Date',
+        type: 'Choix multiple',
       },
     ]
     await db.questionType.createMany({ data: questionTypes })
@@ -323,71 +224,70 @@ export default async () => {
     const questions = [
       {
         id: '1',
-        question: 'Quel est votre nom ?',
-        description: 'Entrez votre nom',
-        questionTypeId: '1',
+        question: 'Dans quel bâtiment se trouve la cafétéria ?',
+        description: '',
+        questionTypeId: '3',
         stepId: '1',
       },
       {
         id: '2',
-        question: 'Quel est votre prénom ?',
-        description: 'Entrez votre prénom',
-        questionTypeId: '2',
+        question: 'Citez au moins un plat proposés à la cafétéria ?',
+        description: '',
+        questionTypeId: '1',
         stepId: '1',
       },
       {
         id: '3',
-        question: 'Quel est votre âge ?',
-        description: 'Entrez votre âge',
-        questionTypeId: '1',
+        question: 'Quelles sont les options de paiement disponibles ?',
+        description: '',
+        questionTypeId: '2',
         stepId: '1',
       },
       {
         id: '4',
-        question: 'Quel est votre sexe ?',
-        description: 'Entrez votre sexe',
+        question: "Qu'est-ce que Izly ?",
+        description: '',
         questionTypeId: '2',
-        stepId: '2',
+        stepId: '1',
       },
+
+      // Lieu numéro 2
       {
         id: '5',
-        question: 'Quel est votre date de naissance ?',
-        description: 'Entrez votre date de naissance',
-        questionTypeId: '3',
-        stepId: '2',
-      },
-      {
-        id: '6',
-        question: 'Quel est votre adresse ?',
-        description: 'Entrez votre adresse',
+        question:
+          'Combien de radiateurs sont présents dans le hall géo-climatique ?',
+        description: '',
         questionTypeId: '1',
         stepId: '2',
+      },
+
+      // Lieu numéro 3
+      {
+        id: '6',
+        question: 'Où se trouve le secrétariat de mon département ?',
+        description: '',
+        questionTypeId: '2',
+        stepId: '3',
       },
       {
         id: '7',
-        question: 'Quel est votre code postal ?',
-        description: 'Entrez votre code postal',
+        question: 'Quel est le nom du secrétaire de mon département ?',
+        description: '',
         questionTypeId: '1',
-        stepId: '2',
+        stepId: '3',
       },
       {
         id: '8',
-        question: 'Quel est votre ville ?',
-        description: 'Entrez votre ville',
+        question:
+          "À qui dois-je m'adresser si je souhaite prévenir d'une absence ?",
+        description: '',
         questionTypeId: '1',
         stepId: '3',
       },
       {
         id: '9',
-        question: 'Quel est votre numéro de téléphone ?',
-        description: 'Entrez votre numéro de téléphone',
-        questionTypeId: '1',
-        stepId: '3',
-      },
-      {
-        id: '10',
-        question: 'Quel est votre email ?',
-        description: 'Entrez votre email',
+        question: 'Combien existe-t-il de parcours dans mon département ?',
+        description: "(s'aider d'internet si besoin)",
         questionTypeId: '1',
         stepId: '3',
       },
@@ -397,72 +297,151 @@ export default async () => {
     const answers = [
       {
         id: '1',
-        answer: 'Joe',
-        description: 'Joe Mama',
+        answer: 'Bâtiment CAP',
+        description: "C'est ici que se trouve la cafétéria.",
         questionId: '1',
         isCorrect: true,
       },
       {
         id: '2',
-        answer: 'Mama',
-        description: 'Joe Mama',
-        questionId: '2',
-        isCorrect: false,
+        answer: 'Bâtiment GEO',
+        description: "Ce n'est pas le bon bâtiment.",
+        questionId: '1',
+        isCorrect: true,
       },
       {
         id: '3',
-        answer: '69',
-        description: 'Joe Mama',
-        questionId: '2',
+        answer: 'Bâtiment A',
+        description: "Ce n'est pas le bon bâtiment.",
+        questionId: '1',
         isCorrect: false,
       },
       {
         id: '4',
-        answer: 'Homme',
-        description: 'Joe Mama',
-        questionId: '2',
-        isCorrect: true,
-      },
-      {
-        id: '5',
-        answer: '01/01/1970',
-        description: 'Joe Mama',
-        questionId: '3',
+        answer: 'Bâtiment B',
+        description: "Ce n'est pas le bon bâtiment.",
+        questionId: '1',
         isCorrect: false,
       },
       {
+        id: '5',
+        answer: 'Carte bancaire et Izly',
+        description: 'Modes de paiement acceptés.',
+        questionId: '3',
+        isCorrect: true,
+      },
+      {
         id: '6',
-        answer: '1 rue de la rue',
-        description: 'Joe Mama',
+        answer: 'Espèces uniquement',
+        description: "Ce n'est pas correct.",
         questionId: '3',
         isCorrect: false,
       },
       {
         id: '7',
-        answer: '90000',
-        description: 'Joe Mama',
+        answer: 'Chèques seulement',
+        description: "Ce n'est pas correct.",
         questionId: '3',
         isCorrect: false,
       },
       {
         id: '8',
-        answer: 'Belfort',
-        description: 'Joe Mama',
+        answer: 'Apple Pay uniquement',
+        description: "Ce n'est pas correct.",
         questionId: '3',
-        isCorrect: true,
+        isCorrect: false,
       },
       {
         id: '9',
-        answer: '0123456789',
-        description: 'Joe Mama',
+        answer: 'Un système de paiement étudiant',
+        description: 'Izly est utilisé pour payer les repas et services.',
         questionId: '4',
         isCorrect: true,
       },
       {
         id: '10',
-        answer: 'joe@gmail.com',
-        description: 'Joe Mama',
+        answer: 'Une application de transport',
+        description: "Ce n'est pas correct.",
+        questionId: '4',
+        isCorrect: false,
+      },
+      {
+        id: '11',
+        answer: 'Un service bancaire',
+        description: "Ce n'est pas totalement exact.",
+        questionId: '4',
+        isCorrect: false,
+      },
+      {
+        id: '12',
+        answer: 'Un outil de gestion des emplois du temps',
+        description: "Ce n'est pas correct.",
+        questionId: '4',
+        isCorrect: false,
+      },
+      {
+        id: '13',
+        answer: "Au secrétariat, près de l'accueil",
+        description: 'Lieu où se trouve le secrétariat.',
+        questionId: '6',
+        isCorrect: true,
+      },
+      {
+        id: '14',
+        answer: 'Dans le bâtiment administratif',
+        description: "Ce n'est pas correct.",
+        questionId: '6',
+        isCorrect: false,
+      },
+      {
+        id: '15',
+        answer: 'Dans la bibliothèque',
+        description: "Ce n'est pas correct.",
+        questionId: '6',
+        isCorrect: false,
+      },
+      {
+        id: '16',
+        answer: 'Au premier étage',
+        description: "Ce n'est pas correct.",
+        questionId: '6',
+        isCorrect: false,
+      },
+
+      // Réponses pour les questions de type 1 (texte)
+      {
+        id: '17',
+        answer: 'Pâtes au pesto',
+        description: 'Plat proposé à la cafétéria.',
+        questionId: '2',
+        isCorrect: true,
+      },
+      {
+        id: '18',
+        answer: '5',
+        description: 'Il y a 5 radiateurs dans le hall géo-climatique.',
         questionId: '5',
+        isCorrect: true,
+      },
+      {
+        id: '19',
+        answer: 'Monsieur Dupont',
+        description: 'Nom du secrétaire du département.',
+        questionId: '7',
+        isCorrect: true,
+      },
+      {
+        id: '20',
+        answer: 'Madame Martin',
+        description: "Personne à contacter en cas d'absence.",
+        questionId: '8',
+        isCorrect: true,
+      },
+      {
+        id: '21',
+        answer: '3 parcours',
+        description: 'Nombre de parcours dans le département.',
+        questionId: '9',
         isCorrect: true,
       },
     ]
@@ -528,34 +507,34 @@ export default async () => {
       },
       {
         nomPerso: 'Panda',
-        descriptionL: 'Panda est la mascotte officiel de l\'Infasso',
-      }
+        descriptionL: "Panda est la mascotte officiel de l'Infasso",
+      },
     ]
-    const characters = [];
+    const characters = []
     for (const characterData of charactersData) {
-      const character = await db.character.create({ data: characterData });
-      characters.push(character);
+      const character = await db.character.create({ data: characterData })
+      characters.push(character)
     }
     const characterSteps = [
       {
         characterId: characters[0].id,
         stepId: '1',
-        text: 'Bonjour, je m\'appelle Jérémie, je suis un futur étudiant de l\'iut d\'Orléans',
+        text: "Bonjour, je m'appelle Jérémie, je suis un futur étudiant de l'iut d'Orléans",
       },
       {
         characterId: characters[1].id,
         stepId: '1',
-        text: 'Salut, je suis Panda, la mascotte officiel de l\'Infasso',
+        text: "Salut, je suis Panda, la mascotte officiel de l'Infasso",
       },
       {
         characterId: characters[0].id,
         stepId: '1',
-        text: 'Je suis là pour découvrir les différents départements de l\'iut d\'Orléans',
+        text: "Je suis là pour découvrir les différents départements de l'iut d'Orléans",
       },
       {
         characterId: characters[1].id,
         stepId: '1',
-        text: 'Je suis là pour t\'aider à trouver les différentes étapes de ton aventure',
+        text: "Je suis là pour t'aider à trouver les différentes étapes de ton aventure",
       },
       {
         characterId: characters[1].id,
@@ -571,43 +550,36 @@ export default async () => {
         characterId: characters[0].id,
         stepId: '1',
         text: 'Merci Panda !',
-      }
+      },
     ]
     await db.characterStep.createMany({ data: characterSteps })
 
     const players = [
       {
-        email: 'joe@doe.com',
-        password: 'joe',
-        genderId: '1',
-        firstname: 'Joe',
-        lastname: 'Doe',
+        username: 'jordanlavenant',
+        password: 'jordan',
         departmentId: '1',
       },
       {
-        email: 'jane@doe.com',
-        password: 'jane',
-        genderId: '2',
-        firstname: 'Jane',
-        lastname: 'Doe',
+        username: 'danielmalleron',
+        password: 'daniel',
         departmentId: '2',
       },
       {
-        email: 'john@doe.com',
-        password: 'john',
-        genderId: '1',
-        firstname: 'John',
-        lastname: 'Doe',
-        departmentId: '3',
+        username: 'leolucidor',
+        password: 'leo',
+        departmentId: '2',
+      },
+      {
+        username: 'nathanpigoreau',
+        password: 'nathan',
+        departmentId: '2',
       },
     ]
     for (const player of players) {
       await db.player.create({
         data: {
-          email: player.email,
-          genderId: player.genderId,
-          firstName: player.firstname,
-          lastName: player.lastname,
+          username: player.username,
           departmentId: player.departmentId,
           hashedPassword: await bcrypt.hash(player.password, 10),
         },
@@ -615,7 +587,7 @@ export default async () => {
     }
 
     console.info(
-      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${genders.length} genders, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players, ${hints.length} hints`
+      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players, ${hints.length} hints`
     )
   } catch (error) {
     console.error(error)

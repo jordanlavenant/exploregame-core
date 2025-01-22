@@ -18,7 +18,7 @@ const ScaffoldLayout = ({
   children,
 }: LayoutProps) => {
   return (
-    <div className="">
+    <div className="rw-scaffold">
       <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
       <NavBar /> 
       <header className="rw-header">

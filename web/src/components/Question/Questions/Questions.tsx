@@ -2,6 +2,7 @@ import type {
   DeleteQuestionMutation,
   DeleteQuestionMutationVariables,
   FindQuestions,
+  Question,
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'

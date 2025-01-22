@@ -22,6 +22,7 @@ export const QUERY: TypedDocumentNode<
       scriptId
       stepId
       questionId
+      completed
       score
       remainingTime
     }

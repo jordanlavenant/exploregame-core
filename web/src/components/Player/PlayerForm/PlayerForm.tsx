@@ -35,76 +35,22 @@ const PlayerForm = (props: PlayerFormProps) => {
         />
 
         <Label
-          name="email"
+          name="username"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Email
+          Username
         </Label>
 
         <TextField
-          name="email"
-          defaultValue={props.player?.email}
+          name="username"
+          defaultValue={props.player?.username}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="email" className="rw-field-error" />
-
-        <Label
-          name="genderId"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Gender id
-        </Label>
-
-        <TextField
-          name="genderId"
-          defaultValue={props.player?.genderId}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
-        />
-
-        <FieldError name="genderId" className="rw-field-error" />
-
-        <Label
-          name="firstName"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          First name
-        </Label>
-
-        <TextField
-          name="firstName"
-          defaultValue={props.player?.firstName}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
-        />
-
-        <FieldError name="firstName" className="rw-field-error" />
-
-        <Label
-          name="lastName"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Last name
-        </Label>
-
-        <TextField
-          name="lastName"
-          defaultValue={props.player?.lastName}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
-        />
-
-        <FieldError name="lastName" className="rw-field-error" />
+        <FieldError name="username" className="rw-field-error" />
 
         <Label
           name="hashedPassword"
