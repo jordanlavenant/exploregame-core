@@ -223,10 +223,6 @@ export default async () => {
 
     const questionTypes = [
       {
-        id: '1',
-        type: 'Question ouverte',
-      },
-      {
         id: '2',
         type: 'Choix unique',
       },
@@ -238,7 +234,6 @@ export default async () => {
     await db.questionType.createMany({ data: questionTypes })
 
     const questions = [
-      // Lieu numéro 1 : Bâtiment CAP
       {
         id: '1',
         question: 'Dans quel bâtiment se trouve la cafétéria ?',

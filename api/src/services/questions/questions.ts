@@ -50,13 +50,13 @@ export const checkAnswer: MutationResolvers['checkAnswer'] = async ({ input }) =
   if (!question) {
     throw new Error('Question not found')
   }
-  const isCorrect = question.Answer.some(
-    (answer) => answer.answer === input.answer && answer.isCorrect
-  )
-  const correctAnswer = question.Answer.find((answer) => answer.isCorrect)
+
+  const correctAnswers = question.Answer.filter((answer) => answer.isCorrect).map((answer) => answer.answer)
+  const isCorrect = input.answers.every((answer) => correctAnswers.includes(answer)) && input.answers.length === correctAnswers.length
+
   return {
     isCorrect,
-    correctAnswer: correctAnswer?.answer,
+    correctAnswers,
   }
 }
 

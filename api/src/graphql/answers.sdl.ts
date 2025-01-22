@@ -29,12 +29,12 @@ export const schema = gql`
 
   input CheckAnswerInput {
     questionId: String!
-    answer: String!
+    answers: [String!]
   }
 
   type CheckAnswerOutput {
     isCorrect: Boolean!
-    correctAnswer: String
+    correctAnswers: [String]
   }
 
   type Mutation {
