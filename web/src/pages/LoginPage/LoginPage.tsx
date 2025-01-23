@@ -135,8 +135,8 @@ const LoginPage = () => {
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={() => navigate('/login')} // Remplacez par l'action souhaitée
-                  className="text-sm text-blue-600 hover:underline"
+                  type='submit'
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                   Login
                 </button>
@@ -144,7 +144,7 @@ const LoginPage = () => {
                   {({ loading }) => (
                     <button type="submit" disabled={loading}>
                       {loading ? "Logging in..." : "Submit"}
-                    </buttonutton>
+                    </button>
                   )}
                 </Submit>
               </div>
