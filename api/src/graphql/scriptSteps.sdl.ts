@@ -10,8 +10,8 @@ export const schema = gql`
   }
 
   type Query {
-    scriptSteps: [ScriptStep!]! @requireAuth
-    scriptStep(id: String!): ScriptStep @requireAuth
+    scriptSteps: [ScriptStep!]! @skipAuth
+    scriptStep(id: String!): ScriptStep @skipAuth
   }
 
   input CreateScriptStepInput {

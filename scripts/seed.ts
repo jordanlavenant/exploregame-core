@@ -189,21 +189,21 @@ export default async () => {
         scriptId: '1',
         stepId: '1',
         lettre: 'I',
-        order: 1,
+        order: 0,
       },
       {
         id: '2',
         scriptId: '1',
         stepId: '2',
         lettre: 'U',
-        order: 2,
+        order: 1,
       },
       {
         id: '3',
         scriptId: '1',
         stepId: '3',
         lettre: 'T',
-        order: 3,
+        order: 2,
       },
     ]
     await db.scriptStep.createMany({ data: scriptsSteps })
@@ -231,7 +231,7 @@ export default async () => {
         description: '',
         questionTypeId: '3',
         stepId: '1',
-        order: 1,
+        order: 0,
       },
       {
         id: '2',
@@ -239,7 +239,7 @@ export default async () => {
         description: '',
         questionTypeId: '1',
         stepId: '1',
-        order: 2,
+        order: 1,
       },
       {
         id: '3',
@@ -247,7 +247,7 @@ export default async () => {
         description: '',
         questionTypeId: '2',
         stepId: '1',
-        order: 3,
+        order: 2,
       },
       {
         id: '4',
@@ -255,7 +255,7 @@ export default async () => {
         description: '',
         questionTypeId: '2',
         stepId: '1',
-        order: 4,
+        order: 3,
       },
 
       // Lieu numéro 2
@@ -266,7 +266,7 @@ export default async () => {
         description: '',
         questionTypeId: '1',
         stepId: '2',
-        order: 1,
+        order: 0,
       },
 
       // Lieu numéro 3
@@ -276,7 +276,7 @@ export default async () => {
         description: '',
         questionTypeId: '2',
         stepId: '3',
-        order: 1,
+        order: 0,
       },
       {
         id: '7',
@@ -284,7 +284,7 @@ export default async () => {
         description: '',
         questionTypeId: '1',
         stepId: '3',
-        order: 2,
+        order: 1,
       },
       {
         id: '8',
@@ -293,7 +293,7 @@ export default async () => {
         description: '',
         questionTypeId: '1',
         stepId: '3',
-        order: 3,
+        order: 2,
       },
       {
         id: '9',
@@ -301,7 +301,7 @@ export default async () => {
         description: "(s'aider d'internet si besoin)",
         questionTypeId: '1',
         stepId: '3',
-        order: 4,
+        order: 3,
       },
     ]
     await db.question.createMany({ data: questions })
