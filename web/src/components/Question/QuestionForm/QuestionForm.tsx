@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown, Edit, Minus, Plus, X } from 'lucide-react'
+import { Check, ChevronsUpDown, Edit, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import type {
   Answer,
   EditQuestionById,
-  Hint,
   HintLevel,
   QuestionType,
   Step,
@@ -69,6 +68,12 @@ const QUESTION_FORM_QUERY = gql`
     steps {
       id
       name
+      ScriptStep {
+        Script {
+          id
+          name
+        }
+      }
     }
     hints {
       id
@@ -144,6 +149,8 @@ const QuestionForm = (props: QuestionFormProps) => {
     resolver: zodResolver(formSchema),
   })
 
+  // const [currScript, setCurrScript] = useState<Script | undefined>(undefined)
+
   useEffect(() => {
     if (!form.getValues('questionTypeId')) {
       form.setValue('questionTypeId', props.question?.questionTypeId)
@@ -169,10 +176,6 @@ const QuestionForm = (props: QuestionFormProps) => {
     }[] | undefined>(
     props.question?.Hint || undefined
   )
-
-  useEffect(() => {
-    console.log(currentHints)
-  }, [currentHints])
 
   useEffect(() => {
     if (currentHints) {
@@ -303,9 +306,9 @@ const QuestionForm = (props: QuestionFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid md:grid-cols-3  gap-4 p-4 *:p-4"
+        className="grid md:grid-cols-3 gap-4 p-4 *:p-4"
       >
-        <Card>
+        <Card className='space-y-4'>
           <H3 className="mb-8">Question</H3>
           <FormField
             control={form.control}
@@ -339,7 +342,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             control={form.control}
             name="questionTypeId"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='flex flex-col'>
                 <FormLabel>Type de la question</FormLabel>
                 {(loading || !questionTypes) && (
                   <Skeleton className="w-[200px] h-10" />
@@ -352,7 +355,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                           variant="outline"
                           role="combobox"
                           className={cn(
-                            'w-[200px] justify-between mx-4',
+                            'sm:w-[200px] justify-between',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
@@ -405,7 +408,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             control={form.control}
             name="stepId"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='flex flex-col'>
                 <FormLabel>Etape associée</FormLabel>
                 {(loading || !steps) && <Skeleton className="w-[200px] h-10" />}
                 {steps && (
@@ -416,7 +419,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                           variant="outline"
                           role="combobox"
                           className={cn(
-                            'w-[200px] justify-between mx-4',
+                            'sm:w-[200px] justify-between',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
@@ -464,6 +467,9 @@ const QuestionForm = (props: QuestionFormProps) => {
               </FormItem>
             )}
           />
+          {/* <section className='my-4'>
+            <p className='text-sm'>Scénario attribué : {currScript?.name}</p>
+          </section> */}
         </Card>
         <Card>
           <H3 className="mb-8">Réponse(s) associée(s)</H3>

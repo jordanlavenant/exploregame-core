@@ -10,7 +10,7 @@ import type {
   CellFailureProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
-import { useMutation } from '@redwoodjs/web'
+import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import StepForm from 'src/components/Step/StepForm'
@@ -21,6 +21,10 @@ export const QUERY: TypedDocumentNode<EditStepById> = gql`
       id
       name
       locationId
+      Questions {
+        id
+        question
+      }
     }
   }
 `
@@ -45,6 +49,10 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ step }: CellSuccessProps<EditStepById>) => {
+    const { refetch } = useQuery(QUERY, {
+      variables: { id: step.id },
+      fetchPolicy: 'network-only',
+    })
   const [updateStep, { loading, error }] = useMutation(UPDATE_STEP_MUTATION, {
     onCompleted: () => {
       toast.success('Step updated')
@@ -57,18 +65,15 @@ export const Success = ({ step }: CellSuccessProps<EditStepById>) => {
 
   const onSave = (input: UpdateStepInput, id: EditStepById['step']['id']) => {
     updateStep({ variables: { id, input } })
+    refetch()
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">
-          Edit Step {step?.id}
-        </h2>
-      </header>
-      <div className="rw-segment-main">
-        <StepForm step={step} onSave={onSave} error={error} loading={loading} />
-      </div>
-    </div>
+    <StepForm
+      step={step}
+      onSave={onSave}
+      error={error}
+      loading={loading}
+    />
   )
 }
