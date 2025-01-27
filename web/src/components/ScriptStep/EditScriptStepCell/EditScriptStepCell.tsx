@@ -22,6 +22,7 @@ export const QUERY: TypedDocumentNode<EditScriptStepById> = gql`
       scriptId
       stepId
       lettre
+      order
     }
   }
 `
@@ -39,6 +40,7 @@ const UPDATE_SCRIPT_STEP_MUTATION: TypedDocumentNode<
       scriptId
       stepId
       lettre
+      order
     }
   }
 `

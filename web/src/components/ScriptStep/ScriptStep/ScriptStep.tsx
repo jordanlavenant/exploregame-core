@@ -69,6 +69,10 @@ const ScriptStep = ({ scriptStep }: Props) => {
               <th>Lettre</th>
               <td>{scriptStep.lettre}</td>
             </tr>
+            <tr>
+              <th>Order</th>
+              <td>{scriptStep.order}</td>
+            </tr>
           </tbody>
         </table>
       </div>

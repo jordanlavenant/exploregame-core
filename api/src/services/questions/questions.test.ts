@@ -35,6 +35,7 @@ describe('questions', () => {
         description: 'String',
         questionTypeId: scenario.question.two.questionTypeId,
         stepId: scenario.question.two.stepId,
+        order: 1632975,
       },
     })
 
@@ -42,6 +43,7 @@ describe('questions', () => {
     expect(result.description).toEqual('String')
     expect(result.questionTypeId).toEqual(scenario.question.two.questionTypeId)
     expect(result.stepId).toEqual(scenario.question.two.stepId)
+    expect(result.order).toEqual(1632975)
   })
 
   scenario('updates a question', async (scenario: StandardScenario) => {

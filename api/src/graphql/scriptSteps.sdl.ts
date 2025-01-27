@@ -4,25 +4,28 @@ export const schema = gql`
     scriptId: String!
     stepId: String!
     lettre: String!
+    order: Int!
     Script: Script!
     Step: Step!
   }
 
   type Query {
-    scriptSteps: [ScriptStep!]! @skipAuth
-    scriptStep(id: String!): ScriptStep @skipAuth
+    scriptSteps: [ScriptStep!]! @requireAuth
+    scriptStep(id: String!): ScriptStep @requireAuth
   }
 
   input CreateScriptStepInput {
     scriptId: String!
     stepId: String!
     lettre: String!
+    order: Int!
   }
 
   input UpdateScriptStepInput {
     scriptId: String
     stepId: String
     lettre: String
+    order: Int
   }
 
   type Mutation {

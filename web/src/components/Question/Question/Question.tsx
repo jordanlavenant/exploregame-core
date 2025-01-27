@@ -73,6 +73,10 @@ const Question = ({ question }: Props) => {
               <th>Step id</th>
               <td>{question.stepId}</td>
             </tr>
+            <tr>
+              <th>Order</th>
+              <td>{question.order}</td>
+            </tr>
           </tbody>
         </table>
       </div>

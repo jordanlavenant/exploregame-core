@@ -53,6 +53,7 @@ model ScriptStep {
   scriptId String
   stepId   String
   lettre   String
+  order    Int
   Script   Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
   Step     Step   @relation(fields: [stepId], references: [id], onDelete: Cascade)
 }
@@ -81,6 +82,7 @@ model Question {
   description    String
   questionTypeId String
   stepId         String
+  order          Int
   Step           Step           @relation(fields: [stepId], references: [id])
   QuestionType   QuestionType   @relation(fields: [questionTypeId], references: [id])
   Answer         Answer[]

@@ -10,7 +10,7 @@ import type {
   CellFailureProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
-import { useMutation, useQuery } from '@redwoodjs/web'
+import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import QuestionForm from 'src/components/Question/QuestionForm'
@@ -23,19 +23,7 @@ export const QUERY: TypedDocumentNode<EditQuestionById> = gql`
       description
       questionTypeId
       stepId
-      Answer {
-        id
-        answer
-        description
-        isCorrect
-        questionId
-      }
-      Hint {
-        id
-        help
-        hintLevelId
-        questionId
-      }
+      order
     }
   }
 `
@@ -51,6 +39,7 @@ const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
       description
       questionTypeId
       stepId
+      order
     }
   }
 `
@@ -62,11 +51,6 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ question }: CellSuccessProps<EditQuestionById>) => {
-  const { refetch } = useQuery(QUERY, {
-    variables: { id: question.id },
-    fetchPolicy: 'network-only',
-  })
-
   const [updateQuestion, { loading, error }] = useMutation(
     UPDATE_QUESTION_MUTATION,
     {
@@ -85,15 +69,23 @@ export const Success = ({ question }: CellSuccessProps<EditQuestionById>) => {
     id: EditQuestionById['question']['id']
   ) => {
     updateQuestion({ variables: { id, input } })
-    refetch()
   }
 
   return (
-    <QuestionForm
-      question={question}
-      onSave={onSave}
-      error={error}
-      loading={loading}
-    />
+    <div className="rw-segment">
+      <header className="rw-segment-header">
+        <h2 className="rw-heading rw-heading-secondary">
+          Edit Question {question?.id}
+        </h2>
+      </header>
+      <div className="rw-segment-main">
+        <QuestionForm
+          question={question}
+          onSave={onSave}
+          error={error}
+          loading={loading}
+        />
+      </div>
+    </div>
   )
 }

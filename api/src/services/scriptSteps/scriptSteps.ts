@@ -7,7 +7,9 @@ import type {
 import { db } from 'src/lib/db'
 
 export const scriptSteps: QueryResolvers['scriptSteps'] = () => {
-  return db.scriptStep.findMany()
+  return db.scriptStep.findMany({
+    orderBy: { order: 'asc' },
+  })
 }
 
 export const scriptStep: QueryResolvers['scriptStep'] = ({ id }) => {

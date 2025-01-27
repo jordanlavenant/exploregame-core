@@ -7,6 +7,7 @@ import {
   FieldError,
   Label,
   TextField,
+  NumberField,
   Submit,
 } from '@redwoodjs/forms'
 
@@ -87,6 +88,24 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
         />
 
         <FieldError name="lettre" className="rw-field-error" />
+
+        <Label
+          name="order"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Order
+        </Label>
+
+        <NumberField
+          name="order"
+          defaultValue={props.scriptStep?.order}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="order" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

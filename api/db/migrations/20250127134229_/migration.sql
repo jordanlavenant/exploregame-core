@@ -32,6 +32,7 @@ CREATE TABLE "ScriptStep" (
     "scriptId" TEXT NOT NULL,
     "stepId" TEXT NOT NULL,
     "lettre" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
 
     CONSTRAINT "ScriptStep_pkey" PRIMARY KEY ("id")
 );
@@ -63,6 +64,7 @@ CREATE TABLE "Question" (
     "description" TEXT NOT NULL,
     "questionTypeId" TEXT NOT NULL,
     "stepId" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
 
     CONSTRAINT "Question_pkey" PRIMARY KEY ("id")
 );

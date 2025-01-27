@@ -21,6 +21,7 @@ export const QUERY: TypedDocumentNode<
       scriptId
       stepId
       lettre
+      order
     }
   }
 `

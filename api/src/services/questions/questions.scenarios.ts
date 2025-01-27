@@ -7,6 +7,7 @@ export const standard = defineScenario<Prisma.QuestionCreateArgs>({
       data: {
         question: 'String',
         description: 'String',
+        order: 3222699,
         Step: {
           create: {
             name: 'String',
@@ -20,6 +21,7 @@ export const standard = defineScenario<Prisma.QuestionCreateArgs>({
       data: {
         question: 'String',
         description: 'String',
+        order: 2915034,
         Step: {
           create: {
             name: 'String',

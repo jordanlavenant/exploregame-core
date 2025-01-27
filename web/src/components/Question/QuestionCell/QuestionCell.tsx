@@ -19,6 +19,7 @@ export const QUERY: TypedDocumentNode<
       description
       questionTypeId
       stepId
+      order
     }
   }
 `

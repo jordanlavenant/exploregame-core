@@ -18,6 +18,7 @@ export const QUERY: TypedDocumentNode<FindQuestions, FindQuestionsVariables> =
         description
         questionTypeId
         stepId
+        order
       }
     }
   `

@@ -5,6 +5,7 @@ export const schema = gql`
     description: String!
     questionTypeId: String!
     stepId: String!
+    order: Int!
     Step: Step!
     QuestionType: QuestionType!
     Answer: [Answer]!
@@ -13,8 +14,8 @@ export const schema = gql`
   }
 
   type Query {
-    questions: [Question!]! @skipAuth
-    question(id: String!): Question @skipAuth
+    questions: [Question!]! @requireAuth
+    question(id: String!): Question @requireAuth
   }
 
   input CreateQuestionInput {
@@ -22,6 +23,7 @@ export const schema = gql`
     description: String!
     questionTypeId: String!
     stepId: String!
+    order: Int!
   }
 
   input UpdateQuestionInput {
@@ -29,6 +31,7 @@ export const schema = gql`
     description: String
     questionTypeId: String
     stepId: String
+    order: Int
   }
 
   type Mutation {

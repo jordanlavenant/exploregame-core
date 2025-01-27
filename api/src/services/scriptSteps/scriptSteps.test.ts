@@ -37,12 +37,14 @@ describe('scriptSteps', () => {
         scriptId: scenario.scriptStep.two.scriptId,
         stepId: scenario.scriptStep.two.stepId,
         lettre: 'String',
+        order: 5746808,
       },
     })
 
     expect(result.scriptId).toEqual(scenario.scriptStep.two.scriptId)
     expect(result.stepId).toEqual(scenario.scriptStep.two.stepId)
     expect(result.lettre).toEqual('String')
+    expect(result.order).toEqual(5746808)
   })
 
   scenario('updates a scriptStep', async (scenario: StandardScenario) => {

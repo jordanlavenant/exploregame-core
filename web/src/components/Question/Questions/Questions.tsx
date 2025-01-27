@@ -2,7 +2,6 @@ import type {
   DeleteQuestionMutation,
   DeleteQuestionMutationVariables,
   FindQuestions,
-  Question,
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
@@ -55,6 +54,7 @@ const QuestionsList = ({ questions }: FindQuestions) => {
             <th>Description</th>
             <th>Question type id</th>
             <th>Step id</th>
+            <th>Order</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -66,6 +66,7 @@ const QuestionsList = ({ questions }: FindQuestions) => {
               <td>{truncate(question.description)}</td>
               <td>{truncate(question.questionTypeId)}</td>
               <td>{truncate(question.stepId)}</td>
+              <td>{truncate(question.order)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
