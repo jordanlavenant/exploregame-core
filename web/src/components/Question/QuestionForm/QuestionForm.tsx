@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown, Edit, Plus, X } from 'lucide-react'
+import { Check, ChevronDown, ChevronsUpDown, ChevronUp, Edit, Plus, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import type {
   Answer,
@@ -78,6 +78,7 @@ const QUESTION_FORM_QUERY = gql`
       Questions {
         id
         order
+        question
       }
     }
     hints {
@@ -299,18 +300,38 @@ const QuestionForm = (props: QuestionFormProps) => {
     })
   }
 
-  const handleSaveQuestion = () => {
-    form.setValue('order', currQuestions.length + 1)
-    const newQuestion = {
-      id: uuidv4(),
-      order: currQuestions[currQuestions.length - 1]?.order + 1 || 1,
-    }
-    setCurrQuestions((prev) => {
-      return [
-        ...prev,
-        newQuestion,
-      ]
-    })
+  // const handleSaveQuestion = () => {
+  //   form.setValue('order', currQuestions.length + 1)
+  //   const newQuestion = {
+  //     id: uuidv4(),
+  //     order: currQuestions[currQuestions.length - 1]?.order + 1 || 1,
+  //   }
+  //   setCurrQuestions((prev) => {
+  //     return [
+  //       ...prev,
+  //       newQuestion,
+  //     ]
+  //   })
+  // }
+
+  const handleUpItem = (index: number) => {
+    if (index === 0) return
+    const newQuestions = [...currQuestions]
+    const temp = { ...newQuestions[index] }
+    newQuestions[index] = { ...newQuestions[index - 1], order: index }
+    newQuestions[index - 1] = { ...temp, order: index - 1 }
+
+    setCurrQuestions(newQuestions)
+  }
+
+  const handleDownItem = (index: number) => {
+    if (index === currQuestions.length - 1) return
+    const newQuestions = [...currQuestions]
+    const temp = { ...newQuestions[index] }
+    newQuestions[index] = { ...newQuestions[index + 1], order: index }
+    newQuestions[index + 1] = { ...temp, order: index + 1 }
+
+    setCurrQuestions(newQuestions)
   }
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
@@ -342,7 +363,7 @@ const QuestionForm = (props: QuestionFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid md:grid-cols-3 gap-4 p-4 *:p-4"
+        className="grid md:grid-cols-2 gap-4 p-4 *:p-4 mb-20"
       >
         <Card className='space-y-4'>
           <H3 className="mb-8">Question</H3>
@@ -440,27 +461,6 @@ const QuestionForm = (props: QuestionFormProps) => {
               </FormItem>
             )}
           />
-          <Separator />
-          <section className='flex flex-wrap items-center gap-2'>
-            {currQuestions.map((question) => (
-              <div
-                key={question.id}
-                className={`w-10 h-10 ${question.id === props.question?.id ? 'bg-green-500' : 'bg-secondary'}`}
-              ></div>
-            ))}
-            {
-              (!props.question || (props.question && props.question.stepId !== form.watch('stepId'))) && form.watch('stepId') && (
-                <Button
-                  variant='outline'
-                  className='w-10 h-10 flex items-center justify-center border-green-500 p-0 rounded-none'
-                  type='button'
-                  onClick={handleSaveQuestion}
-                >
-                  <Plus size={16} className='text-green-500' />
-                </Button>
-              )
-            }
-          </section>
           <FormField
             control={form.control}
             name="stepId"
@@ -584,6 +584,37 @@ const QuestionForm = (props: QuestionFormProps) => {
                   </div>
                 </div>
               ))}
+          </section>
+        </Card>
+        <Card className='space-y-8'>
+          <H3>Placement de la question</H3>
+          <section className='space-y-2 max-h-72 overflow-auto'>
+            {currQuestions.map((question, index) => (
+              <Card className={`flex items-center gap-x-2 ${question.id === props.question?.id && 'border-green-500 text-green-500'}`}>
+                <div className='grid grid-rows-2'>
+                  {index !== 0 && (
+                    <Button
+                      type='button'
+                      variant='ghost'
+                      onClick={() => handleUpItem(index)}
+                    >
+                      <ChevronUp />
+                    </Button>
+                  )}
+                  {index !== currQuestions.length - 1 && (
+                    <Button
+                      className='row-start-2'
+                      type='button'
+                      variant='ghost'
+                      onClick={() => handleDownItem(index)}
+                    >
+                      <ChevronDown />
+                    </Button>
+                  )}
+                </div>
+                <p>{question.question}</p>
+              </Card>
+            ))}
           </section>
         </Card>
         <Card className="space-y-8">
