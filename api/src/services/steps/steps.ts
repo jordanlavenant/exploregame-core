@@ -40,7 +40,10 @@ export const Step: StepRelationResolvers = {
     return db.step.findUnique({ where: { id: root?.id } }).ScriptStep()
   },
   Questions: (_obj, { root }) => {
-    return db.step.findUnique({ where: { id: root?.id } }).Questions()
+    return db.question.findMany({
+      where: { stepId: root?.id },
+      orderBy: { order: 'asc' },
+    })
   },
   Location: (_obj, { root }) => {
     return db.step.findUnique({ where: { id: root?.id } }).Location()

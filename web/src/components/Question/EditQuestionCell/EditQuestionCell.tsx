@@ -24,6 +24,19 @@ export const QUERY: TypedDocumentNode<EditQuestionById> = gql`
       questionTypeId
       stepId
       order
+      Answer {
+        id
+        answer
+        description
+        isCorrect
+        questionId
+      }
+      Hint {
+        id
+        help
+        hintLevelId
+        questionId
+      }
     }
   }
 `
@@ -72,20 +85,11 @@ export const Success = ({ question }: CellSuccessProps<EditQuestionById>) => {
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">
-          Edit Question {question?.id}
-        </h2>
-      </header>
-      <div className="rw-segment-main">
-        <QuestionForm
-          question={question}
-          onSave={onSave}
-          error={error}
-          loading={loading}
-        />
-      </div>
-    </div>
+    <QuestionForm
+      question={question}
+      onSave={onSave}
+      error={error}
+      loading={loading}
+    />
   )
 }

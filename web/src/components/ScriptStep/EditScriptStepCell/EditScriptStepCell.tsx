@@ -75,20 +75,11 @@ export const Success = ({
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">
-          Edit ScriptStep {scriptStep?.id}
-        </h2>
-      </header>
-      <div className="rw-segment-main">
-        <ScriptStepForm
-          scriptStep={scriptStep}
-          onSave={onSave}
-          error={error}
-          loading={loading}
-        />
-      </div>
-    </div>
+    <ScriptStepForm
+      scriptStep={scriptStep}
+      onSave={onSave}
+      error={error}
+      loading={loading}
+    />
   )
 }

@@ -43,7 +43,10 @@ export const Script: ScriptRelationResolvers = {
     return db.script.findUnique({ where: { id: root?.id } }).Department()
   },
   ScriptStep: (_obj, { root }) => {
-    return db.script.findUnique({ where: { id: root?.id } }).ScriptStep()
+    return db.scriptStep.findMany({
+      where: { scriptId: root?.id },
+      orderBy: { order: 'asc' },
+    })
   },
   PlayerScript: (_obj, { root }) => {
     return db.script.findUnique({ where: { id: root?.id } }).PlayerScript()
