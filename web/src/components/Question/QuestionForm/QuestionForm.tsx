@@ -1,8 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronDown, ChevronsUpDown, ChevronUp, Edit, Plus, X } from 'lucide-react'
+import {
+  Check,
+  ChevronDown,
+  ChevronsUpDown,
+  ChevronUp,
+  Edit,
+  Plus,
+  X,
+} from 'lucide-react'
+import { DndProvider, useDrag, useDrop } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useForm } from 'react-hook-form'
 import type {
   Answer,
@@ -143,6 +153,49 @@ export const formSchema = z.object({
   order: z.number().int().positive(),
 })
 
+const DraggableItem = ({ question, index, moveCard }) => {
+  const ref = useRef(null)
+  const [, drop] = useDrop({
+    accept: 'CARD',
+    hover(item) {
+      if (!ref.current) {
+        return
+      }
+      const dragIndex = item.index
+      const hoverIndex = index
+      if (dragIndex === hoverIndex) {
+        return
+      }
+      moveCard(dragIndex, hoverIndex)
+      item.index = hoverIndex
+    },
+  })
+
+  const [{ isDragging }, drag] = useDrag({
+    type: 'CARD',
+    item: { type: 'CARD', index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })
+
+  drag(drop(ref))
+
+  return (
+    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+      <Card className=" flex items-center gap-x-2">
+        <div>
+          <Button variant="ghost" type="button">
+            <ChevronsUpDown />
+          </Button>
+        </div>
+        <p className="text-muted-foreground">{index + 1}</p>
+        <p>{question.question}</p>
+      </Card>
+    </div>
+  )
+}
+
 const QuestionForm = (props: QuestionFormProps) => {
   const { data, loading, error } = useQuery(QUESTION_FORM_QUERY)
   // Answers
@@ -158,6 +211,26 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   const [currQuestions, setCurrQuestions] = useState<Partial<Question>[]>([])
 
+  const moveCard = useCallback(
+    (dragIndex, hoverIndex) => {
+      const newQuestions = [...currQuestions]
+      const dragCard = { ...newQuestions[dragIndex] }
+      const hoverCard = { ...newQuestions[hoverIndex] }
+
+      // Swap the order values
+      const tempOrder = dragCard.order
+      dragCard.order = hoverCard.order
+      hoverCard.order = tempOrder
+
+      // Swap the positions in the array
+      newQuestions[dragIndex] = hoverCard
+      newQuestions[hoverIndex] = dragCard
+
+      setCurrQuestions(newQuestions)
+    },
+    [currQuestions]
+  )
+
   useEffect(() => {
     if (!form.getValues('questionTypeId')) {
       form.setValue('questionTypeId', props.question?.questionTypeId)
@@ -172,11 +245,16 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   useEffect(() => {
     const currStepId = form.watch('stepId')
-    setCurrQuestions(data?.steps.find(step => step.id === currStepId)?.Questions || [])
+    setCurrQuestions(
+      data?.steps.find((step) => step.id === currStepId)?.Questions || []
+    )
   }, [form.watch('stepId')])
 
   useEffect(() => {
-    setCurrQuestions(data?.steps.find(step => step.id === props.question?.stepId)?.Questions || [])
+    setCurrQuestions(
+      data?.steps.find((step) => step.id === props.question?.stepId)
+        ?.Questions || []
+    )
   }, [data])
 
   useEffect(() => {
@@ -184,27 +262,30 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, [currQuestions])
 
   const [currentAnswers, setCurrentAnswers] = useState<
-    {
-      id: string
-      answer: string
-      description: string
-      isCorrect: boolean
-    }[] | undefined
+    | {
+        id: string
+        answer: string
+        description: string
+        isCorrect: boolean
+      }[]
+    | undefined
   >(props.question?.Answer || undefined)
   const [currentHints, setCurrentHints] = useState<
-    {
-      id: string
-      help: string
-      hintLevelId: string
-    }[] | undefined>(
-    props.question?.Hint || undefined
-  )
+    | {
+        id: string
+        help: string
+        hintLevelId: string
+      }[]
+    | undefined
+  >(props.question?.Hint || undefined)
 
   useEffect(() => {
     if (currentHints) {
-      const sortedHints = [...currentHints].sort((a, b) => Number(a.hintLevelId) - Number(b.hintLevelId))
+      const sortedHints = [...currentHints].sort(
+        (a, b) => Number(a.hintLevelId) - Number(b.hintLevelId)
+      )
       const filledHints = new Array(3).fill(undefined)
-      sortedHints.forEach(hint => {
+      sortedHints.forEach((hint) => {
         if (hint === undefined) return
         filledHints[Number(hint.hintLevelId) - 1] = hint
       })
@@ -213,11 +294,17 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, [props.question?.Hint])
 
   const [hintOneEdit, setHintOneEdit] = useState<boolean>(false)
-  const [hintOneValue, setHintOneValue] = useState(currentHints?.[0]?.help || '');
+  const [hintOneValue, setHintOneValue] = useState(
+    currentHints?.[0]?.help || ''
+  )
   const [hintTwoEdit, setHintTwoEdit] = useState<boolean>(false)
-  const [hintTwoValue, setHintTwoValue] = useState(currentHints?.[1]?.help || '');
+  const [hintTwoValue, setHintTwoValue] = useState(
+    currentHints?.[1]?.help || ''
+  )
   const [hintThreeEdit, setHintThreeEdit] = useState<boolean>(false)
-  const [hintThreeValue, setHintThreeValue] = useState(currentHints?.[2]?.help || '');
+  const [hintThreeValue, setHintThreeValue] = useState(
+    currentHints?.[2]?.help || ''
+  )
 
   const [isFormModified, setIsFormModified] = useState<boolean>(false)
 
@@ -314,49 +401,47 @@ const QuestionForm = (props: QuestionFormProps) => {
   //   })
   // }
 
-  const handleUpItem = (index: number) => {
-    if (index === 0) return
-    const newQuestions = [...currQuestions]
-    const temp = { ...newQuestions[index] }
-    newQuestions[index] = { ...newQuestions[index - 1], order: index }
-    newQuestions[index - 1] = { ...temp, order: index - 1 }
+  // const handleUpItem = (index: number) => {
+  //   if (index === 0) return
+  //   const newQuestions = [...currQuestions]
+  //   const temp = { ...newQuestions[index] }
+  //   newQuestions[index] = { ...newQuestions[index - 1], order: index }
+  //   newQuestions[index - 1] = { ...temp, order: index - 1 }
 
-    setCurrQuestions(newQuestions)
-  }
+  //   setCurrQuestions(newQuestions)
+  // }
 
-  const handleDownItem = (index: number) => {
-    if (index === currQuestions.length - 1) return
-    const newQuestions = [...currQuestions]
-    const temp = { ...newQuestions[index] }
-    newQuestions[index] = { ...newQuestions[index + 1], order: index }
-    newQuestions[index + 1] = { ...temp, order: index + 1 }
+  // const handleDownItem = (index: number) => {
+  //   if (index === currQuestions.length - 1) return
+  //   const newQuestions = [...currQuestions]
+  //   const temp = { ...newQuestions[index] }
+  //   newQuestions[index] = { ...newQuestions[index + 1], order: index }
+  //   newQuestions[index + 1] = { ...temp, order: index + 1 }
 
-    setCurrQuestions(newQuestions)
-  }
+  //   setCurrQuestions(newQuestions)
+  // }
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (!currentAnswers || currentAnswers.length === 0) {
       return
     }
-    saveAnswers(
-      {
-        currentAnswers,
-        question: props.question,
-        deleteAnswer,
-        createAnswer,
-      }
-    ).then(() => {
-      saveHints(
-        {
+    saveAnswers({
+      currentAnswers,
+      question: props.question,
+      deleteAnswer,
+      createAnswer,
+    })
+      .then(() => {
+        saveHints({
           currentHints,
           question: props.question,
           deleteHint,
           createHint,
-        }
-      )
-    }).then(() => {
-      props.onSave(data, props?.question?.id)
-    })
+        })
+      })
+      .then(() => {
+        props.onSave(data, props?.question?.id)
+      })
   }
 
   return (
@@ -365,7 +450,7 @@ const QuestionForm = (props: QuestionFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid md:grid-cols-2 gap-4 p-4 *:p-4 mb-20"
       >
-        <Card className='space-y-4'>
+        <Card className="space-y-4">
           <H3 className="mb-8">Question</H3>
           <FormField
             control={form.control}
@@ -375,7 +460,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               <FormItem>
                 <FormLabel>Intitulé</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder='Intitulé de la question' />
+                  <Input {...field} placeholder="Intitulé de la question" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -389,7 +474,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder='Description de la question' />
+                  <Input {...field} placeholder="Description de la question" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -399,7 +484,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             control={form.control}
             name="questionTypeId"
             render={({ field }) => (
-              <FormItem className='flex flex-col'>
+              <FormItem className="flex flex-col">
                 <FormLabel>Type de la question</FormLabel>
                 {(loading || !questionTypes) && (
                   <Skeleton className="w-[200px] h-10" />
@@ -465,7 +550,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             control={form.control}
             name="stepId"
             render={({ field }) => (
-              <FormItem className='flex flex-col'>
+              <FormItem className="flex flex-col">
                 <FormLabel>Etape associée</FormLabel>
                 {(loading || !steps) && <Skeleton className="w-[200px] h-10" />}
                 {steps && (
@@ -586,42 +671,34 @@ const QuestionForm = (props: QuestionFormProps) => {
               ))}
           </section>
         </Card>
-        <Card className='space-y-8'>
-          <H3>Placement de la question</H3>
-          <section className='space-y-2 max-h-72 overflow-auto'>
-            {currQuestions.map((question, index) => (
-              <Card className={`flex items-center gap-x-2 ${question.id === props.question?.id && 'border-green-500 text-green-500'}`}>
-                <div className='grid grid-rows-2'>
-                  {index !== 0 && (
-                    <Button
-                      type='button'
-                      variant='ghost'
-                      onClick={() => handleUpItem(index)}
-                    >
-                      <ChevronUp />
-                    </Button>
-                  )}
-                  {index !== currQuestions.length - 1 && (
-                    <Button
-                      className='row-start-2'
-                      type='button'
-                      variant='ghost'
-                      onClick={() => handleDownItem(index)}
-                    >
-                      <ChevronDown />
-                    </Button>
-                  )}
-                </div>
-                <p>{question.question}</p>
-              </Card>
-            ))}
+        <Card className="space-y-8">
+          <div className="flex justify-between items-center">
+            <H3>Placement de la question</H3>
+            <H4>
+              <span className="text-green-500">{currQuestions.length}</span>{' '}
+              question(s)
+            </H4>
+          </div>
+          <section className="space-y-1 max-h-72 overflow-auto">
+            <DndProvider backend={HTML5Backend}>
+              {currQuestions.map((question, index) => (
+                <DraggableItem
+                  key={index}
+                  index={index}
+                  question={question}
+                  moveCard={moveCard}
+                />
+              ))}
+            </DndProvider>
           </section>
         </Card>
         <Card className="space-y-8">
           <H3>Indice(s) associé(s)</H3>
           <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
-            <H4 className='col-span-full absolute -top-4 -left-2 bg-card px-2'>Indice faible</H4>
-            <div className='col-span-2'>
+            <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
+              Indice faible
+            </H4>
+            <div className="col-span-2">
               {hintOneEdit ? (
                 <Input
                   placeholder="Petit indice"
@@ -631,13 +708,15 @@ const QuestionForm = (props: QuestionFormProps) => {
               ) : currentHints?.[0]?.help ? (
                 <p>{currentHints?.[0]?.help}</p>
               ) : (
-                <p className='text-muted-foreground text-sm'>Pas d'indice associé</p>
+                <p className="text-muted-foreground text-sm">
+                  Pas d&apos;indice associé
+                </p>
               )}
             </div>
-            <div className='grid grid-cols-2 gap-2'>
+            <div className="grid grid-cols-2 gap-2">
               <Button
-                variant='outline'
-                type='button'
+                variant="outline"
+                type="button"
                 onClick={() => {
                   if (hintOneEdit) {
                     handleSaveHint(0, hintOneValue)
@@ -650,8 +729,8 @@ const QuestionForm = (props: QuestionFormProps) => {
                 {hintOneEdit ? <Check /> : <Edit />}
               </Button>
               <Button
-                type='button'
-                variant='outline'
+                type="button"
+                variant="outline"
                 onClick={() => {
                   setHintOneEdit(false)
                   handleDeleteHint(0)
@@ -662,8 +741,10 @@ const QuestionForm = (props: QuestionFormProps) => {
             </div>
           </Card>
           <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
-            <H4 className='col-span-full absolute -top-4 -left-2 bg-card px-2'>Indice moyen</H4>
-            <div className='col-span-2'>
+            <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
+              Indice moyen
+            </H4>
+            <div className="col-span-2">
               {hintTwoEdit ? (
                 <Input
                   placeholder="Indice moyen"
@@ -673,13 +754,15 @@ const QuestionForm = (props: QuestionFormProps) => {
               ) : currentHints?.[1]?.help ? (
                 <p>{currentHints?.[1]?.help}</p>
               ) : (
-                <p className='text-muted-foreground text-sm'>Pas d'indice associé</p>
+                <p className="text-muted-foreground text-sm">
+                  Pas d&apos;indice associé
+                </p>
               )}
             </div>
-            <div className='grid grid-cols-2 gap-2'>
+            <div className="grid grid-cols-2 gap-2">
               <Button
-                variant='outline'
-                type='button'
+                variant="outline"
+                type="button"
                 onClick={() => {
                   if (hintTwoEdit) {
                     handleSaveHint(1, hintTwoValue)
@@ -692,8 +775,8 @@ const QuestionForm = (props: QuestionFormProps) => {
                 {hintTwoEdit ? <Check /> : <Edit />}
               </Button>
               <Button
-                type='button'
-                variant='outline'
+                type="button"
+                variant="outline"
                 onClick={() => {
                   setHintTwoEdit(false)
                   handleDeleteHint(1)
@@ -704,8 +787,10 @@ const QuestionForm = (props: QuestionFormProps) => {
             </div>
           </Card>
           <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
-            <H4 className='col-span-full absolute -top-4 -left-2 bg-card px-2'>Indice fort</H4>
-            <div className='col-span-2'>
+            <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
+              Indice fort
+            </H4>
+            <div className="col-span-2">
               {hintThreeEdit ? (
                 <Input
                   placeholder="Grand indice"
@@ -715,13 +800,15 @@ const QuestionForm = (props: QuestionFormProps) => {
               ) : currentHints?.[2]?.help ? (
                 <p>{currentHints?.[2]?.help}</p>
               ) : (
-                <p className='text-muted-foreground text-sm'>Pas d'indice associé</p>
+                <p className="text-muted-foreground text-sm">
+                  Pas d&apos;indice associé
+                </p>
               )}
             </div>
-            <div className='grid grid-cols-2 gap-2'>
+            <div className="grid grid-cols-2 gap-2">
               <Button
-                variant='outline'
-                type='button'
+                variant="outline"
+                type="button"
                 onClick={() => {
                   if (hintThreeEdit) {
                     handleSaveHint(2, hintThreeValue)
@@ -734,8 +821,8 @@ const QuestionForm = (props: QuestionFormProps) => {
                 {hintThreeEdit ? <Check /> : <Edit />}
               </Button>
               <Button
-                type='button'
-                variant='outline'
+                type="button"
+                variant="outline"
                 onClick={() => {
                   setHintThreeEdit(false)
                   handleDeleteHint(2)
