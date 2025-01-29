@@ -13,8 +13,10 @@ export const saveQuestions = async ({
     return
   }
 
+  console.table(currQuestions)
+
   for (const question of currQuestions) {
-    await updateQuestion({
+    updateQuestion({
       variables: {
         id: question.id,
         input: {

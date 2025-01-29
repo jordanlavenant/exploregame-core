@@ -317,12 +317,18 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, [currQuestion])
 
   useEffect(() => {
-    const question = currQuestions.find(
-      (question) => question.id === currQuestion?.id
-    )
-    if (question) {
-      form.setValue('order', question.order)
+    if (props.question) {
+      const question = currQuestions.find(
+        (question) => question.id === props.question?.id
+      )
+      form.setValue('order', question?.order)
+    } else {
+      const question = currQuestions.find(
+        (question) => question.id === currQuestion?.id
+      )
+      form.setValue('order', question?.order)
     }
+    console.log(form.getValues())
   }, [currQuestions])
 
   const [currentAnswers, setCurrentAnswers] = useState<
@@ -374,10 +380,6 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   const [newAnswer, setNewAnswer] = useState<string>('')
   const [newAnswerDescription, setNewAnswerDescription] = useState<string>('')
-
-  useEffect(() => {
-    console.table(currQuestions)
-  }, [currQuestions])
 
   useEffect(() => {
     const subscription = form.watch((_, { name }) => {
