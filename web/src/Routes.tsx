@@ -14,8 +14,6 @@ import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
 import { useAuth } from './auth'
 
 const Routes = () => {
-
-
   return (
     <Router useAuth={useAuth}>
       <PrivateSet unauthenticated="login">

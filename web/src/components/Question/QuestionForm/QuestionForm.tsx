@@ -2,15 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Check,
-  ChevronDown,
-  ChevronsUpDown,
-  ChevronUp,
-  Edit,
-  Plus,
-  X,
-} from 'lucide-react'
+import { Check, ChevronsUpDown, Edit, X } from 'lucide-react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useForm } from 'react-hook-form'
@@ -146,8 +138,8 @@ const DELETE_HINT_MUTATION = gql`
   }
 `
 
-const UPDATE_QUESTIONS_MUTATION = gql`
-  mutation UpdateQuestionsFunc($id: String!, $input: UpdateQuestionInput!) {
+const UPDATE_QUESTION_MUTATION = gql`
+  mutation UpdateQuestionFunc($id: String!, $input: UpdateQuestionInput!) {
     updateQuestion(id: $id, input: $input) {
       id
     }
@@ -156,24 +148,23 @@ const UPDATE_QUESTIONS_MUTATION = gql`
 
 export const formSchema = z.object({
   question: z.string().nonempty(),
-  description: z.string().nonempty(),
+  description: z.string(),
   questionTypeId: z.string().nonempty(),
   stepId: z.string().nonempty(),
-  order: z.number().int().positive(),
+  order: z.number().int(),
 })
 
-const DraggableItem = (
-  {
-    question,
-    index,
-    moveCard,
-    current
-  } : {
-    question: Partial<Question>
-    index: number
-    moveCard: (dragIndex: number, hoverIndex: number) => void
-    current: boolean
-  }) => {
+const DraggableItem = ({
+  question,
+  index,
+  moveCard,
+  current,
+}: {
+  question: Partial<Question>
+  index: number
+  moveCard: (dragIndex: number, hoverIndex: number) => void
+  current: boolean
+}) => {
   const ref = useRef(null)
   const [, drop] = useDrop({
     accept: 'CARD',
@@ -203,7 +194,9 @@ const DraggableItem = (
 
   return (
     <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
-      <Card className={`flex items-center gap-x-2 ${current && 'border-green-500 text-green-500'}`}>
+      <Card
+        className={`flex items-center gap-x-2 ${current && 'border-green-500 text-green-500'}`}
+      >
         <div>
           <Button variant="ghost" type="button">
             <ChevronsUpDown />
@@ -225,14 +218,16 @@ const QuestionForm = (props: QuestionFormProps) => {
   const [createHint] = useMutation(CREATE_HINT_MUTATION)
   const [deleteHint] = useMutation(DELETE_HINT_MUTATION)
   // Questions
-  const [updateQuestion] = useMutation(UPDATE_QUESTIONS_MUTATION)
+  const [updateQuestion] = useMutation(UPDATE_QUESTION_MUTATION)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
 
   const [currQuestions, setCurrQuestions] = useState<Partial<Question>[]>([])
-  const [currQuestion, setCurrQuestion] = useState<Partial<Question> | null>(null)
+  const [currQuestion, setCurrQuestion] = useState<Partial<Question> | null>(
+    null
+  )
 
   const moveCard = useCallback(
     (dragIndex, hoverIndex) => {
@@ -273,7 +268,7 @@ const QuestionForm = (props: QuestionFormProps) => {
     setCurrQuestions(
       data?.steps.find((step) => step.id === currStepId)?.Questions || []
     )
-  }, [form.watch('stepId')])
+  }, [form.watch('stepId'), data])
 
   useEffect(() => {
     const currStepId = form.watch('stepId')
@@ -319,11 +314,12 @@ const QuestionForm = (props: QuestionFormProps) => {
         setCurrQuestions(newQuestions)
       }
     }
-
   }, [currQuestion])
 
   useEffect(() => {
-    const question = currQuestions.find((question) => question.id === currQuestion?.id)
+    const question = currQuestions.find(
+      (question) => question.id === currQuestion?.id
+    )
     if (question) {
       form.setValue('order', question.order)
     }
@@ -378,6 +374,10 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   const [newAnswer, setNewAnswer] = useState<string>('')
   const [newAnswerDescription, setNewAnswerDescription] = useState<string>('')
+
+  useEffect(() => {
+    console.table(currQuestions)
+  }, [currQuestions])
 
   useEffect(() => {
     const subscription = form.watch((_, { name }) => {
@@ -455,8 +455,6 @@ const QuestionForm = (props: QuestionFormProps) => {
     })
   }
 
-  // console.log(form.getValues())
-
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (!currentAnswers || currentAnswers.length === 0) {
       return
@@ -475,12 +473,12 @@ const QuestionForm = (props: QuestionFormProps) => {
           createHint,
         })
       })
-      // .then(() => {
-      //   saveQuestions({
-      //     currQuestions,
-      //     updateQuestion,
-      //   })
-      // })
+      .then(() => {
+        saveQuestions({
+          currQuestions,
+          updateQuestion,
+        })
+      })
       .then(() => {
         props.onSave(data, props?.question?.id)
       })
@@ -730,7 +728,8 @@ const QuestionForm = (props: QuestionFormProps) => {
                   question={question}
                   moveCard={moveCard}
                   current={
-                    question?.id === props.question?.id || question?.id === currQuestion?.id
+                    question?.id === props.question?.id ||
+                    question?.id === currQuestion?.id
                   }
                 />
               ))}

@@ -49,10 +49,10 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ step }: CellSuccessProps<EditStepById>) => {
-    const { refetch } = useQuery(QUERY, {
-      variables: { id: step.id },
-      fetchPolicy: 'network-only',
-    })
+  const { refetch } = useQuery(QUERY, {
+    variables: { id: step.id },
+    fetchPolicy: 'network-only',
+  })
   const [updateStep, { loading, error }] = useMutation(UPDATE_STEP_MUTATION, {
     onCompleted: () => {
       toast.success('Step updated')
@@ -69,11 +69,6 @@ export const Success = ({ step }: CellSuccessProps<EditStepById>) => {
   }
 
   return (
-    <StepForm
-      step={step}
-      onSave={onSave}
-      error={error}
-      loading={loading}
-    />
+    <StepForm step={step} onSave={onSave} error={error} loading={loading} />
   )
 }
