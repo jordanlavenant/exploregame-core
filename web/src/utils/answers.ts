@@ -35,10 +35,9 @@ export const saveAnswers = async ({
   const answers = question?.Answer
 
   const questionId = question?.id
+  if (answers === currentAnswers) return
 
   if (answers) {
-    if (answers === currentAnswers) return
-
     // Delete all answers of the question
     const answersToDelete = answers.filter(
       (answer) => answer.questionId === questionId

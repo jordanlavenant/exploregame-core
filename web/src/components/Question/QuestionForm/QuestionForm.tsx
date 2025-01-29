@@ -328,7 +328,6 @@ const QuestionForm = (props: QuestionFormProps) => {
       )
       form.setValue('order', question?.order)
     }
-    console.log(form.getValues())
   }, [currQuestions])
 
   const [currentAnswers, setCurrentAnswers] = useState<

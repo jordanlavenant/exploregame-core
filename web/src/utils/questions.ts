@@ -13,8 +13,6 @@ export const saveQuestions = async ({
     return
   }
 
-  console.table(currQuestions)
-
   for (const question of currQuestions) {
     updateQuestion({
       variables: {
