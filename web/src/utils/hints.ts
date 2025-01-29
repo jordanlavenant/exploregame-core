@@ -32,7 +32,6 @@ export const saveHints = async ({ currentHints, question, deleteHint, createHint
     })
   })
 
-  console.log(currentHints)
   // Re-create all hints of the question
   currentHints.forEach((hint) => {
     if (hint === undefined) return
