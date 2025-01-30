@@ -32,6 +32,8 @@ export const saveAnswers = async ({
   if (!currentAnswers || currentAnswers.length === 0) {
     return
   }
+
+  console.log(question)
   const answers = question?.Answer
 
   const questionId = question?.id

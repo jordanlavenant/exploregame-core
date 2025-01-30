@@ -27,19 +27,21 @@ export const saveHints = async ({
     return
   }
   const hints = question?.Hint
-  if (hints === currentHints) return
 
   const questionId = question?.id
+  if (hints === currentHints) return
 
-  // Delete all hints of the question
-  const hintsToDelete = hints.filter((hint) => hint.questionId === questionId)
-  hintsToDelete.forEach((hint) => {
-    deleteHint({
-      variables: {
-        id: hint.id,
-      },
+  if (hints) {
+    // Delete all hints of the question
+    const hintsToDelete = hints.filter((hint) => hint.questionId === questionId)
+    hintsToDelete.forEach((hint) => {
+      deleteHint({
+        variables: {
+          id: hint.id,
+        },
+      })
     })
-  })
+  }
 
   // Re-create all hints of the question
   currentHints.forEach((hint) => {

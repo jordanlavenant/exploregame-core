@@ -49,9 +49,7 @@ const QuestionsList = ({ questions }: FindQuestions) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Id</th>
             <th>Question</th>
-            <th>Description</th>
             <th>Question type id</th>
             <th>Step id</th>
             <th>Order</th>
@@ -61,9 +59,7 @@ const QuestionsList = ({ questions }: FindQuestions) => {
         <tbody>
           {questions.map((question) => (
             <tr key={question.id}>
-              <td>{truncate(question.id)}</td>
               <td>{truncate(question.question)}</td>
-              <td>{truncate(question.description)}</td>
               <td>{truncate(question.questionTypeId)}</td>
               <td>{truncate(question.stepId)}</td>
               <td>{truncate(question.order)}</td>

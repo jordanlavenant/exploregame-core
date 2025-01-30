@@ -195,14 +195,13 @@ const DraggableItem = ({
   return (
     <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
       <Card
-        className={`flex items-center gap-x-2 ${current && 'border-green-500 text-green-500'}`}
+        className={`flex items-center gap-x-2 ${current && 'border-blue-500 text-blue-500'} cursor-move hover:border-blue-500`}
       >
         <div>
           <Button variant="ghost" type="button">
             <ChevronsUpDown />
           </Button>
         </div>
-        <p className="text-muted-foreground">{index + 1}</p>
         <p>{question?.question}</p>
       </Card>
     </div>
@@ -390,7 +389,7 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, [form])
 
   useEffect(() => {
-    if (isFormModified && form.watch('questionTypeId') === '1') {
+    if (isFormModified && (form.watch('questionTypeId') === '1' || form.watch('questionTypeId') === '2')) {
       setCurrentAnswers([])
     }
   }, [form.watch('questionTypeId'), isFormModified])
@@ -457,32 +456,33 @@ const QuestionForm = (props: QuestionFormProps) => {
   }
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    if (!currentAnswers || currentAnswers.length === 0) {
-      return
-    }
-    saveAnswers({
-      currentAnswers,
-      question: props.question,
-      deleteAnswer,
-      createAnswer,
-    })
-      .then(() => {
-        saveHints({
-          currentHints,
-          question: props.question,
-          deleteHint,
-          createHint,
-        })
-      })
-      .then(() => {
-        saveQuestions({
-          currQuestions,
-          updateQuestion,
-        })
-      })
-      .then(() => {
-        props.onSave(data, props?.question?.id)
-      })
+    // if (!currentAnswers || currentAnswers.length === 0) {
+    //   return
+    // }
+    props.onSave(data, props?.question?.id)
+    // saveAnswers({
+    //   currentAnswers,
+    //   question: props.question,
+    //   deleteAnswer,
+    //   createAnswer,
+    // })
+    //   .then(() => {
+    //     saveHints({
+    //       currentHints,
+    //       question: props.question,
+    //       deleteHint,
+    //       createHint,
+    //     })
+    //   })
+    //   .then(() => {
+    //     saveQuestions({
+    //       currQuestions,
+    //       updateQuestion,
+    //     })
+    //   })
+    //   .then(() => {
+    //     props.onSave(data, props?.question?.id)
+    //   })
   }
 
   return (
@@ -668,7 +668,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             />
             <Button
               className="bg-blue-500 text-white hover:bg-blue-600 row-start-1 col-start-3"
-              disabled={!newAnswer || !newAnswerDescription}
+              disabled={!newAnswer}
               onClick={() => {
                 addAnswer().then(() => {
                   setNewAnswer('')
@@ -695,7 +695,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Switch
                       disabled={
                         currentAnswers.some((a) => a.isCorrect) &&
-                        !answer.isCorrect
+                        !answer.isCorrect && form.watch('questionTypeId') === '2'
                       }
                       checked={answer.isCorrect}
                       onCheckedChange={() => toggleCorrect(answer)}
@@ -716,7 +716,7 @@ const QuestionForm = (props: QuestionFormProps) => {
           <div className="flex justify-between items-center">
             <H3>Placement de la question</H3>
             <H4>
-              <span className="text-green-500">{currQuestions.length}</span>{' '}
+              <span className="text-blue-500">{currQuestions.length}</span>{' '}
               question(s)
             </H4>
           </div>

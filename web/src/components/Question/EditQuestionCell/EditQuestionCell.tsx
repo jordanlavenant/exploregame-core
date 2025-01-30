@@ -85,8 +85,10 @@ export const Success = ({ question }: CellSuccessProps<EditQuestionById>) => {
     input: UpdateQuestionInput,
     id: EditQuestionById['question']['id']
   ) => {
-    updateQuestion({ variables: { id, input } })
-    refetch()
+    updateQuestion({ variables: { id, input } }).then((res) => {
+      console.log(res.data.updateQuestion.id)
+      refetch()
+    })
   }
 
   return (
