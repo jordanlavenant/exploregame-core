@@ -2,6 +2,8 @@ import type {
   DeleteQuestionMutation,
   DeleteQuestionMutationVariables,
   FindQuestions,
+  UpdateQuestionMutation,
+  UpdateQuestionMutationVariables,
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
@@ -11,6 +13,7 @@ import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Question/QuestionsCell'
 import { truncate } from 'src/lib/formatters'
+import { saveQuestions } from '@/utils/questions'
 
 const DELETE_QUESTION_MUTATION: TypedDocumentNode<
   DeleteQuestionMutation,
@@ -23,7 +26,20 @@ const DELETE_QUESTION_MUTATION: TypedDocumentNode<
   }
 `
 
+const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
+  UpdateQuestionMutation,
+  UpdateQuestionMutationVariables
+> = gql`
+  mutation UpdateQuestionMutation($id: String!, $input: UpdateQuestionInput!) {
+    updateQuestion(id: $id, input: $input) {
+      id
+      order
+    }
+  }
+`
+
 const QuestionsList = ({ questions }: FindQuestions) => {
+  const [updateQuestion] = useMutation(UPDATE_QUESTION_MUTATION)
   const [deleteQuestion] = useMutation(DELETE_QUESTION_MUTATION, {
     onCompleted: () => {
       toast.success('Question deleted')
@@ -40,7 +56,23 @@ const QuestionsList = ({ questions }: FindQuestions) => {
 
   const onDeleteClick = (id: DeleteQuestionMutationVariables['id']) => {
     if (confirm('Are you sure you want to delete question ' + id + '?')) {
-      deleteQuestion({ variables: { id } })
+      deleteQuestion({ variables: { id } }).then(() => {
+        const question = questions.find((q) => q.id === id)
+        const questionsSameStep = questions.filter(
+          (q) => q.stepId === question?.stepId && q.id !== id
+        )
+        const newQuestions = [];
+        questionsSameStep.forEach((question, index) => {
+          newQuestions.push({
+            id: question.id,
+            order: index
+          })
+        })
+        saveQuestions({
+          currQuestions: newQuestions,
+          updateQuestion,
+        })
+      })
     }
   }
 

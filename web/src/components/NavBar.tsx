@@ -44,7 +44,7 @@ const NavBar = () => {
         <Link to="/" className="text-white text-lg font-bold">
           Explore Game
         </Link>
-        <div className="grid grid-cols-4 space-x-4 *:font-bold *:text-sm *:text-center *:text-white">
+        <div className="flex justify-center gap-x-8 *:font-bold *:text-sm *:text-center *:text-white">
           <Link to="/departments">
             Filières ({departments?.length | 0})
           </Link>
