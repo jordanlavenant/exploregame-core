@@ -235,7 +235,7 @@ export default async () => {
       },
       {
         id: '2',
-        question: 'Citez au moins 2 plat proposés à la cafétéria ?',
+        question: 'Citez au moins 2 plats proposés à la cafétéria ?',
         description: '',
         questionTypeId: '3',
         stepId: '1',
@@ -351,7 +351,7 @@ export default async () => {
       },
       {
         id: '113ad65f-dba5-4f6f-ab44-89d20f26ebbc',
-        answer: 'Gauffre',
+        answer: 'Gaufre',
         description: "",
         questionId: '2',
         isCorrect: true,
