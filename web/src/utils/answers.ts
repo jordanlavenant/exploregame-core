@@ -33,7 +33,6 @@ export const saveAnswers = async ({
     return
   }
 
-  console.log(question)
   const answers = question?.Answer
 
   const questionId = question?.id

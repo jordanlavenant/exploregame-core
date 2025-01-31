@@ -18,6 +18,13 @@ const CREATE_QUESTION_MUTATION: TypedDocumentNode<
   mutation CreateQuestionMutation($input: CreateQuestionInput!) {
     createQuestion(input: $input) {
       id
+      Hint {
+        id
+        questionId
+      }
+      Answer {
+        id
+      }
     }
   }
 `
@@ -36,8 +43,9 @@ const NewQuestion = () => {
     }
   )
 
-  const onSave = (input: CreateQuestionInput) => {
-    createQuestion({ variables: { input } })
+  const onSave = async (input: CreateQuestionInput) => {
+    const response = await createQuestion({ variables: { input } })
+    return response.data
   }
 
   return (

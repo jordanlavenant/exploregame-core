@@ -8,6 +8,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useForm } from 'react-hook-form'
 import type {
   Answer,
+  CreateQuestionMutation,
   EditQuestionById,
   HintLevel,
   Question,
@@ -58,7 +59,7 @@ type FormQuestion = NonNullable<EditQuestionById['question']>
 
 interface QuestionFormProps {
   question?: EditQuestionById['question']
-  onSave: (data: UpdateQuestionInput, id?: FormQuestion['id']) => void
+  onSave: (data: UpdateQuestionInput, id?: FormQuestion['id']) => Promise<CreateQuestionMutation | EditQuestionById>
   error: RWGqlError
   loading: boolean
 }
@@ -361,6 +362,10 @@ const QuestionForm = (props: QuestionFormProps) => {
     }
   }, [props.question?.Hint])
 
+  useEffect(() => {
+    console.log(currentAnswers)
+  }, [currentAnswers])
+
   const [hintOneEdit, setHintOneEdit] = useState<boolean>(false)
   const [hintOneValue, setHintOneValue] = useState(
     currentHints?.[0]?.help || ''
@@ -456,33 +461,57 @@ const QuestionForm = (props: QuestionFormProps) => {
   }
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    // if (!currentAnswers || currentAnswers.length === 0) {
-    //   return
-    // }
-    props.onSave(data, props?.question?.id)
-    // saveAnswers({
-    //   currentAnswers,
-    //   question: props.question,
-    //   deleteAnswer,
-    //   createAnswer,
-    // })
-    //   .then(() => {
-    //     saveHints({
-    //       currentHints,
-    //       question: props.question,
-    //       deleteHint,
-    //       createHint,
-    //     })
-    //   })
-    //   .then(() => {
-    //     saveQuestions({
-    //       currQuestions,
-    //       updateQuestion,
-    //     })
-    //   })
-    //   .then(() => {
-    //     props.onSave(data, props?.question?.id)
-    //   })
+    if (!currentAnswers || currentAnswers.length === 0) {
+      return
+    }
+    if(props.question) {
+      saveAnswers({
+        currentAnswers,
+        question: props.question,
+        deleteAnswer,
+        createAnswer,
+      })
+      .then(() => {
+        saveHints({
+          currentHints,
+          question: props.question,
+          deleteHint,
+          createHint,
+        })
+      })
+      .then(() => {
+        saveQuestions({
+          currQuestions,
+          updateQuestion,
+        })
+      })
+      .then(() => {
+        props.onSave(data, props.question.id)
+      })
+    } else {
+      props.onSave(data, props?.question?.id).then((data) => {
+        saveAnswers({
+          currentAnswers,
+          question: data.createQuestion,
+          deleteAnswer,
+          createAnswer,
+        })
+          .then(() => {
+            saveHints({
+              currentHints,
+              question: data.createQuestion,
+              deleteHint,
+              createHint,
+            })
+          })
+          .then(() => {
+            saveQuestions({
+              currQuestions,
+              updateQuestion,
+            })
+          })
+      })
+    }
   }
 
   return (

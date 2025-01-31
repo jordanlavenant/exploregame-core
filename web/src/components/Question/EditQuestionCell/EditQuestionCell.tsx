@@ -10,7 +10,7 @@ import type {
   CellFailureProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
-import { useMutation, useQuery } from '@redwoodjs/web'
+import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import QuestionForm from 'src/components/Question/QuestionForm'
@@ -53,6 +53,13 @@ const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
       questionTypeId
       stepId
       order
+      Answer {
+        id
+      }
+      Hint {
+        id
+        questionId
+      }
     }
   }
 `
@@ -64,10 +71,6 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ question }: CellSuccessProps<EditQuestionById>) => {
-  const { refetch } = useQuery(QUERY, {
-    variables: { id: question.id },
-    fetchPolicy: 'network-only',
-  })
   const [updateQuestion, { loading, error }] = useMutation(
     UPDATE_QUESTION_MUTATION,
     {
@@ -81,14 +84,12 @@ export const Success = ({ question }: CellSuccessProps<EditQuestionById>) => {
     }
   )
 
-  const onSave = (
+  const onSave = async (
     input: UpdateQuestionInput,
     id: EditQuestionById['question']['id']
   ) => {
-    updateQuestion({ variables: { id, input } }).then((res) => {
-      console.log(res.data.updateQuestion.id)
-      refetch()
-    })
+    const response = await updateQuestion({ variables: { id, input } })
+    return response.data
   }
 
   return (

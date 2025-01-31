@@ -39,7 +39,9 @@ const Question = ({ question }: Props) => {
 
   const onDeleteClick = (id: DeleteQuestionMutationVariables['id']) => {
     if (confirm('Are you sure you want to delete question ' + id + '?')) {
-      deleteQuestion({ variables: { id } })
+      deleteQuestion({ variables: { id } }).then(() => {
+        //
+      })
     }
   }
 
