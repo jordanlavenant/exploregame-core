@@ -18,7 +18,7 @@ const Routes = () => {
     <Router useAuth={useAuth}>
       <PrivateSet unauthenticated="login">
         <Route path="/" page={HomePage} name="home" />
-        <Set wrap={ScaffoldLayout} title="Scripts" titleTo="scripts" buttonLabel="New Script" buttonTo="newScript">
+        <Set wrap={ScaffoldLayout} title="Scénarios" titleTo="scripts" buttonLabel="Nouveau scénario" buttonTo="newScript">
           <Route path="/scripts/new" page={ScriptNewScriptPage} name="newScript" />
           <Route path="/scripts/{id}/edit" page={ScriptEditScriptPage} name="editScript" />
           <Route path="/scripts/{id}" page={ScriptScriptPage} name="script" />
@@ -48,7 +48,7 @@ const Routes = () => {
           <Route path="/users/{id}" page={UserUserPage} name="user" />
           <Route path="/users" page={UserUsersPage} name="users" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="New Question" buttonTo="newQuestion">
+        <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="Nouvelle question" buttonTo="newQuestion">
           <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
           <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
           <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
@@ -90,7 +90,7 @@ const Routes = () => {
           <Route path="/character-steps/{id}" page={CharacterStepCharacterStepPage} name="characterStep" />
           <Route path="/character-steps" page={CharacterStepCharacterStepsPage} name="characterSteps" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Steps" titleTo="steps" buttonLabel="New Step" buttonTo="newStep">
+        <Set wrap={ScaffoldLayout} title="Étapes" titleTo="steps" buttonLabel="Nouvelle étape" buttonTo="newStep">
           <Route path="/steps/new" page={StepNewStepPage} name="newStep" />
           <Route path="/steps/{id}/edit" page={StepEditStepPage} name="editStep" />
           <Route path="/steps/{id}" page={StepStepPage} name="step" />
