@@ -30,7 +30,7 @@ const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
   UpdateQuestionMutation,
   UpdateQuestionMutationVariables
 > = gql`
-  mutation UpdateQuestionMutation($id: String!, $input: UpdateQuestionInput!) {
+  mutation UpdateQuestionAfterDeletation($id: String!, $input: UpdateQuestionInput!) {
     updateQuestion(id: $id, input: $input) {
       id
       order
