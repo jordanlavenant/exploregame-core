@@ -47,13 +47,12 @@ const LoginPage = () => {
   return (
     <>
       <Metadata title="Login" />
-
       <main className="flex items-center justify-center min-h-screen bg-gray-100">
         <Toaster toastOptions={{ duration: 6000 }} />
         <div className="w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Se connecter</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
               <p className="text-sm text-gray-600 mt-2">Entrez vos identifiants pour accéder à votre compte</p>
             </div>
             <Form onSubmit={onSubmit} className="space-y-6">
