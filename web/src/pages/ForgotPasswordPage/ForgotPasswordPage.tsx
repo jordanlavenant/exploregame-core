@@ -40,27 +40,27 @@ const ForgotPasswordPage = () => {
   return (
     <>
       <Metadata title="Mot de passe oublié" />
-      <main className="flex items-center justify-center min-h-screen bg-gray-100">
+      <main className="flex items-center justify-center min-h-screen bg-gray-900">
         <Toaster toastOptions={{ duration: 6000 }} />
-        <div className="w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="w-full max-w-md bg-gray-800 shadow-lg rounded-lg overflow-hidden">
           <div className="p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Mot de passe oublié</h2>
-              <p className="text-sm text-gray-600 mt-2">Entrez votre email pour réinitialiser votre mot de passe</p>
+              <h2 className="text-2xl font-bold text-white">Mot de passe oublié</h2>
+              <p className="text-sm text-gray-400 mt-2">Entrez votre email pour réinitialiser votre mot de passe</p>
             </div>
             <Form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label
                   name="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-300"
                   errorClassName="block text-sm font-medium text-red-500"
                 >
                   Email
                 </Label>
                 <TextField
                   name="email"
-                  className="w-full text-black border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
-                  errorClassName="w-full text-black border border-red-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm p-2"
+                  className="w-full text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+                  errorClassName="w-full text-white bg-gray-700 border border-red-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm p-2"
                   ref={emailRef}
                   validation={{
                     required: {
@@ -83,7 +83,7 @@ const ForgotPasswordPage = () => {
                 >
                   {isSubmitting ? "Envoi en cours..." : "Réinitialiser"}
                 </Submit>
-                <Link to={routes.login()} className="text-sm text-blue-600 hover:underline">
+                <Link to={routes.login()} className="text-sm text-blue-400 hover:underline">
                   Retour à la connexion
                 </Link>
               </div>

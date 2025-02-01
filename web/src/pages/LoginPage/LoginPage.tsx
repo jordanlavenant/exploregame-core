@@ -47,26 +47,26 @@ const LoginPage = () => {
   return (
     <>
       <Metadata title="Login" />
-      <main className="flex items-center justify-center min-h-screen bg-gray-100">
+      <main className="flex items-center justify-center min-h-screen bg-gray-900">
         <Toaster toastOptions={{ duration: 6000 }} />
-        <div className="w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="w-full max-w-md bg-gray-800 shadow-lg rounded-lg overflow-hidden">
           <div className="p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
-              <p className="text-sm text-gray-600 mt-2">Entrez vos identifiants pour accéder à votre compte</p>
+              <h2 className="text-2xl font-bold text-white">Connexion</h2>
+              <p className="text-sm text-gray-400 mt-2">Entrez vos identifiants pour accéder à votre compte</p>
             </div>
             <Form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label
                   name="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-300"
                   errorClassName="block text-sm font-medium text-red-500"
                 >
                   Email
                 </Label>
                 <TextField
                   name="email"
-                  className='w-full text-black border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2'
+                  className='w-full text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2'
                   ref={emailRef}
                   validation={{
                     required: {
@@ -81,7 +81,7 @@ const LoginPage = () => {
               <div className="space-y-2">
                 <Label
                   name="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-300"
                   errorClassName="block text-sm font-medium text-red-500"
                 >
                   Password
@@ -89,7 +89,7 @@ const LoginPage = () => {
                 <div className="relative">
                   <PasswordField
                     name="password"
-                    className='w-full text-black border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2'
+                    className='w-full text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2'
                     autoComplete="current-password"
                     validation={{
                       required: {
@@ -130,7 +130,7 @@ const LoginPage = () => {
                     )}
                   </Submit>
                 </div>
-                <Link to={routes.forgotPassword()} className="text-sm text-blue-600 hover:underline">
+                <Link to={routes.forgotPassword()} className="text-sm text-blue-400 hover:underline">
                   mot de passe oublié ?
                 </Link>
               </div>
