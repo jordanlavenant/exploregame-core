@@ -7,8 +7,8 @@ export const standard = defineScenario<Prisma.DepartmentCreateArgs>({
       data: {
         name: 'String',
         description: 'String',
-        latitude: 253211.82813965448,
-        longitude: 1196851.9322168003,
+        latitude: 8552374.187644223,
+        longitude: 1798251.3051607318,
         ColorSet: {
           create: {
             primary: 'String',
@@ -22,8 +22,8 @@ export const standard = defineScenario<Prisma.DepartmentCreateArgs>({
       data: {
         name: 'String',
         description: 'String',
-        latitude: 3680050.958459815,
-        longitude: 5034622.008307504,
+        latitude: 6404366.982432592,
+        longitude: 8461597.333407154,
         ColorSet: {
           create: {
             primary: 'String',

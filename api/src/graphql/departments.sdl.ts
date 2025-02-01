@@ -9,11 +9,12 @@ export const schema = gql`
     Player: [Player]!
     Script: [Script]!
     ColorSet: ColorSet!
+    Bde: [Bde]!
   }
 
   type Query {
-    departments: [Department!]! @skipAuth
-    department(id: String!): Department @skipAuth
+    departments: [Department!]! @requireAuth
+    department(id: String!): Department @requireAuth
   }
 
   input CreateDepartmentInput {

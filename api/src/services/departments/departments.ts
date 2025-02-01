@@ -52,4 +52,7 @@ export const Department: DepartmentRelationResolvers = {
   ColorSet: (_obj, { root }) => {
     return db.department.findUnique({ where: { id: root?.id } }).ColorSet()
   },
+  Bde: (_obj, { root }) => {
+    return db.department.findUnique({ where: { id: root?.id } }).Bde()
+  },
 }
