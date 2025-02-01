@@ -68,6 +68,7 @@ model Department {
   Player      Player[]
   Script      Script[]
   ColorSet    ColorSet @relation(fields: [colorSetId], references: [id])
+  Bde         Bde[]
 }
 
 model QuestionType {
@@ -172,4 +173,27 @@ model CharacterStep {
   text        String
   Character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
   Step        Step      @relation(fields: [stepId], references: [id], onDelete: Cascade)
+}
+
+model Bde {
+  id            String @id @default(uuid())
+  name          String
+  description   String
+  logo          String      
+  departmentId  String
+  Department    Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model News {
+  id          String @id @default(uuid())
+  titre       String
+  description String
+  date        DateTime
+  tags        Tag[] @relation("NewsTag")
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  titre String
+  news  News[] @relation("NewsTag")
 }

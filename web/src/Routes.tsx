@@ -16,6 +16,34 @@ import { useAuth } from './auth'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Bdes" titleTo="bdes" buttonLabel="New Bde" buttonTo="newBde">
+        <Route path="/bdes/new" page={BdeNewBdePage} name="newBde" />
+        <Route path="/bdes/{id}/edit" page={BdeEditBdePage} name="editBde" />
+        <Route path="/bdes/{id}" page={BdeBdePage} name="bde" />
+        <Route path="/bdes" page={BdeBdesPage} name="bdes" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
+        <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
+        <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
+        <Route path="/departments/{id}" page={DepartmentDepartmentPage} name="department" />
+        <Route path="/departments" page={DepartmentDepartmentsPage} name="departments" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Newses" titleTo="newses" buttonLabel="New News" buttonTo="newNews">
+        <Route path="/newses/new" page={NewsNewNewsPage} name="newNews" />
+        <Route path="/newses/{id}/edit" page={NewsEditNewsPage} name="editNews" />
+        <Route path="/newses/{id}" page={NewsNewsPage} name="news" />
+        <Route path="/newses" page={NewsNewsesPage} name="newses" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Tags" titleTo="tags" buttonLabel="New Tag" buttonTo="newTag">
+        <Route path="/tags/new" page={TagNewTagPage} name="newTag" />
+        <Route path="/tags/{id}/edit" page={TagEditTagPage} name="editTag" />
+        <Route path="/tags/{id}" page={TagTagPage} name="tag" />
+        <Route path="/tags" page={TagTagsPage} name="tags" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Bdes" titleTo="bdes" buttonLabel="New Bde" buttonTo="newBde">
+      </Set>
       <PrivateSet unauthenticated="login">
         <Route path="/" page={HomePage} name="home" />
         <Set wrap={ScaffoldLayout} title="Scénarios" titleTo="scripts" buttonLabel="Nouveau scénario" buttonTo="newScript">
@@ -79,10 +107,6 @@ const Routes = () => {
           <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
-          <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
-          <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
-          <Route path="/departments/{id}" page={DepartmentDepartmentPage} name="department" />
-          <Route path="/departments" page={DepartmentDepartmentsPage} name="departments" />
         </Set>
         <Set wrap={ScaffoldLayout} title="CharacterSteps" titleTo="characterSteps" buttonLabel="New CharacterStep" buttonTo="newCharacterStep">
           <Route path="/character-steps/new" page={CharacterStepNewCharacterStepPage} name="newCharacterStep" />

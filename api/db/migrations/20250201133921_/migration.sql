@@ -164,6 +164,41 @@ CREATE TABLE "CharacterStep" (
     CONSTRAINT "CharacterStep_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "BDE" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "logo" TEXT NOT NULL,
+    "departmentId" TEXT NOT NULL,
+
+    CONSTRAINT "BDE_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "News" (
+    "id" TEXT NOT NULL,
+    "titre" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "News_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Tag" (
+    "id" TEXT NOT NULL,
+    "titre" TEXT NOT NULL,
+
+    CONSTRAINT "Tag_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_NewsTag" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -172,6 +207,12 @@ CREATE UNIQUE INDEX "Player_username_key" ON "Player"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PlayerScript_playerId_scriptId_key" ON "PlayerScript"("playerId", "scriptId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_NewsTag_AB_unique" ON "_NewsTag"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_NewsTag_B_index" ON "_NewsTag"("B");
 
 -- AddForeignKey
 ALTER TABLE "Script" ADD CONSTRAINT "Script_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -223,3 +264,12 @@ ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_characterId_fkey" FORE
 
 -- AddForeignKey
 ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "Step"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BDE" ADD CONSTRAINT "BDE_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_NewsTag" ADD CONSTRAINT "_NewsTag_A_fkey" FOREIGN KEY ("A") REFERENCES "News"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_NewsTag" ADD CONSTRAINT "_NewsTag_B_fkey" FOREIGN KEY ("B") REFERENCES "Tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;
