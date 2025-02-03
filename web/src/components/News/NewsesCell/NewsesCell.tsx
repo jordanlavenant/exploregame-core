@@ -13,7 +13,7 @@ export const QUERY: TypedDocumentNode<FindNewses, FindNewsesVariables> = gql`
   query FindNewses {
     newses {
       id
-      titre
+      title
       description
       date
     }

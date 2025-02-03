@@ -165,20 +165,20 @@ CREATE TABLE "CharacterStep" (
 );
 
 -- CreateTable
-CREATE TABLE "BDE" (
+CREATE TABLE "Bde" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "logo" TEXT NOT NULL,
     "departmentId" TEXT NOT NULL,
 
-    CONSTRAINT "BDE_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Bde_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "News" (
     "id" TEXT NOT NULL,
-    "titre" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
 
@@ -188,7 +188,7 @@ CREATE TABLE "News" (
 -- CreateTable
 CREATE TABLE "Tag" (
     "id" TEXT NOT NULL,
-    "titre" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
 
     CONSTRAINT "Tag_pkey" PRIMARY KEY ("id")
 );
@@ -266,7 +266,7 @@ ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_characterId_fkey" FORE
 ALTER TABLE "CharacterStep" ADD CONSTRAINT "CharacterStep_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "Step"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BDE" ADD CONSTRAINT "BDE_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Bde" ADD CONSTRAINT "Bde_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_NewsTag" ADD CONSTRAINT "_NewsTag_A_fkey" FOREIGN KEY ("A") REFERENCES "News"("id") ON DELETE CASCADE ON UPDATE CASCADE;

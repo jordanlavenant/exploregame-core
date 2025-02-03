@@ -58,8 +58,8 @@ const News = ({ news }: Props) => {
               <td>{news.id}</td>
             </tr>
             <tr>
-              <th>Titre</th>
-              <td>{news.titre}</td>
+              <th>Title</th>
+              <td>{news.title}</td>
             </tr>
             <tr>
               <th>Description</th>

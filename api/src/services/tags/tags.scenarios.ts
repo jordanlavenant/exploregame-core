@@ -3,8 +3,8 @@ import type { ScenarioData } from '@redwoodjs/testing/api'
 
 export const standard = defineScenario<Prisma.TagCreateArgs>({
   tag: {
-    one: { data: { titre: 'String' } },
-    two: { data: { titre: 'String' } },
+    one: { data: { title: 'String' } },
+    two: { data: { title: 'String' } },
   },
 })
 

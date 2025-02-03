@@ -5,16 +5,16 @@ export const standard = defineScenario<Prisma.NewsCreateArgs>({
   news: {
     one: {
       data: {
-        titre: 'String',
+        title: 'String',
         description: 'String',
-        date: '2025-02-01T13:35:45.258Z',
+        date: '2025-02-03T22:31:39.012Z',
       },
     },
     two: {
       data: {
-        titre: 'String',
+        title: 'String',
         description: 'String',
-        date: '2025-02-01T13:35:45.258Z',
+        date: '2025-02-03T22:31:39.012Z',
       },
     },
   },

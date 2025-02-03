@@ -186,7 +186,7 @@ model Bde {
 
 model News {
   id          String @id @default(uuid())
-  titre       String
+  title       String
   description String
   date        DateTime
   tags        Tag[] @relation("NewsTag")
@@ -194,6 +194,6 @@ model News {
 
 model Tag {
   id    String @id @default(uuid())
-  titre String
+  title String
   news  News[] @relation("NewsTag")
 }

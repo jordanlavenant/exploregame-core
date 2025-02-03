@@ -617,8 +617,121 @@ export default async () => {
       })
     }
 
+    const tags = [
+      {
+        id: '1',
+        title: 'infasso',
+      },
+      {
+        id: '2',
+        title: 'iut',
+      },
+      {
+        id: '3',
+        title: 'université',
+      },
+      {
+        id: '4',
+        title: 'étudiant',
+      },
+      {
+        id: '5',
+        title: 'éducation',
+      },
+      {
+        id: '6',
+        title: 'orleans',
+      },
+    ]
+    await db.tag.createMany({ data: tags })
+
+    const newses = [
+      {
+      title: "JPO 2025",
+      description: "La journée portes ouvertes 2025 de l'IUT d'Orléans est une réussite !",
+      date: new Date(),
+      },
+      {
+      title: "Nouveau département",
+      description: "Un nouveau département ouvre ses portes à l'IUT d'Orléans !",
+      date: new Date(),
+      },
+      {
+      title: "Nouvelle formation",
+      description: "Une nouvelle formation est disponible à l'IUT d'Orléans !",
+      date: new Date(),
+      },
+    ]
+    await db.news.createMany({ data: newses })
+
+    const newsJPO = await db.news.findFirst({ where: { title: "JPO 2025" } })
+    const newsDept = await db.news.findFirst({ where: { title: "Nouveau département" } })
+    const newsFormation = await db.news.findFirst({ where: { title: "Nouvelle formation" } })
+
+    await db.news.update({
+      where: { id: newsJPO.id },
+      data: { tags: { connect: [{ id: '2' }, { id: '4' }] } }
+    })
+
+    await db.news.update({
+      where: { id: newsDept.id },
+      data: { tags: { connect: [{ id: '2' }, { id: '4' }] } }
+    })
+
+    await db.news.update({
+      where: { id: newsFormation.id },
+      data: { tags: { connect: [{ id: '1' }, { id: '3' }] } }
+    })
+
+    const bdes = [
+      {
+        id: '1',
+        name: 'INFASSO',
+        description: 'Bureau des étudiants de l\'INFO',
+        departmentId: '1',
+        logo : 'Panda',
+      },
+      {
+        id: '2',
+        name: 'BDE GEA',
+        description: 'Bureau des étudiants de GEA',
+        departmentId: '2',
+        logo : 'Panda',
+      },
+      {
+        id: '3',
+        name: 'BDE GMP',
+        description: 'Bureau des étudiants de GMP',
+        departmentId: '3',
+        logo : 'Panda',
+      },
+      {
+        id: '4',
+        name: 'BDE QLIO',
+        description: 'Bureau des étudiants de QLIO',
+        departmentId: '4',
+        logo : 'Panda',
+      },
+      {
+        id: '5',
+        name: 'DCO',
+        description: 'Bureau des étudiants de Chimie',
+        departmentId: '5',
+        logo : 'Panda',
+      },
+      {
+        id: '6',
+        name: 'BDE MT2E',
+        description: 'Bureau des étudiants de MT2E',
+        departmentId: '6',
+        logo : 'Panda',
+      },
+    ]
+    await db.bde.createMany({ data: bdes })
+
+
     console.info(
-      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players, ${hints.length} hints`
+      `Seeded ${users.length} users, ${departments.length} departments, ${locations.length} locations, ${hintLevels.length} hintLevels, ${scripts.length} scripts, ${steps.length} steps, ${scriptsSteps.length} scriptsSteps, ${questionTypes.length} questionTypes, ${questions.length} questions, ${answers.length} answers, ${players.length} players, ${hints.length} hints, ${tags.length} tags, ${newses.length} newses`
     )
   } catch (error) {
     console.error(error)

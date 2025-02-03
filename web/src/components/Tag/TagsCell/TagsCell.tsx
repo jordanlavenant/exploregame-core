@@ -13,7 +13,7 @@ export const QUERY: TypedDocumentNode<FindTags, FindTagsVariables> = gql`
   query FindTags {
     tags {
       id
-      titre
+      title
     }
   }
 `

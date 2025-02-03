@@ -25,25 +25,25 @@ describe('newses', () => {
   scenario('creates a news', async () => {
     const result = await createNews({
       input: {
-        titre: 'String',
+        title: 'String',
         description: 'String',
-        date: '2025-02-01T13:35:45.246Z',
+        date: '2025-02-03T22:31:38.976Z',
       },
     })
 
-    expect(result.titre).toEqual('String')
+    expect(result.title).toEqual('String')
     expect(result.description).toEqual('String')
-    expect(result.date).toEqual(new Date('2025-02-01T13:35:45.246Z'))
+    expect(result.date).toEqual(new Date('2025-02-03T22:31:38.976Z'))
   })
 
   scenario('updates a news', async (scenario: StandardScenario) => {
     const original = (await news({ id: scenario.news.one.id })) as News
     const result = await updateNews({
       id: original.id,
-      input: { titre: 'String2' },
+      input: { title: 'String2' },
     })
 
-    expect(result.titre).toEqual('String2')
+    expect(result.title).toEqual('String2')
   })
 
   scenario('deletes a news', async (scenario: StandardScenario) => {
