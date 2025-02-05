@@ -23,6 +23,13 @@ export const QUERY: TypedDocumentNode<EditScriptStepById> = gql`
       stepId
       lettre
       order
+      Step {
+        id
+        name
+        Location {
+          id
+        }
+      }
     }
   }
 `
