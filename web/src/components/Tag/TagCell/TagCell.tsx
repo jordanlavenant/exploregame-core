@@ -12,7 +12,7 @@ export const QUERY: TypedDocumentNode<FindTagById, FindTagByIdVariables> = gql`
   query FindTagById($id: String!) {
     tag: tag(id: $id) {
       id
-      titre
+      title
     }
   }
 `

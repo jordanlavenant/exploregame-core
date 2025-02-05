@@ -19,7 +19,7 @@ export const QUERY: TypedDocumentNode<EditTagById> = gql`
   query EditTagById($id: String!) {
     tag: tag(id: $id) {
       id
-      titre
+      title
     }
   }
 `
@@ -31,7 +31,7 @@ const UPDATE_TAG_MUTATION: TypedDocumentNode<
   mutation UpdateTagMutation($id: String!, $input: UpdateTagInput!) {
     updateTag(id: $id, input: $input) {
       id
-      titre
+      title
     }
   }
 `

@@ -50,7 +50,7 @@ const TagsList = ({ tags }: FindTags) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Titre</th>
+            <th>Title</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -58,7 +58,7 @@ const TagsList = ({ tags }: FindTags) => {
           {tags.map((tag) => (
             <tr key={tag.id}>
               <td>{truncate(tag.id)}</td>
-              <td>{truncate(tag.titre)}</td>
+              <td>{truncate(tag.title)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

@@ -50,7 +50,7 @@ const NewsesList = ({ newses }: FindNewses) => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Titre</th>
+            <th>Title</th>
             <th>Description</th>
             <th>Date</th>
             <th>&nbsp;</th>
@@ -60,7 +60,7 @@ const NewsesList = ({ newses }: FindNewses) => {
           {newses.map((news) => (
             <tr key={news.id}>
               <td>{truncate(news.id)}</td>
-              <td>{truncate(news.titre)}</td>
+              <td>{truncate(news.title)}</td>
               <td>{truncate(news.description)}</td>
               <td>{timeTag(news.date)}</td>
               <td>

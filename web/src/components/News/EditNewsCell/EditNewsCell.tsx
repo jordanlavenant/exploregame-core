@@ -19,7 +19,7 @@ export const QUERY: TypedDocumentNode<EditNewsById> = gql`
   query EditNewsById($id: String!) {
     news: news(id: $id) {
       id
-      titre
+      title
       description
       date
     }
@@ -33,7 +33,7 @@ const UPDATE_NEWS_MUTATION: TypedDocumentNode<
   mutation UpdateNewsMutation($id: String!, $input: UpdateNewsInput!) {
     updateNews(id: $id, input: $input) {
       id
-      titre
+      title
       description
       date
     }

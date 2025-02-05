@@ -1,7 +1,7 @@
 export const schema = gql`
   type Tag {
     id: String!
-    titre: String!
+    title: String!
     news: [News]!
   }
 
@@ -11,11 +11,11 @@ export const schema = gql`
   }
 
   input CreateTagInput {
-    titre: String!
+    title: String!
   }
 
   input UpdateTagInput {
-    titre: String
+    title: String
   }
 
   type Mutation {

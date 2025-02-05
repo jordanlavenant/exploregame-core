@@ -13,7 +13,7 @@ export const QUERY: TypedDocumentNode<FindNewsById, FindNewsByIdVariables> =
     query FindNewsById($id: String!) {
       news: news(id: $id) {
         id
-        titre
+        title
         description
         date
       }

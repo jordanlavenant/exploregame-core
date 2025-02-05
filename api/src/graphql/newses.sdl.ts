@@ -1,7 +1,7 @@
 export const schema = gql`
   type News {
     id: String!
-    titre: String!
+    title: String!
     description: String!
     date: DateTime!
     tags: [Tag]!
@@ -13,13 +13,13 @@ export const schema = gql`
   }
 
   input CreateNewsInput {
-    titre: String!
+    title: String!
     description: String!
     date: DateTime!
   }
 
   input UpdateNewsInput {
-    titre: String
+    title: String
     description: String
     date: DateTime
   }

@@ -24,20 +24,20 @@ describe('tags', () => {
 
   scenario('creates a tag', async () => {
     const result = await createTag({
-      input: { titre: 'String' },
+      input: { title: 'String' },
     })
 
-    expect(result.titre).toEqual('String')
+    expect(result.title).toEqual('String')
   })
 
   scenario('updates a tag', async (scenario: StandardScenario) => {
     const original = (await tag({ id: scenario.tag.one.id })) as Tag
     const result = await updateTag({
       id: original.id,
-      input: { titre: 'String2' },
+      input: { title: 'String2' },
     })
 
-    expect(result.titre).toEqual('String2')
+    expect(result.title).toEqual('String2')
   })
 
   scenario('deletes a tag', async (scenario: StandardScenario) => {

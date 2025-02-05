@@ -42,22 +42,22 @@ const NewsForm = (props: NewsFormProps) => {
         />
 
         <Label
-          name="titre"
+          name="title"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Titre
+          Title
         </Label>
 
         <TextField
-          name="titre"
-          defaultValue={props.news?.titre}
+          name="title"
+          defaultValue={props.news?.title}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
 
-        <FieldError name="titre" className="rw-field-error" />
+        <FieldError name="title" className="rw-field-error" />
 
         <Label
           name="description"
