@@ -49,8 +49,7 @@ const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Id</th>
-            <th>Script id</th>
+            <th>Nom du scénario</th>
             <th>Step id</th>
             <th>Lettre</th>
             <th>Order</th>
@@ -60,8 +59,7 @@ const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
         <tbody>
           {scriptSteps.map((scriptStep) => (
             <tr key={scriptStep.id}>
-              <td>{truncate(scriptStep.id)}</td>
-              <td>{truncate(scriptStep.scriptId)}</td>
+              <td>{truncate(scriptStep.Script.name)}</td>
               <td>{truncate(scriptStep.stepId)}</td>
               <td>{truncate(scriptStep.lettre)}</td>
               <td>{truncate(scriptStep.order)}</td>
