@@ -21,6 +21,10 @@ export const QUERY: TypedDocumentNode<
       lettre
       order
       Script {
+        id
+        name
+      }
+      Step {
         name
       }
     }

@@ -2,6 +2,8 @@ import type {
   DeleteScriptStepMutation,
   DeleteScriptStepMutationVariables,
   FindScriptSteps,
+  UpdateScriptStepMutation,
+  UpdateScriptStepMutationVariables,
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
@@ -11,6 +13,8 @@ import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/ScriptStep/ScriptStepsCell'
 import { truncate } from 'src/lib/formatters'
+
+import { saveScriptSteps } from '@/utils/scriptSteps'
 
 const DELETE_SCRIPT_STEP_MUTATION: TypedDocumentNode<
   DeleteScriptStepMutation,
@@ -23,7 +27,23 @@ const DELETE_SCRIPT_STEP_MUTATION: TypedDocumentNode<
   }
 `
 
+const UPDATE_SCRIPT_STEP_MUTATION: TypedDocumentNode<
+  UpdateScriptStepMutation,
+  UpdateScriptStepMutationVariables
+> = gql`
+  mutation UpdateScriptStepAfterDeletation(
+    $id: String!
+    $input: UpdateScriptStepInput!
+  ) {
+    updateScriptStep(id: $id, input: $input) {
+      id
+      order
+    }
+  }
+`
+
 const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
+  const [updateScriptStep] = useMutation(UPDATE_SCRIPT_STEP_MUTATION)
   const [deleteScriptStep] = useMutation(DELETE_SCRIPT_STEP_MUTATION, {
     onCompleted: () => {
       toast.success('ScriptStep deleted')
@@ -40,7 +60,24 @@ const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
 
   const onDeleteClick = (id: DeleteScriptStepMutationVariables['id']) => {
     if (confirm('Are you sure you want to delete scriptStep ' + id + '?')) {
-      deleteScriptStep({ variables: { id } })
+      deleteScriptStep({ variables: { id } }).then(() => {
+        const currScriptStep = scriptSteps.find((s) => s.id === id)
+        const scriptStepsSameScript = scriptSteps.filter(
+          (s) => s.scriptId === currScriptStep.scriptId && s.id !== id
+        )
+        const newScriptSteps = []
+        scriptStepsSameScript.forEach((scriptStep, index) => {
+          newScriptSteps.push({
+            id: scriptStep.id,
+            order: index,
+          })
+        })
+        console.log(newScriptSteps)
+        saveScriptSteps({
+          currScriptSteps: newScriptSteps,
+          updateScriptStep,
+        })
+      })
     }
   }
 
@@ -49,8 +86,8 @@ const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
       <table className="rw-table">
         <thead>
           <tr>
+            <th>Nom de l&apos;étape</th>
             <th>Nom du scénario</th>
-            <th>Step id</th>
             <th>Lettre</th>
             <th>Order</th>
             <th>&nbsp;</th>
@@ -59,8 +96,8 @@ const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
         <tbody>
           {scriptSteps.map((scriptStep) => (
             <tr key={scriptStep.id}>
+              <td>{truncate(scriptStep.Step.name)}</td>
               <td>{truncate(scriptStep.Script.name)}</td>
-              <td>{truncate(scriptStep.stepId)}</td>
               <td>{truncate(scriptStep.lettre)}</td>
               <td>{truncate(scriptStep.order)}</td>
               <td>

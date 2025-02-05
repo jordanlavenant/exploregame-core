@@ -59,7 +59,10 @@ type FormQuestion = NonNullable<EditQuestionById['question']>
 
 interface QuestionFormProps {
   question?: EditQuestionById['question']
-  onSave: (data: UpdateQuestionInput, id?: FormQuestion['id']) => Promise<CreateQuestionMutation | EditQuestionById>
+  onSave: (
+    data: UpdateQuestionInput,
+    id?: FormQuestion['id']
+  ) => Promise<CreateQuestionMutation | EditQuestionById>
   error: RWGqlError
   loading: boolean
 }
@@ -394,7 +397,11 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, [form])
 
   useEffect(() => {
-    if (isFormModified && (form.watch('questionTypeId') === '1' || form.watch('questionTypeId') === '2')) {
+    if (
+      isFormModified &&
+      (form.watch('questionTypeId') === '1' ||
+        form.watch('questionTypeId') === '2')
+    ) {
       setCurrentAnswers([])
     }
   }, [form.watch('questionTypeId'), isFormModified])
@@ -464,30 +471,30 @@ const QuestionForm = (props: QuestionFormProps) => {
     if (!currentAnswers || currentAnswers.length === 0) {
       return
     }
-    if(props.question) {
+    if (props.question) {
       saveAnswers({
         currentAnswers,
         question: props.question,
         deleteAnswer,
         createAnswer,
       })
-      .then(() => {
-        saveHints({
-          currentHints,
-          question: props.question,
-          deleteHint,
-          createHint,
+        .then(() => {
+          saveHints({
+            currentHints,
+            question: props.question,
+            deleteHint,
+            createHint,
+          })
         })
-      })
-      .then(() => {
-        saveQuestions({
-          currQuestions,
-          updateQuestion,
+        .then(() => {
+          saveQuestions({
+            currQuestions,
+            updateQuestion,
+          })
         })
-      })
-      .then(() => {
-        props.onSave(data, props.question.id)
-      })
+        .then(() => {
+          props.onSave(data, props.question.id)
+        })
     } else {
       props.onSave(data, props?.question?.id).then((data) => {
         saveAnswers({
@@ -724,7 +731,8 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Switch
                       disabled={
                         currentAnswers.some((a) => a.isCorrect) &&
-                        !answer.isCorrect && form.watch('questionTypeId') === '2'
+                        !answer.isCorrect &&
+                        form.watch('questionTypeId') === '2'
                       }
                       checked={answer.isCorrect}
                       onCheckedChange={() => toggleCorrect(answer)}
