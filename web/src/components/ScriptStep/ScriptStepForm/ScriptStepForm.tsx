@@ -59,13 +59,14 @@ interface ScriptStepFormProps {
 }
 
 const SCRIPTSTEP_FORM_QUERY = gql`
-  query ScriptStepForm {
+  query ScriptForm {
     scripts {
       id
       name
       ScriptStep {
         id
         order
+        lettre
         Step {
           name
         }
@@ -161,6 +162,7 @@ const DraggableItem = ({
             <ChevronsUpDown />
           </Button>
         </div>
+        <p className='font-mono text-muted-foreground'>({scriptStep?.lettre || '?'})</p>
         <p>{scriptStep?.Step?.name}</p>
       </Card>
     </div>
@@ -215,11 +217,13 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
 
   useEffect(() => {
     const stepName = form.watch('stepName')
+    const lettre = form.watch('lettre')
     if (!props.scriptStep) {
       if (!currScriptStep) {
         setCurrScriptStep({
           id: uuidv4(),
           order: currScriptSteps.length + 1,
+          lettre: lettre,
           Step: {
             name: stepName,
           },
@@ -227,13 +231,14 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
       } else {
         setCurrScriptStep({
           ...currScriptStep,
+          lettre: lettre,
           Step: {
             name: stepName,
           },
         })
       }
     }
-  }, [form.watch('scriptId'), form.watch('stepName')])
+  }, [form.watch('scriptId'), form.watch('stepName'), form.watch('lettre')])
 
   useEffect(() => {
     if (currScriptStep) {
