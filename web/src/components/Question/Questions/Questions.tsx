@@ -13,6 +13,7 @@ import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Question/QuestionsCell'
 import { truncate } from 'src/lib/formatters'
+
 import { saveQuestions } from '@/utils/questions'
 
 const DELETE_QUESTION_MUTATION: TypedDocumentNode<
@@ -30,7 +31,10 @@ const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
   UpdateQuestionMutation,
   UpdateQuestionMutationVariables
 > = gql`
-  mutation UpdateQuestionAfterDeletation($id: String!, $input: UpdateQuestionInput!) {
+  mutation UpdateQuestionAfterDeletation(
+    $id: String!
+    $input: UpdateQuestionInput!
+  ) {
     updateQuestion(id: $id, input: $input) {
       id
       order
@@ -61,11 +65,11 @@ const QuestionsList = ({ questions }: FindQuestions) => {
         const questionsSameStep = questions.filter(
           (q) => q.stepId === question?.stepId && q.id !== id
         )
-        const newQuestions = [];
+        const newQuestions = []
         questionsSameStep.forEach((question, index) => {
           newQuestions.push({
             id: question.id,
-            order: index
+            order: index,
           })
         })
         saveQuestions({
