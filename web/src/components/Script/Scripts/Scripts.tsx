@@ -49,7 +49,7 @@ const ScriptsList = ({ scripts }: FindScripts) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Nom</th>
             <th>Visible</th>
             <th>Department</th>
             <th>Mot secret</th>

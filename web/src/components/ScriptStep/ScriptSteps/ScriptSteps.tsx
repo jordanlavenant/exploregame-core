@@ -89,7 +89,6 @@ const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
             <th>Nom de l&apos;étape</th>
             <th>Nom du scénario</th>
             <th>Lettre</th>
-            <th>Order</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -99,7 +98,6 @@ const ScriptStepsList = ({ scriptSteps }: FindScriptSteps) => {
               <td>{truncate(scriptStep.Step.name)}</td>
               <td>{truncate(scriptStep.Script.name)}</td>
               <td>{truncate(scriptStep.lettre)}</td>
-              <td>{truncate(scriptStep.order)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
