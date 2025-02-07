@@ -209,7 +209,35 @@ const HomePage = () => {
           <div className="p-4 flex flex-col items-center">
             <h2 className="text-2xl font-bold mb-4 text-center">Les actualités</h2>
             <Card className="p-4 w-full max-w-lg">
-              {/* Work in progress */}
+              {data.newses.map((news) => (
+              <div key={news.id} className="p-2 border rounded-lg mb-4">
+                <h3 className="text-xl font-bold mb-2">{news.title}</h3>
+                <p className="text-sm mb-2">{news.description}</p>
+                <p className="text-sm mb-2">Date: {new Date(news.date).toLocaleDateString()}</p>
+                <div className="flex space-x-2">
+                <Button variant="ghost" size="icon" onClick={() => navigate(routes.editNews({ id: news.id }))}>
+                  <Pencil />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(news)}>
+                  <Trash />
+                </Button>
+                </div>
+              </div>
+              ))}
+              <div className="flex justify-between items-center mt-4">
+              <p className="text-sm">Date: {new Date(news.date).toLocaleDateString()}</p>
+              <div className="flex space-x-2">
+                <Button variant="ghost" size="icon" onClick={() => navigate(routes.editNews({ id: news.id }))}>
+                <Pencil />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(news)}>
+                <Trash />
+                </Button>
+              </div>
+              </div>
+              <div className="flex justify-center mt-4">
+              <Button onClick={() => navigate(routes.newses())}>Gérer toutes les actualités</Button>
+              </div>
             </Card>
           </div>
 
