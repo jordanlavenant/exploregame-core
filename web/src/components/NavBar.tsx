@@ -17,6 +17,9 @@ const QUERY = gql`
     departments {
       id
     }
+    bdes {
+      id
+    }
   }
 `
 
@@ -27,7 +30,7 @@ const NavBar = () => {
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
-  const { questions, steps, scripts, departments } = data
+  const { questions, steps, scripts, departments, bdes } = data
 
   function deleteAllCookies() {
     document.cookie.split(';').forEach(cookie => {
@@ -56,6 +59,9 @@ const NavBar = () => {
           </Link>
           <Link to="/questions">
             Questions ({questions?.length | 0})
+          </Link>
+          <Link to="/bdes">
+            BDE ({bdes?.length | 0})
           </Link>
         </div>
         <div className='flex justify-end'>
