@@ -20,6 +20,13 @@ export const QUERY: TypedDocumentNode<
       stepId
       lettre
       order
+      Script {
+        id
+        name
+      }
+      Step {
+        name
+      }
     }
   }
 `

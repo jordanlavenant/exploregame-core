@@ -4,15 +4,18 @@ import type {
   FindQuestions,
   UpdateQuestionMutation,
   UpdateQuestionMutationVariables,
+  FindSteps,
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
-import { useMutation } from '@redwoodjs/web'
+import { useMutation, useQuery } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { QUERY } from 'src/components/Question/QuestionsCell'
+import { QUERY as QUESTIONS_QUERY } from 'src/components/Question/QuestionsCell'
+import { QUERY as STEPS_QUERY } from 'src/components/Step/StepsCell'
 import { truncate } from 'src/lib/formatters'
+
 import { saveQuestions } from '@/utils/questions'
 
 const DELETE_QUESTION_MUTATION: TypedDocumentNode<
@@ -30,7 +33,10 @@ const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
   UpdateQuestionMutation,
   UpdateQuestionMutationVariables
 > = gql`
-  mutation UpdateQuestionAfterDeletation($id: String!, $input: UpdateQuestionInput!) {
+  mutation UpdateQuestionAfterDeletation(
+    $id: String!
+    $input: UpdateQuestionInput!
+  ) {
     updateQuestion(id: $id, input: $input) {
       id
       order
@@ -39,6 +45,7 @@ const UPDATE_QUESTION_MUTATION: TypedDocumentNode<
 `
 
 const QuestionsList = ({ questions }: FindQuestions) => {
+  const { data: stepsData } = useQuery<FindSteps>(STEPS_QUERY)
   const [updateQuestion] = useMutation(UPDATE_QUESTION_MUTATION)
   const [deleteQuestion] = useMutation(DELETE_QUESTION_MUTATION, {
     onCompleted: () => {
@@ -47,10 +54,7 @@ const QuestionsList = ({ questions }: FindQuestions) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    // This refetches the query on the list page. Read more about other ways to
-    // update the cache over here:
-    // https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
-    refetchQueries: [{ query: QUERY }],
+    refetchQueries: [{ query: QUESTIONS_QUERY }],
     awaitRefetchQueries: true,
   })
 
@@ -59,13 +63,13 @@ const QuestionsList = ({ questions }: FindQuestions) => {
       deleteQuestion({ variables: { id } }).then(() => {
         const question = questions.find((q) => q.id === id)
         const questionsSameStep = questions.filter(
-          (q) => q.stepId === question?.stepId && q.id !== id
+          (q) => q.step.id === question?.step.id && q.id !== id
         )
-        const newQuestions = [];
+        const newQuestions = []
         questionsSameStep.forEach((question, index) => {
           newQuestions.push({
             id: question.id,
-            order: index
+            order: index,
           })
         })
         saveQuestions({
@@ -76,15 +80,19 @@ const QuestionsList = ({ questions }: FindQuestions) => {
     }
   }
 
+  const getStepName = (stepId: string) => {
+    const step = stepsData?.steps.find((step) => step.id === stepId)
+    return step ? step.name : 'Unknown Step'
+  }
+
   return (
     <div className="rw-segment rw-table-wrapper-responsive">
       <table className="rw-table">
         <thead>
           <tr>
             <th>Question</th>
-            <th>Question type id</th>
-            <th>Step id</th>
-            <th>Order</th>
+            <th>Type de question</th>
+            <th>Step</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -92,9 +100,8 @@ const QuestionsList = ({ questions }: FindQuestions) => {
           {questions.map((question) => (
             <tr key={question.id}>
               <td>{truncate(question.question)}</td>
-              <td>{truncate(question.questionTypeId)}</td>
-              <td>{truncate(question.stepId)}</td>
-              <td>{truncate(question.order)}</td>
+              <td>{truncate(question.QuestionType.type)}</td>
+              <td>{truncate(getStepName(question.stepId))}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

@@ -10,7 +10,7 @@ import type {
   CellFailureProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
-import { useMutation } from '@redwoodjs/web'
+import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import ScriptStepForm from 'src/components/ScriptStep/ScriptStepForm'
@@ -23,6 +23,13 @@ export const QUERY: TypedDocumentNode<EditScriptStepById> = gql`
       stepId
       lettre
       order
+      Step {
+        id
+        name
+        Location {
+          id
+        }
+      }
     }
   }
 `
@@ -54,6 +61,10 @@ export const Failure = ({ error }: CellFailureProps) => (
 export const Success = ({
   scriptStep,
 }: CellSuccessProps<EditScriptStepById>) => {
+  const { refetch } = useQuery(QUERY, {
+    variables: { id: scriptStep.id },
+    fetchPolicy: 'network-only',
+  })
   const [updateScriptStep, { loading, error }] = useMutation(
     UPDATE_SCRIPT_STEP_MUTATION,
     {
@@ -72,6 +83,7 @@ export const Success = ({
     id: EditScriptStepById['scriptStep']['id']
   ) => {
     updateScriptStep({ variables: { id, input } })
+    refetch()
   }
 
   return (

@@ -5,11 +5,11 @@
 // https://www.prisma.io/docs/orm/prisma-migrate
 
 datasource db {
-  // provider = "sqlite"
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  //provider = "postgresql"
+  //url      = env("DATABASE_URL")
   // url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
-  // url      = "file:./dev.db"
+  url      = "file:./dev.db"
 }
 
 generator client {
@@ -176,20 +176,20 @@ model CharacterStep {
 }
 
 model Bde {
-  id            String @id @default(uuid())
-  name          String
-  description   String
-  logo          String      
-  departmentId  String
-  Department    Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  id           String     @id @default(uuid())
+  name         String
+  description  String
+  logo         String
+  departmentId String
+  Department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
 }
 
 model News {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
   description String
   date        DateTime
-  tags        Tag[] @relation("NewsTag")
+  tags        Tag[]    @relation("NewsTag")
 }
 
 model Tag {

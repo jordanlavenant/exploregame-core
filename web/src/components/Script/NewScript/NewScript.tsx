@@ -41,14 +41,7 @@ const NewScript = () => {
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">New Script</h2>
-      </header>
-      <div className="rw-segment-main">
-        <ScriptForm onSave={onSave} loading={loading} error={error} />
-      </div>
-    </div>
+    <ScriptForm onSave={onSave} loading={loading} error={error} />
   )
 }
 
