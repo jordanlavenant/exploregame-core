@@ -16,7 +16,10 @@ export const QUERY: TypedDocumentNode<FindBdes, FindBdesVariables> = gql`
       name
       description
       logo
-      departmentId
+      Department {
+        id
+        name
+      }
     }
   }
 `
