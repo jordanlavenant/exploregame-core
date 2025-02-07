@@ -49,22 +49,22 @@ const BdesList = ({ bdes }: FindBdes) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Id</th>
+            {/* <th>Id</th> */}
             <th>Name</th>
             <th>Description</th>
             <th>Logo</th>
-            <th>Department id</th>
+            <th>Departement</th> {/* Updated header */}
             <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {bdes.map((bde) => (
             <tr key={bde.id}>
-              <td>{truncate(bde.id)}</td>
+              {/* <td>{truncate(bde.id)}</td> */}
               <td>{truncate(bde.name)}</td>
               <td>{truncate(bde.description)}</td>
               <td>{truncate(bde.logo)}</td>
-              <td>{truncate(bde.departmentId)}</td>
+              <td>{truncate(bde.Department.name)}</td> {/* Updated to display department name */}
               <td>
                 <nav className="rw-table-actions">
                   <Link

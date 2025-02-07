@@ -31,9 +31,6 @@ const NewsesList = ({ newses }: FindNewses) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    // This refetches the query on the list page. Read more about other ways to
-    // update the cache over here:
-    // https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
     refetchQueries: [{ query: QUERY }],
     awaitRefetchQueries: true,
   })
@@ -49,7 +46,7 @@ const NewsesList = ({ newses }: FindNewses) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Id</th>
+            {/* <th>Id</th> */}
             <th>Title</th>
             <th>Description</th>
             <th>Date</th>
@@ -59,7 +56,7 @@ const NewsesList = ({ newses }: FindNewses) => {
         <tbody>
           {newses.map((news) => (
             <tr key={news.id}>
-              <td>{truncate(news.id)}</td>
+              {/* <td>{truncate(news.id)}</td> */}
               <td>{truncate(news.title)}</td>
               <td>{truncate(news.description)}</td>
               <td>{timeTag(news.date)}</td>

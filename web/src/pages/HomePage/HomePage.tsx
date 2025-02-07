@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { back, navigate, routes } from '@redwoodjs/router';
-import { DeleteScriptMutation, DeleteScriptMutationVariables, UpdateScriptMutation, UpdateScriptMutationVariables } from 'types/graphql';
+import { DeleteNewsMutation, DeleteNewsMutationVariables, DeleteScriptMutation, DeleteScriptMutationVariables, UpdateScriptMutation, UpdateScriptMutationVariables } from 'types/graphql';
 import NavBar from 'src/components/NavBar'
 
 const HOME_QUERY = gql`
@@ -27,6 +27,12 @@ const HOME_QUERY = gql`
       ColorSet {
         primary
       }
+    }
+    newses {
+      id
+      title
+      description
+      date
     }
   }
 `;
@@ -54,16 +60,29 @@ const DELETE_SCRIPT: TypedDocumentNode<
   }
 `;
 
+const DELETE_NEWS: TypedDocumentNode<
+  DeleteNewsMutation,
+  DeleteNewsMutationVariables
+> = gql`
+  mutation DeleteNews($id: String!) {
+    deleteNews(id: $id) {
+      id
+    }
+  }
+`;
+
 const HomePage = () => {
   // Requêtes
   const { data, loading, error } = useQuery(HOME_QUERY);
   const [updateScript] = useMutation(UPDATE_SCRIPT_VISIBILITY);
   const [deleteScript] = useMutation(DELETE_SCRIPT);
+  const [deleteNews] = useMutation(DELETE_NEWS);
 
-  // Etat du script sélectionné pour les modales
+  // Etat des éléments sélectionné pour les modales
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedScript, setSelectedScript] = useState(null);
   const [typeModal, setTypeModal] = useState(null);
+  const [selectedNews, setSelectedNews] = useState(null);
 
   // Données récupérées par la requête
   var scripts = data?.scripts;
@@ -89,11 +108,41 @@ const HomePage = () => {
     handleCloseModal();
   };
 
+  const handleDeleteNews = () => {
+    console.log("🔴 handleDeleteNews appelé !");
+  
+    deleteNews({
+      variables: { id: selectedNews.id },
+      update: (cache) => {
+        cache.modify({
+          fields: {
+            newses(existingNewsRefs, { readField }) {
+              return existingNewsRefs.filter(
+                (newsRef) => readField("id", newsRef) !== selectedNews.id
+              );
+            },
+          },
+        });
+      },
+    })
+      .then(() => console.log("✅ Suppression réussie et cache mis à jour !"))
+      .catch((error) => console.error("❌ Erreur lors de la suppression :", error));
+  
+    handleCloseModal();
+  };
+  
+
   const handleDeleteClick = (script) => {
     setSelectedScript(script);
     setTypeModal('delete');
     setIsModalOpen(true);
   };
+
+  const handleDeleteClickNews = (news) => {
+    setSelectedNews(news);
+    setTypeModal('deleteNews');
+    setIsModalOpen(true);
+  }
 
   const handleVisibilityClick = (script) => {
     setSelectedScript(script);
@@ -101,13 +150,11 @@ const HomePage = () => {
     setIsModalOpen(true);
   };
 
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedScript(null);
     setTypeModal(null);
   };
-
 
   const createModal = (typeModal) => {
     if (typeModal === 'delete') {
@@ -139,6 +186,24 @@ const HomePage = () => {
               </Button>
               <Button variant="destructive" onClick={() => handleUpdateVisibility(selectedScript.id, !selectedScript.visible)}>
                 Confirmer
+              </Button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    else if (typeModal === 'deleteNews') {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded text-black">
+            <h2 className="text-xl font-bold mb-2">Confirmer la suppression</h2>
+            <p>Êtes-vous sûr de vouloir supprimer l'actualité {selectedNews?.title} ?</p>
+            <div className="flex justify-end mt-4 space-x-2">
+              <Button variant="ghost" onClick={handleCloseModal}>
+                Annuler
+              </Button>
+              <Button variant="destructive" onClick={handleDeleteNews}>
+                Supprimer
               </Button>
             </div>
           </div>
@@ -185,15 +250,15 @@ const HomePage = () => {
                         />
                       </div>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(script)}>
-                          <Trash />
-                        </Button>
-                        <Button
+                      <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => navigate(routes.editScript({ id: script.id }))}
                         >
                           <Pencil />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(script)}>
+                          <Trash />
                         </Button>
                       </div>
                     </div>
@@ -206,13 +271,31 @@ const HomePage = () => {
           </div>
 
           {/* Actualités */}
-          <div className="p-4 flex flex-col items-center">
+            <div className="p-4 flex flex-col items-center">
             <h2 className="text-2xl font-bold mb-4 text-center">Les actualités</h2>
             <Card className="p-4 w-full max-w-lg">
-              {/* Work in progress */}
+              {data.newses.slice(0, 3).map((news) => (
+              <div key={news.id} className="p-2 border rounded-lg mb-4">
+              <h3 className="text-xl font-bold mb-2">{news.title}</h3>
+              <p className="text-sm mb-2">{news.description}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-sm mb-2 flex-grow text-left">Date : {new Date(news.date).toLocaleDateString()}</p>
+                <div className="flex space-x-2">
+                <Button variant="ghost" size="icon" onClick={() => navigate(routes.editNews({ id: news.id }))}>
+                <Pencil />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => handleDeleteClickNews(news)}>
+                <Trash />
+                </Button>
+                </div>
+              </div>
+              </div>
+              ))}
+              <div className="flex justify-center mt-4">
+              <Button onClick={() => navigate(routes.newses())}>Gérer toutes les actualités</Button>
+              </div>
             </Card>
-          </div>
-
+            </div>
           {/* Départements */}
           <div className="p-4 flex flex-col items-center">
             <h2 className="text-2xl font-bold mb-4 text-center">Les départements</h2>

@@ -49,7 +49,7 @@ const TagsList = ({ tags }: FindTags) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Id</th>
+            {/* <th>Id</th> */}
             <th>Title</th>
             <th>&nbsp;</th>
           </tr>
