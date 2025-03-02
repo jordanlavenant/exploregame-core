@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown, Edit, X } from 'lucide-react'
+import { Check, ChevronsUpDown, Edit, GripVertical, X } from 'lucide-react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useForm } from 'react-hook-form'
@@ -23,7 +23,7 @@ import type { RWGqlError } from '@redwoodjs/forms'
 import { back } from '@redwoodjs/router'
 
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Command,
   CommandEmpty,
@@ -169,44 +169,59 @@ const DraggableItem = ({
   moveCard: (dragIndex: number, hoverIndex: number) => void
   current: boolean
 }) => {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+    type: 'CARD',
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }))
+
   const [, drop] = useDrop({
     accept: 'CARD',
     hover(item: { index: number }) {
-      if (!ref.current) {
-        return
-      }
+      if (!ref.current) return
       const dragIndex = item.index
       const hoverIndex = index
-      if (dragIndex === hoverIndex) {
-        return
-      }
+
+      if (dragIndex === hoverIndex) return
+
       moveCard(dragIndex, hoverIndex)
       item.index = hoverIndex
     },
   })
 
-  const [{ isDragging }, drag] = useDrag({
-    type: 'CARD',
-    item: { type: 'CARD', index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
   drag(drop(ref))
 
   return (
-    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div
+      ref={dragPreview}
+      className={cn('transition-all duration-200', isDragging && 'opacity-50')}
+    >
       <Card
-        className={`flex items-center gap-x-2 ${current && 'border-blue-500 text-blue-500'} cursor-move hover:border-blue-500`}
+        className={cn(
+          'mb-2 cursor-pointer group',
+          current && 'border-primary',
+          !isDragging && 'hover:border-primary'
+        )}
       >
-        <div>
-          <Button variant="ghost" type="button">
-            <ChevronsUpDown />
-          </Button>
-        </div>
-        <p>{question?.question}</p>
+        <Card className="p-3 flex items-center gap-3">
+          <div ref={ref} className="cursor-grab">
+            <GripVertical className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+          </div>
+          <div className="font-mono text-sm text-muted-foreground w-6">
+            {question?.order}
+          </div>
+          <div className="flex-grow">
+            <div className="font-medium truncate">{question?.question}</div>
+          </div>
+          {current && (
+            <div className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-md">
+              Actuelle
+            </div>
+          )}
+        </Card>
       </Card>
     </div>
   )
@@ -525,395 +540,415 @@ const QuestionForm = (props: QuestionFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid md:grid-cols-2 gap-4 p-4 *:p-4 mb-20"
+        className="grid md:grid-cols-2 gap-4 *:p-4 mb-20"
       >
-        <Card className="space-y-4">
-          <H3 className="mb-8">Question</H3>
-          <FormField
-            control={form.control}
-            name="question"
-            defaultValue={props.question?.question}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Intitulé</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Intitulé de la question" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            defaultValue={props.question?.description}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Description de la question" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="questionTypeId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Type de la question</FormLabel>
-                {(loading || !questionTypes) && (
-                  <Skeleton className="w-[200px] h-10" />
-                )}
-                {questionTypes && (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'sm:w-[200px] justify-between',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? questionTypes.find(
-                                (qType) => qType.id === field.value
-                              )?.type
-                            : 'Choisir un type...'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>Aucun type trouvé.</CommandEmpty>
-                          <CommandGroup>
-                            {questionTypes.map((qType: QuestionType) => (
-                              <CommandItem
-                                className="hover: cursor-pointer"
-                                value={qType.id}
-                                key={qType.id}
-                                onSelect={() => {
-                                  form.setValue('questionTypeId', qType.id)
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    qType.id === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  )}
-                                />
-                                {qType.type}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                )}
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="stepId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Etape associée</FormLabel>
-                {(loading || !steps) && <Skeleton className="w-[200px] h-10" />}
-                {steps && (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'sm:w-[200px] justify-between',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? steps.find((step) => step.id === field.value)
-                                ?.name
-                            : 'Choisir une étape...'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>Aucun étape trouvée.</CommandEmpty>
-                          <CommandGroup>
-                            {steps.map((step: Step) => (
-                              <CommandItem
-                                className="hover: cursor-pointer"
-                                value={step.id}
-                                key={step.id}
-                                onSelect={() => {
-                                  form.setValue('stepId', step.id)
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    step.id === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  )}
-                                />
-                                {step.name}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                )}
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Configuration question</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <FormField
+              control={form.control}
+              name="question"
+              defaultValue={props.question?.question}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Intitulé</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Intitulé de la question" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              defaultValue={props.question?.description}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Description de la question"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="questionTypeId"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Type de la question</FormLabel>
+                  {(loading || !questionTypes) && (
+                    <Skeleton className="w-[200px] h-10" />
+                  )}
+                  {questionTypes && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              'sm:w-[200px] justify-between',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value
+                              ? questionTypes.find(
+                                  (qType) => qType.id === field.value
+                                )?.type
+                              : 'Choisir un type...'}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandList>
+                            <CommandEmpty>Aucun type trouvé.</CommandEmpty>
+                            <CommandGroup>
+                              {questionTypes.map((qType: QuestionType) => (
+                                <CommandItem
+                                  className="hover: cursor-pointer"
+                                  value={qType.id}
+                                  key={qType.id}
+                                  onSelect={() => {
+                                    form.setValue('questionTypeId', qType.id)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      qType.id === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
+                                    )}
+                                  />
+                                  {qType.type}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="stepId"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Etape associée</FormLabel>
+                  {(loading || !steps) && (
+                    <Skeleton className="w-[200px] h-10" />
+                  )}
+                  {steps && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              'sm:w-[200px] justify-between',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value
+                              ? steps.find((step) => step.id === field.value)
+                                  ?.name
+                              : 'Choisir une étape...'}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandList>
+                            <CommandEmpty>Aucun étape trouvée.</CommandEmpty>
+                            <CommandGroup>
+                              {steps.map((step: Step) => (
+                                <CommandItem
+                                  className="hover: cursor-pointer"
+                                  value={step.id}
+                                  key={step.id}
+                                  onSelect={() => {
+                                    form.setValue('stepId', step.id)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      step.id === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
+                                    )}
+                                  />
+                                  {step.name}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
         </Card>
         <Card>
-          <H3 className="mb-8">Réponse(s) associée(s)</H3>
-          <section className="grid grid-cols-3 gap-2">
-            <Input
-              value={newAnswer}
-              onChange={(e) => setNewAnswer(e.target.value)}
-              placeholder="Nouvelle réponse"
-              className="col-span-2"
-            />
-            <Input
-              value={newAnswerDescription}
-              onChange={(e) => setNewAnswerDescription(e.target.value)}
-              placeholder="Description"
-              className="col-span-full"
-            />
-            <Button
-              className="bg-blue-500 text-white hover:bg-blue-600 row-start-1 col-start-3"
-              disabled={!newAnswer}
-              onClick={() => {
-                addAnswer().then(() => {
-                  setNewAnswer('')
-                  setNewAnswerDescription('')
-                })
-              }}
-            >
-              Ajouter
-            </Button>
-          </section>
-          <Separator className="my-4" />
-          <section className="max-h-[300px] overflow-y-auto">
-            {(!currentAnswers || currentAnswers.length === 0) && (
-              <p className="text-muted-foreground">Pas de réponse associées</p>
-            )}
-            {currentAnswers &&
-              currentAnswers.map((answer: Answer) => (
-                <div
-                  key={answer.id}
-                  className="cursor-pointer p-1 flex justify-between items-center select-none"
-                >
-                  <p>{answer.answer}</p>
-                  <div className="space-x-2">
-                    <Switch
-                      disabled={
-                        currentAnswers.some((a) => a.isCorrect) &&
-                        !answer.isCorrect &&
-                        form.watch('questionTypeId') === '2'
-                      }
-                      checked={answer.isCorrect}
-                      onCheckedChange={() => toggleCorrect(answer)}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => removeAnswer(answer)}
-                    >
-                      <X size={16} />
-                    </Button>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Réponse(s) associée(s)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <section className="grid grid-cols-3 gap-2">
+              <Input
+                value={newAnswer}
+                onChange={(e) => setNewAnswer(e.target.value)}
+                placeholder="Nouvelle réponse"
+                className="col-span-2"
+              />
+              <Input
+                value={newAnswerDescription}
+                onChange={(e) => setNewAnswerDescription(e.target.value)}
+                placeholder="Description"
+                className="col-span-full"
+              />
+              <Button
+                className="bg-blue-500 text-white hover:bg-blue-600 row-start-1 col-start-3"
+                disabled={!newAnswer}
+                onClick={() => {
+                  addAnswer().then(() => {
+                    setNewAnswer('')
+                    setNewAnswerDescription('')
+                  })
+                }}
+              >
+                Ajouter
+              </Button>
+            </section>
+            <Separator className="my-4" />
+            <section className="max-h-[300px] overflow-y-auto">
+              {(!currentAnswers || currentAnswers.length === 0) && (
+                <p className="text-muted-foreground">
+                  Pas de réponse associées
+                </p>
+              )}
+              {currentAnswers &&
+                currentAnswers.map((answer: Answer) => (
+                  <div
+                    key={answer.id}
+                    className="cursor-pointer p-1 flex justify-between items-center select-none"
+                  >
+                    <p>{answer.answer}</p>
+                    <div className="space-x-2">
+                      <Switch
+                        disabled={
+                          currentAnswers.some((a) => a.isCorrect) &&
+                          !answer.isCorrect &&
+                          form.watch('questionTypeId') === '2'
+                        }
+                        checked={answer.isCorrect}
+                        onCheckedChange={() => toggleCorrect(answer)}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => removeAnswer(answer)}
+                      >
+                        <X size={16} />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
-          </section>
+                ))}
+            </section>
+          </CardContent>
         </Card>
-        <Card className="space-y-8">
-          <div className="flex justify-between items-center">
-            <H3>Placement de la question</H3>
-            <H4>
-              <span className="text-blue-500">{currQuestions.length}</span>{' '}
-              question(s)
-            </H4>
-          </div>
-          <section className="space-y-1 max-h-72 overflow-auto">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Placement de la question</CardTitle>
+            <div className="text-sm text-muted-foreground">
+              {currQuestions.length} question(s)
+            </div>
+          </CardHeader>
+          <CardContent className="max-h-72 overflow-auto pr-1">
             <DndProvider backend={HTML5Backend}>
-              {currQuestions.map((question, index) => (
-                <DraggableItem
-                  key={index}
-                  index={index}
-                  question={question}
-                  moveCard={moveCard}
-                  current={
-                    question?.id === props.question?.id ||
-                    question?.id === currQuestion?.id
-                  }
-                />
-              ))}
+              <div>
+                {currQuestions.map((question, index) => (
+                  <DraggableItem
+                    key={index}
+                    index={index}
+                    question={question}
+                    moveCard={moveCard}
+                    current={
+                      question?.id === props.question?.id ||
+                      question?.id === currQuestion?.id
+                    }
+                  />
+                ))}
+              </div>
             </DndProvider>
-          </section>
+          </CardContent>
         </Card>
-        <Card className="space-y-8">
-          <H3>Indice(s) associé(s)</H3>
-          <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
-            <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
-              Indice faible
-            </H4>
-            <div className="col-span-2">
-              {hintOneEdit ? (
-                <Input
-                  placeholder="Petit indice"
-                  value={hintOneValue}
-                  onChange={(e) => setHintOneValue(e.target.value)}
-                />
-              ) : currentHints?.[0]?.help ? (
-                <p>{currentHints?.[0]?.help}</p>
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Pas d&apos;indice associé
-                </p>
-              )}
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => {
-                  if (hintOneEdit) {
-                    handleSaveHint(0, hintOneValue)
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Indice(s) associé(s)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
+              <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
+                Indice faible
+              </H4>
+              <div className="col-span-2">
+                {hintOneEdit ? (
+                  <Input
+                    placeholder="Petit indice"
+                    value={hintOneValue}
+                    onChange={(e) => setHintOneValue(e.target.value)}
+                  />
+                ) : currentHints?.[0]?.help ? (
+                  <p>{currentHints?.[0]?.help}</p>
+                ) : (
+                  <p className="text-muted-foreground text-sm">
+                    Pas d&apos;indice associé
+                  </p>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    if (hintOneEdit) {
+                      handleSaveHint(0, hintOneValue)
+                      setHintOneEdit(false)
+                    } else {
+                      setHintOneEdit(true)
+                    }
+                  }}
+                >
+                  {hintOneEdit ? <Check /> : <Edit />}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
                     setHintOneEdit(false)
-                  } else {
-                    setHintOneEdit(true)
-                  }
-                }}
-              >
-                {hintOneEdit ? <Check /> : <Edit />}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setHintOneEdit(false)
-                  handleDeleteHint(0)
-                }}
-              >
-                <X />
-              </Button>
-            </div>
-          </Card>
-          <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
-            <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
-              Indice moyen
-            </H4>
-            <div className="col-span-2">
-              {hintTwoEdit ? (
-                <Input
-                  placeholder="Indice moyen"
-                  value={hintTwoValue}
-                  onChange={(e) => setHintTwoValue(e.target.value)}
-                />
-              ) : currentHints?.[1]?.help ? (
-                <p>{currentHints?.[1]?.help}</p>
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Pas d&apos;indice associé
-                </p>
-              )}
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => {
-                  if (hintTwoEdit) {
-                    handleSaveHint(1, hintTwoValue)
+                    handleDeleteHint(0)
+                  }}
+                >
+                  <X />
+                </Button>
+              </div>
+            </Card>
+            <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
+              <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
+                Indice moyen
+              </H4>
+              <div className="col-span-2">
+                {hintTwoEdit ? (
+                  <Input
+                    placeholder="Indice moyen"
+                    value={hintTwoValue}
+                    onChange={(e) => setHintTwoValue(e.target.value)}
+                  />
+                ) : currentHints?.[1]?.help ? (
+                  <p>{currentHints?.[1]?.help}</p>
+                ) : (
+                  <p className="text-muted-foreground text-sm">
+                    Pas d&apos;indice associé
+                  </p>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    if (hintTwoEdit) {
+                      handleSaveHint(1, hintTwoValue)
+                      setHintTwoEdit(false)
+                    } else {
+                      setHintTwoEdit(true)
+                    }
+                  }}
+                >
+                  {hintTwoEdit ? <Check /> : <Edit />}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
                     setHintTwoEdit(false)
-                  } else {
-                    setHintTwoEdit(true)
-                  }
-                }}
-              >
-                {hintTwoEdit ? <Check /> : <Edit />}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setHintTwoEdit(false)
-                  handleDeleteHint(1)
-                }}
-              >
-                <X />
-              </Button>
-            </div>
-          </Card>
-          <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
-            <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
-              Indice fort
-            </H4>
-            <div className="col-span-2">
-              {hintThreeEdit ? (
-                <Input
-                  placeholder="Grand indice"
-                  value={hintThreeValue}
-                  onChange={(e) => setHintThreeValue(e.target.value)}
-                />
-              ) : currentHints?.[2]?.help ? (
-                <p>{currentHints?.[2]?.help}</p>
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Pas d&apos;indice associé
-                </p>
-              )}
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => {
-                  if (hintThreeEdit) {
-                    handleSaveHint(2, hintThreeValue)
+                    handleDeleteHint(1)
+                  }}
+                >
+                  <X />
+                </Button>
+              </div>
+            </Card>
+            <Card className="grid grid-cols-3 gap-2 items-center p-4 relative">
+              <H4 className="col-span-full absolute -top-4 -left-2 bg-card px-2">
+                Indice fort
+              </H4>
+              <div className="col-span-2">
+                {hintThreeEdit ? (
+                  <Input
+                    placeholder="Grand indice"
+                    value={hintThreeValue}
+                    onChange={(e) => setHintThreeValue(e.target.value)}
+                  />
+                ) : currentHints?.[2]?.help ? (
+                  <p>{currentHints?.[2]?.help}</p>
+                ) : (
+                  <p className="text-muted-foreground text-sm">
+                    Pas d&apos;indice associé
+                  </p>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    if (hintThreeEdit) {
+                      handleSaveHint(2, hintThreeValue)
+                      setHintThreeEdit(false)
+                    } else {
+                      setHintThreeEdit(true)
+                    }
+                  }}
+                >
+                  {hintThreeEdit ? <Check /> : <Edit />}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
                     setHintThreeEdit(false)
-                  } else {
-                    setHintThreeEdit(true)
-                  }
-                }}
-              >
-                {hintThreeEdit ? <Check /> : <Edit />}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setHintThreeEdit(false)
-                  handleDeleteHint(2)
-                }}
-              >
-                <X />
-              </Button>
-            </div>
-          </Card>
+                    handleDeleteHint(2)
+                  }}
+                >
+                  <X />
+                </Button>
+              </div>
+            </Card>
+          </CardContent>
         </Card>
         <footer
           className="border-t-2 py-8 lg:fixed lg:w-screen left-0 bottom-0 flex justify-center items-center gap-4"

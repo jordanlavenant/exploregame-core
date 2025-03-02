@@ -275,7 +275,7 @@ const ScriptForm = (props: ScriptFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 p-4 mb-24"
       >
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 *:p-4 gap-4">
           <Card>
             <CardHeader>
               <CardTitle>Informations du scénario</CardTitle>

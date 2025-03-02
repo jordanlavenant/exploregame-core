@@ -2,13 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown, GripVertical } from 'lucide-react'
+import { Check, ChevronRight, ChevronsUpDown, GripVertical } from 'lucide-react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useForm } from 'react-hook-form'
 import type {
   EditScriptStepById,
   Location,
+  Question,
   Script,
   ScriptStep,
   UpdateScriptStepInput,
@@ -17,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { z } from 'zod'
 
 import type { RWGqlError } from '@redwoodjs/forms'
-import { back } from '@redwoodjs/router'
+import { back, navigate } from '@redwoodjs/router'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -79,6 +80,34 @@ const SCRIPTSTEP_FORM_QUERY = gql`
   }
 `
 
+const STEP_QUESTIONS_QUERY = gql`
+  query StepQuestionsQuery($stepId: String!) {
+    step(id: $stepId) {
+      id
+      name
+      Questions {
+        id
+        question
+        description
+        order
+        questionTypeId
+        QuestionType {
+          type
+        }
+      }
+    }
+  }
+`
+
+const UPDATE_QUESTION_ORDER_MUTATION = gql`
+  mutation UpdateQuestionOrder($id: String!, $input: UpdateQuestionInput!) {
+    updateQuestion(id: $id, input: $input) {
+      id
+      order
+    }
+  }
+`
+
 const CREATE_STEP_MUTATION = gql`
   mutation CreateStepFunc($input: CreateStepInput!) {
     createStep(input: $input) {
@@ -114,20 +143,20 @@ export const formSchema = z.object({
   order: z.number().int(),
 })
 
-const DraggableItem = ({
-  scriptStep,
+const DraggableQuestion = ({
+  question,
   index,
-  moveCard,
-  current,
+  moveQuestion,
+  onClick,
 }: {
-  scriptStep: Partial<ScriptStep>
+  question: Partial<Question>
   index: number
-  moveCard: (dragIndex: number, hoverIndex: number) => void
-  current: boolean
+  moveQuestion: (dragIndex: number, hoverIndex: number) => void
+  onClick: () => void
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
-    type: 'CARD',
+    type: 'QUESTION',
     item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -135,7 +164,7 @@ const DraggableItem = ({
   }))
 
   const [, drop] = useDrop({
-    accept: 'CARD',
+    accept: 'QUESTION',
     hover(item: { index: number }) {
       if (!ref.current) return
 
@@ -144,7 +173,68 @@ const DraggableItem = ({
 
       if (dragIndex === hoverIndex) return
 
-      moveCard(dragIndex, hoverIndex)
+      moveQuestion(dragIndex, hoverIndex)
+      item.index = hoverIndex
+    },
+  })
+
+  drag(drop(ref))
+
+  return (
+    <div
+      ref={dragPreview}
+      className={cn('transition-all duration-200', isDragging && 'opacity-50')}
+      onClick={onClick}
+    >
+      <Card className="mb-2 hover:border-primary cursor-pointer group">
+        <CardContent className="p-3 flex items-center gap-3">
+          <div ref={ref} className="cursor-grab">
+            <GripVertical className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+          </div>
+          <div className="flex-grow">
+            <div className="font-medium">{question?.question}</div>
+            <div className="text-xs text-muted-foreground">
+              {question?.QuestionType?.type}
+            </div>
+          </div>
+          <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+const DraggableScriptStep = ({
+  scriptStep,
+  index,
+  moveScriptStep,
+  isCurrent,
+}: {
+  scriptStep: Partial<ScriptStep>
+  index: number
+  moveScriptStep: (dragIndex: number, hoverIndex: number) => void
+  isCurrent: boolean
+}) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+    type: 'SCRIPT_STEP',
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }))
+
+  const [, drop] = useDrop({
+    accept: 'SCRIPT_STEP',
+    hover(item: { index: number }) {
+      if (!ref.current) return
+
+      const dragIndex = item.index
+      const hoverIndex = index
+
+      if (dragIndex === hoverIndex) return
+
+      moveScriptStep(dragIndex, hoverIndex)
       item.index = hoverIndex
     },
   })
@@ -159,26 +249,24 @@ const DraggableItem = ({
       <Card
         className={cn(
           'mb-2 hover:border-primary cursor-pointer group',
-          current && 'border-blue-500'
+          isCurrent && 'border-primary'
         )}
       >
         <CardContent className="p-3 flex items-center gap-3">
           <div ref={ref} className="cursor-grab">
             <GripVertical className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
           </div>
-          <div
-            className={cn(
-              'font-mono text-sm w-6',
-              current ? 'text-blue-500' : 'text-muted-foreground'
-            )}
-          >
-            {scriptStep?.lettre || '?'}
+          <div className="font-mono text-sm text-muted-foreground w-6">
+            {scriptStep.lettre}
           </div>
           <div className="flex-grow">
-            <div className={cn('font-medium', current && 'text-blue-500')}>
-              {scriptStep?.Step?.name}
-            </div>
+            <div className="font-medium">{scriptStep.Step?.name}</div>
           </div>
+          {isCurrent && (
+            <div className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-md">
+              Actuelle
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
@@ -190,6 +278,7 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
   const [createStep] = useMutation(CREATE_STEP_MUTATION)
   const [updateStep] = useMutation(UPDATE_STEP_MUTATION)
   const [updateScriptStep] = useMutation(UPDATE_SCRIPT_STEP_MUTATION)
+  const [updateQuestionOrder] = useMutation(UPDATE_QUESTION_ORDER_MUTATION)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -208,6 +297,25 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
   )
   const [currScriptStep, setCurrScriptStep] =
     useState<Partial<ScriptStep> | null>(null)
+  const [questions, setQuestions] = useState<Partial<Question>[]>([])
+
+  // Fetch questions when stepId changes
+  const { data: _stepQuestionsData, loading: questionsLoading } = useQuery(
+    STEP_QUESTIONS_QUERY,
+    {
+      variables: {
+        stepId: form.watch('stepId') || props.scriptStep?.stepId,
+      },
+      skip: !form.watch('stepId') && !props.scriptStep?.stepId,
+      onCompleted: (data) => {
+        if (data?.step?.Questions) {
+          setQuestions(
+            [...data.step.Questions].sort((a, b) => a.order - b.order)
+          )
+        }
+      },
+    }
+  )
 
   useEffect(() => {
     const currScriptId = form.watch('scriptId')
@@ -286,25 +394,69 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
     }
   }, [currScriptSteps])
 
-  const moveCard = useCallback(
-    (dragIndex, hoverIndex) => {
-      const newScriptSteps = [...currScriptSteps]
-      const dragCard = { ...newScriptSteps[dragIndex] }
-      const hoverCard = { ...newScriptSteps[hoverIndex] }
+  const moveQuestion = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragQuestion = questions[dragIndex]
+      const newQuestions = [...questions]
 
-      // Swap the order values
-      const tempOrder = dragCard.order
-      dragCard.order = hoverCard.order
-      hoverCard.order = tempOrder
+      // Remove the dragged item
+      newQuestions.splice(dragIndex, 1)
+      // Insert it at the new position
+      newQuestions.splice(hoverIndex, 0, dragQuestion)
 
-      // Swap the positions in the array
-      newScriptSteps[dragIndex] = hoverCard
-      newScriptSteps[hoverIndex] = dragCard
+      // Update the order value for each question
+      const updatedQuestions = newQuestions.map((question, idx) => ({
+        ...question,
+        order: idx,
+      }))
 
-      setCurrScriptSteps(newScriptSteps)
+      setQuestions(updatedQuestions)
+    },
+    [questions]
+  )
+
+  const moveScriptStep = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragStep = currScriptSteps[dragIndex]
+      const newSteps = [...currScriptSteps]
+
+      // Remove the dragged item
+      newSteps.splice(dragIndex, 1)
+      // Insert it at the new position
+      newSteps.splice(hoverIndex, 0, dragStep)
+
+      // Update the order value for each step
+      const updatedSteps = newSteps.map((step, idx) => ({
+        ...step,
+        order: idx,
+      }))
+
+      setCurrScriptSteps(updatedSteps)
     },
     [currScriptSteps]
   )
+
+  const saveQuestionOrder = async () => {
+    try {
+      const promises = questions.map((question) =>
+        updateQuestionOrder({
+          variables: {
+            id: question.id,
+            input: {
+              order: question.order,
+            },
+          },
+        })
+      )
+      await Promise.all(promises)
+    } catch (error) {
+      console.error('Error updating question order:', error)
+    }
+  }
+
+  const navigateToQuestion = (id: string) => {
+    navigate(`/questions/${id}/edit`)
+  }
 
   if (loading)
     return (
@@ -327,29 +479,36 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
   const scripts: Script[] = data.scripts
   const locations: Location[] = data.locations
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const { stepId, stepName, locationId } = data
+
+    // Save script steps order
+    await saveScriptSteps({
+      currScriptSteps: currScriptSteps,
+      updateScriptStep: updateScriptStep,
+    })
+
+    // Save question order if there are questions
+    if (questions.length > 0) {
+      await saveQuestionOrder()
+    }
+
     // création d'une nouvelle étape
     if (!stepId) {
-      saveScriptSteps({
-        currScriptSteps: currScriptSteps,
-        updateScriptStep: updateScriptStep,
-      }).then(() => {
-        saveStep({
-          name: stepName,
-          locationId: locationId,
-          createStep: createStep,
-        }).then((stepId) => {
-          props.onSave(
-            {
-              scriptId: data.scriptId,
-              stepId: stepId,
-              lettre: data.lettre,
-              order: data.order,
-            },
-            props?.scriptStep?.id
-          )
-        })
+      saveStep({
+        name: stepName,
+        locationId: locationId,
+        createStep: createStep,
+      }).then((stepId) => {
+        props.onSave(
+          {
+            scriptId: data.scriptId,
+            stepId: stepId,
+            lettre: data.lettre,
+            order: data.order,
+          },
+          props?.scriptStep?.id
+        )
       })
     } else {
       // modification d'une étape existante
@@ -358,26 +517,21 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
         name: props.scriptStep?.Step?.name,
         locationId: props.scriptStep?.Step?.Location?.id,
       }
-      saveScriptSteps({
-        currScriptSteps: currScriptSteps,
-        updateScriptStep: updateScriptStep,
+      changeStep({
+        previous: previous,
+        name: stepName,
+        locationId: locationId,
+        updateStep: updateStep,
       }).then(() => {
-        changeStep({
-          previous: previous,
-          name: stepName,
-          locationId: locationId,
-          updateStep: updateStep,
-        }).then(() => {
-          props.onSave(
-            {
-              scriptId: data.scriptId,
-              stepId: data.stepId,
-              lettre: data.lettre,
-              order: data.order,
-            },
-            props?.scriptStep?.id
-          )
-        })
+        props.onSave(
+          {
+            scriptId: data.scriptId,
+            stepId: data.stepId,
+            lettre: data.lettre,
+            order: data.order,
+          },
+          props?.scriptStep?.id
+        )
       })
     }
   }
@@ -388,12 +542,12 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 p-4 mb-24"
       >
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-4 *:p-4">
           <Card>
             <CardHeader>
-              <CardTitle>Informations de l&apos;étape</CardTitle>
+              <CardTitle>Configuration de l&apos;étape</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <FormField
                 control={form.control}
                 name="stepName"
@@ -563,38 +717,88 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
               />
             </CardContent>
           </Card>
-
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Placement de l&apos;étape</CardTitle>
-              <H4 className="text-muted-foreground">
-                <span className="text-blue-500">{currScriptSteps.length}</span>{' '}
-                étape(s)
-              </H4>
+              <CardTitle>Ordre des étapes du scénario</CardTitle>
+              <div className="text-sm text-muted-foreground">
+                {currScriptSteps.length} étape(s)
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="max-h-96 overflow-y-auto pr-1">
+            <CardContent className="max-h-72 overflow-y-auto pr-1">
+              {form.watch('scriptId') ? (
                 <DndProvider backend={HTML5Backend}>
-                  {currScriptSteps.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <p>Aucune étape associée à ce scénario.</p>
-                    </div>
-                  ) : (
-                    currScriptSteps.map((scriptStep, index) => (
-                      <DraggableItem
-                        key={index}
-                        index={index}
+                  <div>
+                    {currScriptSteps.map((scriptStep, index) => (
+                      <DraggableScriptStep
+                        key={scriptStep.id}
                         scriptStep={scriptStep}
-                        moveCard={moveCard}
-                        current={
-                          scriptStep?.id === props.scriptStep?.id ||
-                          scriptStep?.id === currScriptStep?.id
+                        index={index}
+                        moveScriptStep={moveScriptStep}
+                        isCurrent={
+                          props.scriptStep?.id === scriptStep.id ||
+                          currScriptStep?.id === scriptStep.id
                         }
                       />
-                    ))
-                  )}
+                    ))}
+                  </div>
                 </DndProvider>
-              </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Sélectionnez un scénario pour voir ses étapes</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Questions associées</CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/questions/new')}
+              >
+                Ajouter une question
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {questionsLoading || !form.watch('stepId') ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                </div>
+              ) : questions.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Aucune question associée à cette étape.</p>
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => navigate('/questions/new')}
+                  >
+                    Créer une première question
+                  </Button>
+                </div>
+              ) : (
+                <div className="max-h-96 overflow-y-auto pr-1">
+                  <H4 className="mb-4 text-muted-foreground">
+                    <span className="text-blue-500">{questions.length}</span>{' '}
+                    question(s)
+                  </H4>
+                  <DndProvider backend={HTML5Backend}>
+                    <div>
+                      {questions.map((question, index) => (
+                        <DraggableQuestion
+                          key={question.id}
+                          question={question}
+                          index={index}
+                          moveQuestion={moveQuestion}
+                          onClick={() => navigateToQuestion(question.id)}
+                        />
+                      ))}
+                    </div>
+                  </DndProvider>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
