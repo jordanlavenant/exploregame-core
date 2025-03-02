@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, ChevronsUpDown, GripVertical } from 'lucide-react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useForm } from 'react-hook-form'
@@ -20,7 +20,7 @@ import type { RWGqlError } from '@redwoodjs/forms'
 import { back } from '@redwoodjs/router'
 
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Command,
   CommandEmpty,
@@ -44,7 +44,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
-import { H3, H4 } from '@/components/ui/typography'
+import { H4 } from '@/components/ui/typography'
 import { cn } from '@/lib/utils'
 import { saveScriptSteps } from '@/utils/scriptSteps'
 import { changeStep, saveStep } from '@/utils/steps'
@@ -125,45 +125,61 @@ const DraggableItem = ({
   moveCard: (dragIndex: number, hoverIndex: number) => void
   current: boolean
 }) => {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+    type: 'CARD',
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }))
+
   const [, drop] = useDrop({
     accept: 'CARD',
     hover(item: { index: number }) {
-      if (!ref.current) {
-        return
-      }
+      if (!ref.current) return
+
       const dragIndex = item.index
       const hoverIndex = index
-      if (dragIndex === hoverIndex) {
-        return
-      }
+
+      if (dragIndex === hoverIndex) return
+
       moveCard(dragIndex, hoverIndex)
       item.index = hoverIndex
     },
   })
 
-  const [{ isDragging }, drag] = useDrag({
-    type: 'CARD',
-    item: { type: 'CARD', index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
   drag(drop(ref))
 
   return (
-    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div
+      ref={dragPreview}
+      className={cn('transition-all duration-200', isDragging && 'opacity-50')}
+    >
       <Card
-        className={`flex items-center gap-x-2 ${current && 'border-blue-500 text-blue-500'} cursor-move hover:border-blue-500`}
+        className={cn(
+          'mb-2 hover:border-primary cursor-pointer group',
+          current && 'border-blue-500'
+        )}
       >
-        <div>
-          <Button variant="ghost" type="button">
-            <ChevronsUpDown />
-          </Button>
-        </div>
-        <p className='font-mono text-muted-foreground'>({scriptStep?.lettre || '?'})</p>
-        <p>{scriptStep?.Step?.name}</p>
+        <CardContent className="p-3 flex items-center gap-3">
+          <div ref={ref} className="cursor-grab">
+            <GripVertical className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+          </div>
+          <div
+            className={cn(
+              'font-mono text-sm w-6',
+              current ? 'text-blue-500' : 'text-muted-foreground'
+            )}
+          >
+            {scriptStep?.lettre || '?'}
+          </div>
+          <div className="flex-grow">
+            <div className={cn('font-medium', current && 'text-blue-500')}>
+              {scriptStep?.Step?.name}
+            </div>
+          </div>
+        </CardContent>
       </Card>
     </div>
   )
@@ -177,6 +193,14 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      scriptId: props.scriptStep?.scriptId || '',
+      stepId: props.scriptStep?.stepId || '',
+      stepName: props.scriptStep?.Step?.name || '',
+      locationId: props.scriptStep?.Step?.Location?.id || '',
+      lettre: props.scriptStep?.lettre || '',
+      order: props.scriptStep?.order || 0,
+    },
   })
 
   const [currScriptSteps, setCurrScriptSteps] = useState<Partial<ScriptStep>[]>(
@@ -184,27 +208,6 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
   )
   const [currScriptStep, setCurrScriptStep] =
     useState<Partial<ScriptStep> | null>(null)
-
-  useEffect(() => {
-    if (!form.getValues('scriptId')) {
-      form.setValue('scriptId', props.scriptStep?.scriptId)
-    }
-    if (!form.getValues('stepId')) {
-      form.setValue('stepId', props.scriptStep?.stepId)
-    }
-    if (!form.getValues('stepName')) {
-      form.setValue('stepName', props.scriptStep?.Step?.name)
-    }
-    if (!form.getValues('locationId')) {
-      form.setValue('locationId', props.scriptStep?.Step?.Location?.id)
-    }
-    if (!form.getValues('lettre')) {
-      form.setValue('lettre', props.scriptStep?.lettre)
-    }
-    if (!form.getValues('order')) {
-      form.setValue('order', props.scriptStep?.order)
-    }
-  }, [form])
 
   useEffect(() => {
     const currScriptId = form.watch('scriptId')
@@ -303,8 +306,23 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
     [currScriptSteps]
   )
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error...</div>
+  if (loading)
+    return (
+      <div className="p-8 space-y-4">
+        <Skeleton className="h-10 w-1/3" />
+        <div className="grid md:grid-cols-2 gap-4">
+          <Skeleton className="h-64" />
+          <Skeleton className="h-64" />
+        </div>
+      </div>
+    )
+
+  if (error)
+    return (
+      <div className="p-8 text-red-500">
+        Erreur de chargement: {error.message}
+      </div>
+    )
 
   const scripts: Script[] = data.scripts
   const locations: Location[] = data.locations
@@ -335,7 +353,6 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
       })
     } else {
       // modification d'une étape existante
-      console.log('modification')
       const previous = {
         id: stepId,
         name: props.scriptStep?.Step?.name,
@@ -345,14 +362,12 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
         currScriptSteps: currScriptSteps,
         updateScriptStep: updateScriptStep,
       }).then(() => {
-        console.log('1')
         changeStep({
           previous: previous,
           name: stepName,
           locationId: locationId,
           updateStep: updateStep,
         }).then(() => {
-          console.log('2')
           props.onSave(
             {
               scriptId: data.scriptId,
@@ -371,207 +386,226 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid md:grid-cols-2 gap-4 p-4 *:p-4 mb-20"
+        className="space-y-8 p-4 mb-24"
       >
-        <Card className="space-y-4">
-          <H3 className="mb-8">Étape</H3>
-          <FormField
-            control={form.control}
-            name="stepName"
-            defaultValue={props.scriptStep?.Step?.name}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Intitulé de l&apos;étape</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Intitulé de l'étape" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="locationId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Lieu associé</FormLabel>
-                {(loading || !locations) && (
-                  <Skeleton className="w-[200px] h-10" />
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Informations de l&apos;étape</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <FormField
+                control={form.control}
+                name="stepName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Intitulé de l&apos;étape</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Intitulé de l'étape" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-                {locations && (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'sm:w-[200px] justify-between',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? locations.find(
-                                (location) => location.id === field.value
-                              )?.name
-                            : 'Choisir un lieu...'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>Aucun scénario trouvé.</CommandEmpty>
-                          <CommandGroup>
-                            {locations.map((location: Location) => (
-                              <CommandItem
-                                className="hover: cursor-pointer"
-                                value={location.id}
-                                key={location.id}
-                                onSelect={() => {
-                                  form.setValue('locationId', location.id)
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    location.id === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  )}
-                                />
-                                {location.name}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+              />
+
+              <FormField
+                control={form.control}
+                name="locationId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lieu associé</FormLabel>
+                    {loading || !locations ? (
+                      <Skeleton className="w-full h-10" />
+                    ) : (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                'w-full justify-between',
+                                !field.value && 'text-muted-foreground'
+                              )}
+                            >
+                              {field.value
+                                ? locations.find(
+                                    (location) => location.id === field.value
+                                  )?.name
+                                : 'Choisir un lieu...'}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandList>
+                              <CommandEmpty>Aucun lieu trouvé.</CommandEmpty>
+                              <CommandGroup>
+                                {locations.map((location: Location) => (
+                                  <CommandItem
+                                    className="cursor-pointer"
+                                    value={location.id}
+                                    key={location.id}
+                                    onSelect={() => {
+                                      form.setValue('locationId', location.id)
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        'mr-2 h-4 w-4',
+                                        location.id === field.value
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                    {location.name}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                    <FormMessage />
+                  </FormItem>
                 )}
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lettre"
-            defaultValue={props.scriptStep?.lettre}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Lettre associée</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    maxLength={1}
-                    placeholder="Lettre associée"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="scriptId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Scénario associé</FormLabel>
-                {(loading || !scripts) && (
-                  <Skeleton className="w-[200px] h-10" />
+              />
+
+              <FormField
+                control={form.control}
+                name="lettre"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lettre associée</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        maxLength={1}
+                        className="w-20"
+                        placeholder="A"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Une lettre unique pour identifier cette étape
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
                 )}
-                {scripts && (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'sm:w-[200px] justify-between',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? scripts.find(
-                                (script) => script.id === field.value
-                              )?.name
-                            : 'Choisir un scénario...'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>Aucun scénario trouvé.</CommandEmpty>
-                          <CommandGroup>
-                            {scripts.map((script: Script) => (
-                              <CommandItem
-                                className="hover: cursor-pointer"
-                                value={script.id}
-                                key={script.id}
-                                onSelect={() => {
-                                  form.setValue('scriptId', script.id)
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    script.id === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  )}
-                                />
-                                {script.name}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+              />
+
+              <FormField
+                control={form.control}
+                name="scriptId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scénario associé</FormLabel>
+                    {loading || !scripts ? (
+                      <Skeleton className="w-full h-10" />
+                    ) : (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                'w-full justify-between',
+                                !field.value && 'text-muted-foreground'
+                              )}
+                            >
+                              {field.value
+                                ? scripts.find(
+                                    (script) => script.id === field.value
+                                  )?.name
+                                : 'Choisir un scénario...'}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandList>
+                              <CommandEmpty>
+                                Aucun scénario trouvé.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {scripts.map((script: Script) => (
+                                  <CommandItem
+                                    className="cursor-pointer"
+                                    value={script.id}
+                                    key={script.id}
+                                    onSelect={() => {
+                                      form.setValue('scriptId', script.id)
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        'mr-2 h-4 w-4',
+                                        script.id === field.value
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                    {script.name}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                    <FormMessage />
+                  </FormItem>
                 )}
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </Card>
-        <Card className="space-y-8">
-          <div className="flex justify-between items-center">
-            <H3>Placement de l&apos;étape</H3>
-            <H4>
-              <span className="text-blue-500">{currScriptSteps.length}</span>{' '}
-              étape(s)
-            </H4>
-          </div>
-          <section className="space-y-1 max-h-72 overflow-auto">
-            <DndProvider backend={HTML5Backend}>
-              {currScriptSteps.map((scriptStep, index) => (
-                <DraggableItem
-                  key={index}
-                  index={index}
-                  scriptStep={scriptStep}
-                  moveCard={moveCard}
-                  current={
-                    scriptStep?.id === props.scriptStep?.id ||
-                    scriptStep?.id === currScriptStep?.id
-                  }
-                />
-              ))}
-            </DndProvider>
-          </section>
-        </Card>
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Placement de l&apos;étape</CardTitle>
+              <H4 className="text-muted-foreground">
+                <span className="text-blue-500">{currScriptSteps.length}</span>{' '}
+                étape(s)
+              </H4>
+            </CardHeader>
+            <CardContent>
+              <div className="max-h-96 overflow-y-auto pr-1">
+                <DndProvider backend={HTML5Backend}>
+                  {currScriptSteps.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>Aucune étape associée à ce scénario.</p>
+                    </div>
+                  ) : (
+                    currScriptSteps.map((scriptStep, index) => (
+                      <DraggableItem
+                        key={index}
+                        index={index}
+                        scriptStep={scriptStep}
+                        moveCard={moveCard}
+                        current={
+                          scriptStep?.id === props.scriptStep?.id ||
+                          scriptStep?.id === currScriptStep?.id
+                        }
+                      />
+                    ))
+                  )}
+                </DndProvider>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <footer
-          className="border-t-2 py-8 lg:fixed lg:w-screen left-0 bottom-0 flex justify-center items-center gap-4"
+          className="border-t-2 py-6 fixed left-0 bottom-0 w-full flex justify-center items-center gap-4 bg-background z-10"
           style={{
-            backdropFilter: 'blur(20px)',
+            backdropFilter: 'blur(8px)',
           }}
         >
-          <Button variant="outline" onClick={() => back()}>
+          <Button variant="outline" onClick={() => back()} type="button">
             Annuler
           </Button>
           <Button type="submit" disabled={props.loading}>
