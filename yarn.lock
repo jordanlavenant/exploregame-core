@@ -20845,6 +20845,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-themes@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "next-themes@npm:0.4.4"
+  peerDependencies:
+    react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+  checksum: 45d82f968ccfc90f6e6e3cdb95962132f6d1e19eaf614c4e824fc5d079ec522dd50cc196c58da2f000d755b81dbb0caf378c4f512a9e6b6c0a0daa3f99f1a2c7
+  languageName: node
+  linkType: hard
+
 "next-tick@npm:^1.1.0":
   version: 1.1.0
   resolution: "next-tick@npm:1.1.0"
@@ -25698,6 +25708,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sonner@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "sonner@npm:2.0.1"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 29e15324109ac19e0c9f2236ad695e2791fcf183264e5a4ffc72acfff28894fb8e80de65a1bf40bcea881fe4d06481b3c533ee3dc6ffafa80a44912e2ebc5cf6
+  languageName: node
+  linkType: hard
+
 "sort-keys@npm:^1.0.0":
   version: 1.1.2
   resolution: "sort-keys@npm:1.1.2"
@@ -28316,6 +28336,7 @@ __metadata:
     input: ^1.0.1
     lucide-react: ^0.447.0
     navigation-menu: ^1.0.0
+    next-themes: ^0.4.4
     postcss: ^8.4.47
     postcss-loader: ^8.1.1
     react: 18.3.1
@@ -28325,6 +28346,7 @@ __metadata:
     react-draggable: ^4.4.6
     react-hook-form: ^7.54.2
     shadcn: ^2.1.8
+    sonner: ^2.0.1
     tailwind-merge: ^2.5.3
     tailwindcss: ^3.4.13
     tailwindcss-animate: ^1.0.7

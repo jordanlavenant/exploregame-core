@@ -11,7 +11,7 @@ import type {
   TypedDocumentNode,
 } from '@redwoodjs/web'
 import { useMutation } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
+import { toast } from "sonner"
 
 import TagForm from 'src/components/Tag/TagForm'
 

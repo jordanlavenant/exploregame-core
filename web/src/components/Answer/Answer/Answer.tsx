@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import type {
   DeleteAnswerMutation,
   DeleteAnswerMutationVariables,
@@ -7,7 +8,6 @@ import type {
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
 
 import { checkboxInputTag } from 'src/lib/formatters'
 

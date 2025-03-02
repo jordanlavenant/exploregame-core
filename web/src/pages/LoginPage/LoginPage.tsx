@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { Eye, EyeOff } from 'lucide-react'
+import { toast } from 'sonner'
+
 import {
   Form,
   Label,
@@ -10,7 +13,6 @@ import {
 } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
-import { toast, Toaster } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
 
@@ -38,99 +40,104 @@ const LoginPage = () => {
     if (response.message) {
       toast(response.message)
     } else if (response.error) {
-      toast.error(response.error)
-    } else {
-      toast.success('Welcome back!')
+      toast.error('Mauvais identifiants')
     }
   }
 
   return (
     <>
       <Metadata title="Login" />
-      <main className="flex items-center justify-center min-h-screen bg-gray-900">
-        <Toaster toastOptions={{ duration: 6000 }} />
-        <div className="w-full max-w-md bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+      <main className="flex items-center justify-center min-h-screen bg-background">
+        <div className="w-full max-w-md bg-card shadow-lg rounded-lg overflow-hidden border border-border">
           <div className="p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-white">Connexion</h2>
-              <p className="text-sm text-gray-400 mt-2">Entrez vos identifiants pour accéder à votre compte</p>
+              <h2 className="text-2xl font-bold text-foreground">Connexion</h2>
+              <p className="text-sm text-muted-foreground mt-2">
+                Entrez vos identifiants pour accéder à votre compte
+              </p>
             </div>
             <Form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label
                   name="email"
-                  className="block text-sm font-medium text-gray-300"
-                  errorClassName="block text-sm font-medium text-red-500"
+                  className="block text-sm font-medium text-foreground"
+                  errorClassName="block text-sm font-medium text-destructive"
                 >
                   Email
                 </Label>
                 <TextField
                   name="email"
-                  className='w-full text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2'
+                  className="w-full bg-input text-foreground border border-input rounded-md shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none sm:text-sm p-2"
                   ref={emailRef}
                   validation={{
                     required: {
                       value: true,
-                      message: "Email is required",
+                      message: 'Email is required',
                     },
                   }}
                 />
-                <FieldError name="email" className="text-sm text-red-500" />
+                <FieldError name="email" className="text-sm text-destructive" />
               </div>
 
               <div className="space-y-2">
                 <Label
                   name="password"
-                  className="block text-sm font-medium text-gray-300"
-                  errorClassName="block text-sm font-medium text-red-500"
+                  className="block text-sm font-medium text-foreground"
+                  errorClassName="block text-sm font-medium text-destructive"
                 >
                   Password
                 </Label>
                 <div className="relative">
                   <PasswordField
                     name="password"
-                    className='w-full text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2'
+                    className="w-full bg-input text-foreground border border-input rounded-md shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none sm:text-sm p-2"
                     autoComplete="current-password"
                     validation={{
                       required: {
                         value: true,
-                        message: "Password is required",
+                        message: 'Password is required',
                       },
                     }}
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 flex items-center pr-2"
                   >
-                    {showPassword ? (
-                      <img src="/oeil-fermer.png" alt="Hide password" className="h-5 w-5 text-gray-400" />
-                    ) : (
-                      <img src="/oeil.png" alt="Show password" className="h-5 w-5 text-gray-400" />
-                    )}
+                    {showPassword ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
-                <FieldError name="password" className="text-sm text-red-500" />
+                <FieldError
+                  name="password"
+                  className="text-sm text-destructive"
+                />
               </div>
 
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                   <button
-                    type='submit'
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    type="submit"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium py-2 px-4 rounded-md"
                   >
                     Se connecter
                   </button>
                   <Submit>
                     {({ loading }) => (
-                      <button type="submit" disabled={loading}>
-                        {loading ? "Logging in..." : "Submit"}
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 font-medium py-2 px-4 rounded-md"
+                      >
+                        {loading ? 'Logging in...' : 'Submit'}
                       </button>
                     )}
                   </Submit>
                 </div>
-                <Link to={routes.forgotPassword()} className="text-sm text-blue-400 hover:underline">
+                <Link
+                  to={routes.forgotPassword()}
+                  className="text-sm text-primary hover:underline"
+                >
                   mot de passe oublié ?
                 </Link>
               </div>

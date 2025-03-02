@@ -11,7 +11,7 @@ import type {
   TypedDocumentNode,
 } from '@redwoodjs/web'
 import { useMutation, useQuery } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
+import { toast } from "sonner"
 
 import StepForm from 'src/components/Step/StepForm'
 

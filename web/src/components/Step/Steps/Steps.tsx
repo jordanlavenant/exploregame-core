@@ -7,7 +7,7 @@ import type {
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
+import { toast } from "sonner"
 
 import { QUERY } from 'src/components/Step/StepsCell'
 import { truncate } from 'src/lib/formatters'

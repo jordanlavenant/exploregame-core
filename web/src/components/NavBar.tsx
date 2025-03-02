@@ -94,7 +94,7 @@ const NavBar = () => {
 
   // Initiales de l'utilisateur pour l'avatar
   const getUserInitials = () => {
-    if (!userEmail) return 'EG'
+    if (!userEmail) return <User className="size-5" />
     return userEmail
       .split('@')[0]
       .split('.')
@@ -145,7 +145,7 @@ const NavBar = () => {
     to,
     label,
     icon,
-    count,
+    count = 0,
     className = '',
     onClick = () => {},
   }) => {
@@ -203,7 +203,7 @@ const NavBar = () => {
     to,
     mobileLabel,
     icon,
-    count,
+    count = 0,
     onClick = () => {},
   }) => {
     const isActive =
@@ -360,25 +360,6 @@ const NavBar = () => {
                     </p>
                   </div>
                 </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link
-                    to={routes.home()}
-                    className="flex items-center cursor-pointer"
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Mon profil</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link
-                    to={routes.home()}
-                    className="flex items-center cursor-pointer"
-                  >
-                    <Activity className="mr-2 h-4 w-4" />
-                    <span>Activité récente</span>
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={logout}
