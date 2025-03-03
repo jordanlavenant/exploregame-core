@@ -25,5 +25,3 @@ api/src/lib/generateGraphiQLHeader.*
 
 postgres
 delete_containers.sh
-
-yarn.lock

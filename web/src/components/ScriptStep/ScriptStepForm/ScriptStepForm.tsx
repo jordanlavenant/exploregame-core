@@ -2,13 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, ChevronRight, ChevronsUpDown, GripVertical } from 'lucide-react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useForm } from 'react-hook-form'
 import type {
   EditScriptStepById,
   Location,
+  Question,
   Script,
   ScriptStep,
   UpdateScriptStepInput,
@@ -17,10 +18,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { z } from 'zod'
 
 import type { RWGqlError } from '@redwoodjs/forms'
-import { back } from '@redwoodjs/router'
+import { back, navigate } from '@redwoodjs/router'
 
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Command,
   CommandEmpty,
@@ -44,7 +45,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
-import { H3, H4 } from '@/components/ui/typography'
+import { H4 } from '@/components/ui/typography'
 import { cn } from '@/lib/utils'
 import { saveScriptSteps } from '@/utils/scriptSteps'
 import { changeStep, saveStep } from '@/utils/steps'
@@ -75,6 +76,34 @@ const SCRIPTSTEP_FORM_QUERY = gql`
     locations {
       id
       name
+    }
+  }
+`
+
+const STEP_QUESTIONS_QUERY = gql`
+  query StepQuestionsQuery($stepId: String!) {
+    step(id: $stepId) {
+      id
+      name
+      Questions {
+        id
+        question
+        description
+        order
+        questionTypeId
+        QuestionType {
+          type
+        }
+      }
+    }
+  }
+`
+
+const UPDATE_QUESTION_ORDER_MUTATION = gql`
+  mutation UpdateQuestionOrder($id: String!, $input: UpdateQuestionInput!) {
+    updateQuestion(id: $id, input: $input) {
+      id
+      order
     }
   }
 `
@@ -114,56 +143,131 @@ export const formSchema = z.object({
   order: z.number().int(),
 })
 
-const DraggableItem = ({
-  scriptStep,
+const DraggableQuestion = ({
+  question,
   index,
-  moveCard,
-  current,
+  moveQuestion,
+  onClick,
 }: {
-  scriptStep: Partial<ScriptStep>
+  question: Partial<Question>
   index: number
-  moveCard: (dragIndex: number, hoverIndex: number) => void
-  current: boolean
+  moveQuestion: (dragIndex: number, hoverIndex: number) => void
+  onClick: () => void
 }) => {
-  const ref = useRef(null)
-  const [, drop] = useDrop({
-    accept: 'CARD',
-    hover(item: { index: number }) {
-      if (!ref.current) {
-        return
-      }
-      const dragIndex = item.index
-      const hoverIndex = index
-      if (dragIndex === hoverIndex) {
-        return
-      }
-      moveCard(dragIndex, hoverIndex)
-      item.index = hoverIndex
-    },
-  })
-
-  const [{ isDragging }, drag] = useDrag({
-    type: 'CARD',
-    item: { type: 'CARD', index },
+  const ref = useRef<HTMLDivElement>(null)
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+    type: 'QUESTION',
+    item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+  }))
+
+  const [, drop] = useDrop({
+    accept: 'QUESTION',
+    hover(item: { index: number }) {
+      if (!ref.current) return
+
+      const dragIndex = item.index
+      const hoverIndex = index
+
+      if (dragIndex === hoverIndex) return
+
+      moveQuestion(dragIndex, hoverIndex)
+      item.index = hoverIndex
+    },
   })
 
   drag(drop(ref))
 
   return (
-    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div
+      ref={dragPreview}
+      className={cn('transition-all duration-200', isDragging && 'opacity-50')}
+      onClick={onClick}
+    >
+      <Card className="mb-2 hover:border-primary cursor-pointer group">
+        <CardContent className="p-3 flex items-center gap-3">
+          <div ref={ref} className="cursor-grab">
+            <GripVertical className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+          </div>
+          <div className="flex-grow">
+            <div className="font-medium">{question?.question}</div>
+            <div className="text-xs text-muted-foreground">
+              {question?.QuestionType?.type}
+            </div>
+          </div>
+          <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+const DraggableScriptStep = ({
+  scriptStep,
+  index,
+  moveScriptStep,
+  isCurrent,
+}: {
+  scriptStep: Partial<ScriptStep>
+  index: number
+  moveScriptStep: (dragIndex: number, hoverIndex: number) => void
+  isCurrent: boolean
+}) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+    type: 'SCRIPT_STEP',
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }))
+
+  const [, drop] = useDrop({
+    accept: 'SCRIPT_STEP',
+    hover(item: { index: number }) {
+      if (!ref.current) return
+
+      const dragIndex = item.index
+      const hoverIndex = index
+
+      if (dragIndex === hoverIndex) return
+
+      moveScriptStep(dragIndex, hoverIndex)
+      item.index = hoverIndex
+    },
+  })
+
+  drag(drop(ref))
+
+  return (
+    <div
+      ref={dragPreview}
+      className={cn('transition-all duration-200', isDragging && 'opacity-50')}
+    >
       <Card
-        className={`flex items-center gap-x-2 ${current && 'border-blue-500 text-blue-500'} cursor-move hover:border-blue-500`}
+        className={cn(
+          'mb-2 hover:border-primary cursor-pointer group',
+          isCurrent && 'border-primary'
+        )}
       >
-        <div>
-          <Button variant="ghost" type="button">
-            <ChevronsUpDown />
-          </Button>
-        </div>
-        <p className='font-mono text-muted-foreground'>({scriptStep?.lettre || '?'})</p>
-        <p>{scriptStep?.Step?.name}</p>
+        <CardContent className="p-3 flex items-center gap-3">
+          <div ref={ref} className="cursor-grab">
+            <GripVertical className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+          </div>
+          <div className="font-mono text-sm text-muted-foreground w-6">
+            {scriptStep.lettre}
+          </div>
+          <div className="flex-grow">
+            <div className="font-medium">{scriptStep.Step?.name}</div>
+          </div>
+          {isCurrent && (
+            <div className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-md">
+              Actuelle
+            </div>
+          )}
+        </CardContent>
       </Card>
     </div>
   )
@@ -174,9 +278,18 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
   const [createStep] = useMutation(CREATE_STEP_MUTATION)
   const [updateStep] = useMutation(UPDATE_STEP_MUTATION)
   const [updateScriptStep] = useMutation(UPDATE_SCRIPT_STEP_MUTATION)
+  const [updateQuestionOrder] = useMutation(UPDATE_QUESTION_ORDER_MUTATION)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      scriptId: props.scriptStep?.scriptId || '',
+      stepId: props.scriptStep?.stepId || '',
+      stepName: props.scriptStep?.Step?.name || '',
+      locationId: props.scriptStep?.Step?.Location?.id || '',
+      lettre: props.scriptStep?.lettre || '',
+      order: props.scriptStep?.order || 0,
+    },
   })
 
   const [currScriptSteps, setCurrScriptSteps] = useState<Partial<ScriptStep>[]>(
@@ -184,27 +297,25 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
   )
   const [currScriptStep, setCurrScriptStep] =
     useState<Partial<ScriptStep> | null>(null)
+  const [questions, setQuestions] = useState<Partial<Question>[]>([])
 
-  useEffect(() => {
-    if (!form.getValues('scriptId')) {
-      form.setValue('scriptId', props.scriptStep?.scriptId)
+  // Fetch questions when stepId changes
+  const { data: _stepQuestionsData, loading: questionsLoading } = useQuery(
+    STEP_QUESTIONS_QUERY,
+    {
+      variables: {
+        stepId: form.watch('stepId') || props.scriptStep?.stepId,
+      },
+      skip: !form.watch('stepId') && !props.scriptStep?.stepId,
+      onCompleted: (data) => {
+        if (data?.step?.Questions) {
+          setQuestions(
+            [...data.step.Questions].sort((a, b) => a.order - b.order)
+          )
+        }
+      },
     }
-    if (!form.getValues('stepId')) {
-      form.setValue('stepId', props.scriptStep?.stepId)
-    }
-    if (!form.getValues('stepName')) {
-      form.setValue('stepName', props.scriptStep?.Step?.name)
-    }
-    if (!form.getValues('locationId')) {
-      form.setValue('locationId', props.scriptStep?.Step?.Location?.id)
-    }
-    if (!form.getValues('lettre')) {
-      form.setValue('lettre', props.scriptStep?.lettre)
-    }
-    if (!form.getValues('order')) {
-      form.setValue('order', props.scriptStep?.order)
-    }
-  }, [form])
+  )
 
   useEffect(() => {
     const currScriptId = form.watch('scriptId')
@@ -283,86 +394,144 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
     }
   }, [currScriptSteps])
 
-  const moveCard = useCallback(
-    (dragIndex, hoverIndex) => {
-      const newScriptSteps = [...currScriptSteps]
-      const dragCard = { ...newScriptSteps[dragIndex] }
-      const hoverCard = { ...newScriptSteps[hoverIndex] }
+  const moveQuestion = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragQuestion = questions[dragIndex]
+      const newQuestions = [...questions]
 
-      // Swap the order values
-      const tempOrder = dragCard.order
-      dragCard.order = hoverCard.order
-      hoverCard.order = tempOrder
+      // Remove the dragged item
+      newQuestions.splice(dragIndex, 1)
+      // Insert it at the new position
+      newQuestions.splice(hoverIndex, 0, dragQuestion)
 
-      // Swap the positions in the array
-      newScriptSteps[dragIndex] = hoverCard
-      newScriptSteps[hoverIndex] = dragCard
+      // Update the order value for each question
+      const updatedQuestions = newQuestions.map((question, idx) => ({
+        ...question,
+        order: idx,
+      }))
 
-      setCurrScriptSteps(newScriptSteps)
+      setQuestions(updatedQuestions)
+    },
+    [questions]
+  )
+
+  const moveScriptStep = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragStep = currScriptSteps[dragIndex]
+      const newSteps = [...currScriptSteps]
+
+      // Remove the dragged item
+      newSteps.splice(dragIndex, 1)
+      // Insert it at the new position
+      newSteps.splice(hoverIndex, 0, dragStep)
+
+      // Update the order value for each step
+      const updatedSteps = newSteps.map((step, idx) => ({
+        ...step,
+        order: idx,
+      }))
+
+      setCurrScriptSteps(updatedSteps)
     },
     [currScriptSteps]
   )
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error...</div>
+  const saveQuestionOrder = async () => {
+    try {
+      const promises = questions.map((question) =>
+        updateQuestionOrder({
+          variables: {
+            id: question.id,
+            input: {
+              order: question.order,
+            },
+          },
+        })
+      )
+      await Promise.all(promises)
+    } catch (error) {
+      console.error('Error updating question order:', error)
+    }
+  }
+
+  const navigateToQuestion = (id: string) => {
+    navigate(`/questions/${id}/edit`)
+  }
+
+  if (loading)
+    return (
+      <div className="p-8 space-y-4">
+        <Skeleton className="h-10 w-1/3" />
+        <div className="grid md:grid-cols-2 gap-4">
+          <Skeleton className="h-64" />
+          <Skeleton className="h-64" />
+        </div>
+      </div>
+    )
+
+  if (error)
+    return (
+      <div className="p-8 text-red-500">
+        Erreur de chargement: {error.message}
+      </div>
+    )
 
   const scripts: Script[] = data.scripts
   const locations: Location[] = data.locations
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const { stepId, stepName, locationId } = data
+
+    // Save script steps order
+    await saveScriptSteps({
+      currScriptSteps: currScriptSteps,
+      updateScriptStep: updateScriptStep,
+    })
+
+    // Save question order if there are questions
+    if (questions.length > 0) {
+      await saveQuestionOrder()
+    }
+
     // création d'une nouvelle étape
     if (!stepId) {
-      saveScriptSteps({
-        currScriptSteps: currScriptSteps,
-        updateScriptStep: updateScriptStep,
-      }).then(() => {
-        saveStep({
-          name: stepName,
-          locationId: locationId,
-          createStep: createStep,
-        }).then((stepId) => {
-          props.onSave(
-            {
-              scriptId: data.scriptId,
-              stepId: stepId,
-              lettre: data.lettre,
-              order: data.order,
-            },
-            props?.scriptStep?.id
-          )
-        })
+      saveStep({
+        name: stepName,
+        locationId: locationId,
+        createStep: createStep,
+      }).then((stepId) => {
+        props.onSave(
+          {
+            scriptId: data.scriptId,
+            stepId: stepId,
+            lettre: data.lettre,
+            order: data.order,
+          },
+          props?.scriptStep?.id
+        )
       })
     } else {
       // modification d'une étape existante
-      console.log('modification')
       const previous = {
         id: stepId,
         name: props.scriptStep?.Step?.name,
         locationId: props.scriptStep?.Step?.Location?.id,
       }
-      saveScriptSteps({
-        currScriptSteps: currScriptSteps,
-        updateScriptStep: updateScriptStep,
+      changeStep({
+        previous: previous,
+        name: stepName,
+        locationId: locationId,
+        updateStep: updateStep,
       }).then(() => {
-        console.log('1')
-        changeStep({
-          previous: previous,
-          name: stepName,
-          locationId: locationId,
-          updateStep: updateStep,
-        }).then(() => {
-          console.log('2')
-          props.onSave(
-            {
-              scriptId: data.scriptId,
-              stepId: data.stepId,
-              lettre: data.lettre,
-              order: data.order,
-            },
-            props?.scriptStep?.id
-          )
-        })
+        props.onSave(
+          {
+            scriptId: data.scriptId,
+            stepId: data.stepId,
+            lettre: data.lettre,
+            order: data.order,
+          },
+          props?.scriptStep?.id
+        )
       })
     }
   }
@@ -371,207 +540,276 @@ const ScriptStepForm = (props: ScriptStepFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid md:grid-cols-2 gap-4 p-4 *:p-4 mb-20"
+        className="space-y-8 p-4 mb-24"
       >
-        <Card className="space-y-4">
-          <H3 className="mb-8">Étape</H3>
-          <FormField
-            control={form.control}
-            name="stepName"
-            defaultValue={props.scriptStep?.Step?.name}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Intitulé de l&apos;étape</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Intitulé de l'étape" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="locationId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Lieu associé</FormLabel>
-                {(loading || !locations) && (
-                  <Skeleton className="w-[200px] h-10" />
+        <div className="grid md:grid-cols-3 gap-4 *:p-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Configuration de l&apos;étape</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="stepName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Intitulé de l&apos;étape</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Intitulé de l'étape" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-                {locations && (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'sm:w-[200px] justify-between',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? locations.find(
-                                (location) => location.id === field.value
-                              )?.name
-                            : 'Choisir un lieu...'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>Aucun scénario trouvé.</CommandEmpty>
-                          <CommandGroup>
-                            {locations.map((location: Location) => (
-                              <CommandItem
-                                className="hover: cursor-pointer"
-                                value={location.id}
-                                key={location.id}
-                                onSelect={() => {
-                                  form.setValue('locationId', location.id)
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    location.id === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  )}
-                                />
-                                {location.name}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+              />
+
+              <FormField
+                control={form.control}
+                name="locationId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lieu associé</FormLabel>
+                    {loading || !locations ? (
+                      <Skeleton className="w-full h-10" />
+                    ) : (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                'w-full justify-between',
+                                !field.value && 'text-muted-foreground'
+                              )}
+                            >
+                              {field.value
+                                ? locations.find(
+                                    (location) => location.id === field.value
+                                  )?.name
+                                : 'Choisir un lieu...'}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandList>
+                              <CommandEmpty>Aucun lieu trouvé.</CommandEmpty>
+                              <CommandGroup>
+                                {locations.map((location: Location) => (
+                                  <CommandItem
+                                    className="cursor-pointer"
+                                    value={location.id}
+                                    key={location.id}
+                                    onSelect={() => {
+                                      form.setValue('locationId', location.id)
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        'mr-2 h-4 w-4',
+                                        location.id === field.value
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                    {location.name}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                    <FormMessage />
+                  </FormItem>
                 )}
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lettre"
-            defaultValue={props.scriptStep?.lettre}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Lettre associée</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    maxLength={1}
-                    placeholder="Lettre associée"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="scriptId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Scénario associé</FormLabel>
-                {(loading || !scripts) && (
-                  <Skeleton className="w-[200px] h-10" />
+              />
+
+              <FormField
+                control={form.control}
+                name="lettre"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lettre associée</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        maxLength={1}
+                        className="w-20"
+                        placeholder="A"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Une lettre unique pour identifier cette étape
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
                 )}
-                {scripts && (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'sm:w-[200px] justify-between',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? scripts.find(
-                                (script) => script.id === field.value
-                              )?.name
-                            : 'Choisir un scénario...'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>Aucun scénario trouvé.</CommandEmpty>
-                          <CommandGroup>
-                            {scripts.map((script: Script) => (
-                              <CommandItem
-                                className="hover: cursor-pointer"
-                                value={script.id}
-                                key={script.id}
-                                onSelect={() => {
-                                  form.setValue('scriptId', script.id)
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    script.id === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  )}
-                                />
-                                {script.name}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+              />
+
+              <FormField
+                control={form.control}
+                name="scriptId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scénario associé</FormLabel>
+                    {loading || !scripts ? (
+                      <Skeleton className="w-full h-10" />
+                    ) : (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                'w-full justify-between',
+                                !field.value && 'text-muted-foreground'
+                              )}
+                            >
+                              {field.value
+                                ? scripts.find(
+                                    (script) => script.id === field.value
+                                  )?.name
+                                : 'Choisir un scénario...'}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandList>
+                              <CommandEmpty>
+                                Aucun scénario trouvé.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {scripts.map((script: Script) => (
+                                  <CommandItem
+                                    className="cursor-pointer"
+                                    value={script.id}
+                                    key={script.id}
+                                    onSelect={() => {
+                                      form.setValue('scriptId', script.id)
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        'mr-2 h-4 w-4',
+                                        script.id === field.value
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                    {script.name}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                    <FormMessage />
+                  </FormItem>
                 )}
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </Card>
-        <Card className="space-y-8">
-          <div className="flex justify-between items-center">
-            <H3>Placement de l&apos;étape</H3>
-            <H4>
-              <span className="text-blue-500">{currScriptSteps.length}</span>{' '}
-              étape(s)
-            </H4>
-          </div>
-          <section className="space-y-1 max-h-72 overflow-auto">
-            <DndProvider backend={HTML5Backend}>
-              {currScriptSteps.map((scriptStep, index) => (
-                <DraggableItem
-                  key={index}
-                  index={index}
-                  scriptStep={scriptStep}
-                  moveCard={moveCard}
-                  current={
-                    scriptStep?.id === props.scriptStep?.id ||
-                    scriptStep?.id === currScriptStep?.id
-                  }
-                />
-              ))}
-            </DndProvider>
-          </section>
-        </Card>
+              />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Ordre des étapes du scénario</CardTitle>
+              <div className="text-sm text-muted-foreground">
+                {currScriptSteps.length} étape(s)
+              </div>
+            </CardHeader>
+            <CardContent className="max-h-72 overflow-y-auto pr-1">
+              {form.watch('scriptId') ? (
+                <DndProvider backend={HTML5Backend}>
+                  <div>
+                    {currScriptSteps.map((scriptStep, index) => (
+                      <DraggableScriptStep
+                        key={scriptStep.id}
+                        scriptStep={scriptStep}
+                        index={index}
+                        moveScriptStep={moveScriptStep}
+                        isCurrent={
+                          props.scriptStep?.id === scriptStep.id ||
+                          currScriptStep?.id === scriptStep.id
+                        }
+                      />
+                    ))}
+                  </div>
+                </DndProvider>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Sélectionnez un scénario pour voir ses étapes</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Questions associées</CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/questions/new')}
+              >
+                Ajouter une question
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {questionsLoading || !form.watch('stepId') ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                </div>
+              ) : questions.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Aucune question associée à cette étape.</p>
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => navigate('/questions/new')}
+                  >
+                    Créer une première question
+                  </Button>
+                </div>
+              ) : (
+                <div className="max-h-96 overflow-y-auto pr-1">
+                  <H4 className="mb-4 text-muted-foreground">
+                    <span className="text-blue-500">{questions.length}</span>{' '}
+                    question(s)
+                  </H4>
+                  <DndProvider backend={HTML5Backend}>
+                    <div>
+                      {questions.map((question, index) => (
+                        <DraggableQuestion
+                          key={question.id}
+                          question={question}
+                          index={index}
+                          moveQuestion={moveQuestion}
+                          onClick={() => navigateToQuestion(question.id)}
+                        />
+                      ))}
+                    </div>
+                  </DndProvider>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
         <footer
-          className="border-t-2 py-8 lg:fixed lg:w-screen left-0 bottom-0 flex justify-center items-center gap-4"
+          className="border-t-2 py-6 fixed left-0 bottom-0 w-full flex justify-center items-center gap-4 bg-background z-10"
           style={{
-            backdropFilter: 'blur(20px)',
+            backdropFilter: 'blur(8px)',
           }}
         >
-          <Button variant="outline" onClick={() => back()}>
+          <Button variant="outline" onClick={() => back()} type="button">
             Annuler
           </Button>
           <Button type="submit" disabled={props.loading}>

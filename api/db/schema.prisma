@@ -5,11 +5,11 @@
 // https://www.prisma.io/docs/orm/prisma-migrate
 
 datasource db {
-  provider = "sqlite"
-  //provider = "postgresql"
-  //url      = env("DATABASE_URL")
+  // provider = "sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // url      = "postgresql://postgres:postgres@localhost:5432/ExploreGame?schema=public"
-  url      = "file:./dev.db"
+  // url      = "file:./dev.db"
 }
 
 generator client {

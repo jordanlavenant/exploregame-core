@@ -8,7 +8,7 @@ import type {
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation, useQuery } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
+import { toast } from "sonner"
 
 import { QUERY as DEPARTMENTS_QUERY } from 'src/components/Department/DepartmentsCell'
 import { QUERY as COLOR_SETS_QUERY } from 'src/components/ColorSet/ColorSetsCell'
