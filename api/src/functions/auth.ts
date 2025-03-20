@@ -155,6 +155,13 @@ export const handler = async (
     },
   }
 
+  // Configure cookie domain properly
+  const cookieDomain = process.env.APP_DOMAIN
+    ? process.env.NODE_ENV === 'development'
+      ? undefined
+      : process.env.APP_DOMAIN
+    : undefined
+
   const authHandler = new DbAuthHandler(event, context, {
     // Provide prisma db client
     db: db,
@@ -190,9 +197,9 @@ export const handler = async (
         SameSite: 'Strict',
         Secure: process.env.NODE_ENV !== 'development',
 
-        // If you need to allow other domains (besides the api side) access to
-        // the dbAuth session cookie:
-        Domain: '.' + process.env.APP_DOMAIN,
+        // Fixed domain configuration - removed the leading dot
+        // Only set domain in production
+        ...(cookieDomain ? { Domain: cookieDomain } : {}),
       },
       name: cookieName,
     },
@@ -203,5 +210,21 @@ export const handler = async (
     signup: signupOptions,
   })
 
-  return await authHandler.invoke()
+  try {
+    return await authHandler.invoke()
+  } catch (error) {
+    console.error('Auth handler error:', error)
+
+    // Return a proper JSON response even in case of error
+    return {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        error: 'Authentication error',
+        message: error.message,
+      }),
+    }
+  }
 }
