@@ -273,7 +273,7 @@ Le lancement du projet ouvre des instances sur différents ports :
 
 - `8910` - UI
 - `8911` - API
-- `8911/graphql` - UI de l'ORM
+- `8911/graphql` - Explorer GraphQL
 
 # Modèles
 
@@ -299,3 +299,48 @@ yarn redwood g scaffold <model>
 ```
 
 
+# Docker hub
+
+Pour pousser les images sur le `Docker Hub`, il faut suivre les instructions suivantes.
+
+### Api
+
+Construction de l'image
+
+```bash
+docker build --target api_serve -t jordaaaaaan/exploregame-core-api:latest .
+```
+
+Pousser l'image
+
+```bash
+docker push jordaaaaaan/exploregame-core-api:latest
+```
+
+### Web
+
+Construction de l'image
+
+```bash
+docker build --target web_serve -t jordaaaaaan/exploregame-core-web:latest .
+```
+
+Pousser l'image
+
+```bash
+docker push jordaaaaaan/exploregame-core-web:latest
+```
+
+### Console
+
+Construction de l'image
+
+```bash
+docker build --target console -t jordaaaaaan/exploregame-core-console:latest .
+```
+
+Pousser l'image
+
+```bash
+docker push jordaaaaaan/exploregame-core-console:latest
+```
