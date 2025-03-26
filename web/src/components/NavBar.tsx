@@ -13,7 +13,6 @@ import {
   User,
   Moon,
   Sun,
-  Activity,
 } from 'lucide-react'
 
 import { Link, navigate, routes, useLocation } from '@redwoodjs/router'

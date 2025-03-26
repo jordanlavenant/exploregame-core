@@ -1,12 +1,64 @@
-import React, { useState } from 'react';
-import { Metadata, TypedDocumentNode, useMutation, useQuery } from '@redwoodjs/web';
-import { Trash, Pencil } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { back, navigate, routes } from '@redwoodjs/router';
-import { DeleteNewsMutation, DeleteNewsMutationVariables, DeleteScriptMutation, DeleteScriptMutationVariables, UpdateScriptMutation, UpdateScriptMutationVariables } from 'types/graphql';
+import { useState } from 'react'
+
+import {
+  BarChart3,
+  CalendarIcon,
+  FileText,
+  Info,
+  Layers,
+  LayoutDashboard,
+  Pencil,
+  RefreshCw,
+  School,
+  Trash2,
+  TrendingUp,
+  Users,
+} from 'lucide-react'
+import type {
+  DeleteNewsMutation,
+  DeleteNewsMutationVariables,
+  DeleteScriptMutation,
+  DeleteScriptMutationVariables,
+  UpdateScriptMutation,
+  UpdateScriptMutationVariables,
+} from 'types/graphql'
+
+import { navigate, routes } from '@redwoodjs/router'
+import {
+  Metadata,
+  TypedDocumentNode,
+  useMutation,
+  useQuery,
+} from '@redwoodjs/web'
+
 import NavBar from 'src/components/NavBar'
+
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Switch } from '@/components/ui/switch'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 const HOME_QUERY = gql`
   query HOME_QUERY {
@@ -14,18 +66,34 @@ const HOME_QUERY = gql`
       id
       name
       visible
+      departmentId
       Department {
         name
         ColorSet {
           primary
+          secondary
+          tertiary
         }
+      }
+      ScriptStep {
+        id
       }
     }
     departments {
       id
       name
+      description
       ColorSet {
         primary
+        secondary
+        tertiary
+      }
+      Script {
+        id
+        visible
+      }
+      Player {
+        id
       }
     }
     newses {
@@ -33,21 +101,46 @@ const HOME_QUERY = gql`
       title
       description
       date
+      tags {
+        id
+        title
+      }
+    }
+    players {
+      id
+      username
+      Department {
+        name
+      }
+      PlayerScript {
+        id
+        completed
+        score
+      }
+    }
+    steps {
+      id
+      Questions {
+        id
+      }
+    }
+    questions {
+      id
     }
   }
-`;
+`
 
 const UPDATE_SCRIPT_VISIBILITY: TypedDocumentNode<
-  UpdateScriptMutation, 
+  UpdateScriptMutation,
   UpdateScriptMutationVariables
-  >= gql`
+> = gql`
   mutation UpdateScriptVisibility($id: String!, $input: UpdateScriptInput!) {
     updateScript(id: $id, input: $input) {
       id
       visible
     }
   }
-`;
+`
 
 const DELETE_SCRIPT: TypedDocumentNode<
   DeleteScriptMutation,
@@ -58,7 +151,7 @@ const DELETE_SCRIPT: TypedDocumentNode<
       id
     }
   }
-`;
+`
 
 const DELETE_NEWS: TypedDocumentNode<
   DeleteNewsMutation,
@@ -69,263 +162,728 @@ const DELETE_NEWS: TypedDocumentNode<
       id
     }
   }
-`;
+`
 
 const HomePage = () => {
   // Requêtes
-  const { data, loading, error } = useQuery(HOME_QUERY);
-  const [updateScript] = useMutation(UPDATE_SCRIPT_VISIBILITY);
-  const [deleteScript] = useMutation(DELETE_SCRIPT);
-  const [deleteNews] = useMutation(DELETE_NEWS);
+  const { data, loading, error, refetch } = useQuery(HOME_QUERY)
+  const [updateScript] = useMutation(UPDATE_SCRIPT_VISIBILITY)
+  const [deleteScript] = useMutation(DELETE_SCRIPT)
+  const [deleteNews] = useMutation(DELETE_NEWS)
 
-  // Etat des éléments sélectionné pour les modales
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedScript, setSelectedScript] = useState(null);
-  const [typeModal, setTypeModal] = useState(null);
-  const [selectedNews, setSelectedNews] = useState(null);
+  // États
+  const [activeTab, setActiveTab] = useState('overview')
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteNewsDialogOpen, setDeleteNewsDialogOpen] = useState(false)
+  const [selectedScript, setSelectedScript] = useState(null)
+  const [selectedNews, setSelectedNews] = useState(null)
 
-  // Données récupérées par la requête
-  var scripts = data?.scripts;
-  const departments = data?.departments;
+  // Calculs des statistiques du dashboard
+  const calculateStats = () => {
+    if (!data) return {}
 
-  const handleUpdateVisibility = (id, visible) => {
+    const visibleScripts = data.scripts.filter((s) => s.visible).length
+    const hiddenScripts = data.scripts.length - visibleScripts
+
+    const totalPlayers = data.players?.length || 0
+    const completedGames =
+      data.players?.reduce((total, player) => {
+        return (
+          total +
+          (player.PlayerScript?.filter((ps) => ps.completed)?.length || 0)
+        )
+      }, 0) || 0
+
+    const totalQuestions = data.questions?.length || 0
+
+    const departmentsWithScripts = data.departments?.reduce((acc, dept) => {
+      const scriptCount = dept.Script?.length || 0
+      return { ...acc, [dept.name]: scriptCount }
+    }, {})
+
+    return {
+      totalScripts: data.scripts.length,
+      visibleScripts,
+      hiddenScripts,
+      totalDepartments: data.departments.length,
+      totalNews: data.newses.length,
+      totalPlayers,
+      completedGames,
+      totalQuestions,
+      departmentsWithScripts,
+    }
+  }
+
+  const stats = calculateStats()
+
+  // Gestion de la visibilité des scénarios
+  const handleToggleVisibility = (id, visible) => {
     updateScript({
       variables: {
         id,
-        input: { visible },
+        input: { visible: !visible },
       },
-    });
-    handleCloseModal();
-  };
+      onCompleted: () => refetch(),
+    })
+  }
 
+  // Gestion de la suppression des scénarios
   const handleDeleteScript = () => {
     deleteScript({
       variables: {
         id: selectedScript.id,
       },
-    });
-    scripts = scripts.filter((script) => script.id !== selectedScript.id);
-    handleCloseModal();
-  };
-
-  const handleDeleteNews = () => {
-    console.log("🔴 handleDeleteNews appelé !");
-  
-    deleteNews({
-      variables: { id: selectedNews.id },
-      update: (cache) => {
-        cache.modify({
-          fields: {
-            newses(existingNewsRefs, { readField }) {
-              return existingNewsRefs.filter(
-                (newsRef) => readField("id", newsRef) !== selectedNews.id
-              );
-            },
-          },
-        });
+      onCompleted: () => {
+        setDeleteDialogOpen(false)
+        setSelectedScript(null)
+        refetch()
       },
     })
-      .then(() => console.log("✅ Suppression réussie et cache mis à jour !"))
-      .catch((error) => console.error("❌ Erreur lors de la suppression :", error));
-  
-    handleCloseModal();
-  };
-  
-
-  const handleDeleteClick = (script) => {
-    setSelectedScript(script);
-    setTypeModal('delete');
-    setIsModalOpen(true);
-  };
-
-  const handleDeleteClickNews = (news) => {
-    setSelectedNews(news);
-    setTypeModal('deleteNews');
-    setIsModalOpen(true);
   }
 
-  const handleVisibilityClick = (script) => {
-    setSelectedScript(script);
-    setTypeModal('visibility');
-    setIsModalOpen(true);
-  };
+  // Gestion de la suppression des actualités
+  const handleDeleteNews = () => {
+    deleteNews({
+      variables: { id: selectedNews.id },
+      onCompleted: () => {
+        setDeleteNewsDialogOpen(false)
+        setSelectedNews(null)
+        refetch()
+      },
+    })
+  }
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedScript(null);
-    setTypeModal(null);
-  };
+  // Formatage de la date
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }
+    return new Date(dateString).toLocaleDateString('fr-FR', options)
+  }
 
-  const createModal = (typeModal) => {
-    if (typeModal === 'delete') {
-      return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded text-black">
-            <h2 className="text-xl font-bold mb-2">Confirmer la suppression</h2>
-            <p>Êtes-vous sûr de vouloir supprimer le script {selectedScript?.name} ?</p>
-            <div className="flex justify-end mt-4 space-x-2">
-              <Button variant="ghost" onClick={handleCloseModal}>
-                Annuler
-              </Button>
-              <Button variant="destructive" onClick={handleDeleteScript}>
-                Supprimer
-              </Button>
-            </div>
+  if (loading) {
+    return (
+      <>
+        <NavBar />
+        <div className="flex justify-center items-center h-[80vh]">
+          <div className="flex flex-col items-center gap-4">
+            <RefreshCw className="h-16 w-16 animate-spin text-primary" />
+            <h2 className="text-2xl font-semibold">
+              Chargement du tableau de bord...
+            </h2>
           </div>
         </div>
-      );
-    } else if (typeModal === 'visibility') {
-      return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded text-black">
-            <h2 className="text-xl font-bold mb-2">Changer la visibilité</h2>
-            <p>Êtes-vous sûr de vouloir changer la visibilité du script {selectedScript?.name} ?</p>
-            <div className="flex justify-end mt-4 space-x-2">
-              <Button variant="ghost" onClick={handleCloseModal}>
-                Annuler
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <NavBar />
+        <div className="flex justify-center items-center h-[80vh]">
+          <Card className="w-[500px] max-w-[90%]">
+            <CardHeader>
+              <CardTitle className="text-destructive flex items-center gap-2">
+                <Info className="h-5 w-5" />
+                Erreur de chargement
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Une erreur s&apos;est produite lors du chargement des données:{' '}
+                {error.message}
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={() => refetch()}>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Réessayer
               </Button>
-              <Button variant="destructive" onClick={() => handleUpdateVisibility(selectedScript.id, !selectedScript.visible)}>
-                Confirmer
-              </Button>
-            </div>
-          </div>
+            </CardFooter>
+          </Card>
         </div>
-      );
-    }
-    else if (typeModal === 'deleteNews') {
-      return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded text-black">
-            <h2 className="text-xl font-bold mb-2">Confirmer la suppression</h2>
-            <p>Êtes-vous sûr de vouloir supprimer l'actualité {selectedNews?.title} ?</p>
-            <div className="flex justify-end mt-4 space-x-2">
-              <Button variant="ghost" onClick={handleCloseModal}>
-                Annuler
-              </Button>
-              <Button variant="destructive" onClick={handleDeleteNews}>
-                Supprimer
-              </Button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
+      </>
+    )
   }
 
   return (
     <>
-      <Metadata title="Home" description="Home page" />
-      {loading && <p>Loading scenarios...</p>}
-      {error && <p>Error loading scenarios</p>}
+      <Metadata
+        title="Tableau de bord"
+        description="Tableau de bord Explore Game"
+      />
       <NavBar />
-      <div className="flex justify-center mb-4">
-        <img alt="Logo Explore-Game" src="/explore-game-logo.png" className="w-32 sm:w-48" />
-      </div>
 
-      {scripts && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4">
-          {/* Scénarios */}
-          <div className="p-4 flex flex-col items-center">
-            <h2 className="text-2xl font-bold mb-4 text-center">Scénarios visible</h2>
-            <Card className="p-4 w-full max-w-lg">
-              {scripts
-                .filter((script) => script.visible)
-                .map((script) => (
+      <div className="container mx-auto py-6 space-y-8">
+        {/* En-tête et logo */}
+        <div className="flex flex-col sm:flex-row justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Tableau de bord administrateur
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Gérez les scénarios, départements et actualités de votre
+              plateforme
+            </p>
+          </div>
+          <img
+            alt="Logo Explore-Game"
+            src="/explore-game-logo.png"
+            className="w-32 sm:w-36 mt-4 sm:mt-0"
+          />
+        </div>
+
+        {/* Statistiques générales */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Scénarios
+              </CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalScripts}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.visibleScripts} visibles, {stats.hiddenScripts} masqués
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Départements
+              </CardTitle>
+              <School className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalDepartments}</div>
+              <p className="text-xs text-muted-foreground">
+                Avec leurs couleurs et spécialités
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Actualités</CardTitle>
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalNews}</div>
+              <p className="text-xs text-muted-foreground">
+                Dernière publication:{' '}
+                {data.newses[0] && formatDate(data.newses[0].date)}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Questions</CardTitle>
+              <Layers className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalQuestions}</div>
+              <p className="text-xs text-muted-foreground">
+                Réparties sur {data.steps?.length || 0} étapes
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Onglets principaux */}
+        <Tabs
+          defaultValue="overview"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
+          <TabsList className="grid grid-cols-3 md:grid-cols-4 lg:w-[600px]">
+            <TabsTrigger value="overview">
+              <LayoutDashboard className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Vue d&apos;ensemble</span>
+              <span className="sm:hidden">Vue</span>
+            </TabsTrigger>
+            <TabsTrigger value="scripts">
+              <FileText className="h-4 w-4 mr-2" />
+              <span>Scénarios</span>
+            </TabsTrigger>
+            <TabsTrigger value="news">
+              <TrendingUp className="h-4 w-4 mr-2" />
+              <span>Actualités</span>
+            </TabsTrigger>
+            <TabsTrigger value="departments">
+              <Users className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Départements</span>
+              <span className="sm:hidden">Dép.</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Vue d'ensemble */}
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Scénarios récents */}
+              <Card className="md:col-span-1">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FileText className="mr-2 h-4 w-4" />
+                    Scénarios récents
+                  </CardTitle>
+                  <CardDescription>
+                    Les derniers scénarios visibles
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {data.scripts
+                    .filter((script) => script.visible)
+                    .slice(0, 4)
+                    .map((script) => (
+                      <div
+                        key={script.id}
+                        className="flex items-center justify-between p-2 rounded-md border"
+                        style={{
+                          borderLeftColor: script.Department.ColorSet.primary,
+                          borderLeftWidth: '4px',
+                        }}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="truncate font-medium">{script.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {script.Department.name}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Badge
+                            variant={script.visible ? 'default' : 'outline'}
+                          >
+                            {script.visible ? 'Visible' : 'Masqué'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => navigate(routes.scripts())}
+                  >
+                    Voir tous les scénarios
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Actualités récentes */}
+              <Card className="md:col-span-1">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <TrendingUp className="mr-2 h-4 w-4" />
+                    Dernières actualités
+                  </CardTitle>
+                  <CardDescription>Les actualités récentes</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {data.newses.slice(0, 4).map((news) => (
+                    <div
+                      key={news.id}
+                      className="flex flex-col p-2 rounded-md border"
+                    >
+                      <div className="flex justify-between items-start">
+                        <p className="font-medium truncate">{news.title}</p>
+                        <div className="flex items-center text-xs text-muted-foreground">
+                          <CalendarIcon className="mr-1 h-3 w-3" />
+                          {formatDate(news.date)}
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-1">
+                        {news.description}
+                      </p>
+                    </div>
+                  ))}
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => navigate(routes.newses())}
+                  >
+                    Voir toutes les actualités
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+
+            {/* Départements */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <School className="mr-2 h-4 w-4" />
+                  Aperçu des départements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                  {data.departments.map((department) => {
+                    const scriptCount = department.Script?.length || 0
+
+                    return (
+                      <Card
+                        key={department.id}
+                        className="overflow-hidden border-t-4 hover:shadow-md transition-shadow cursor-pointer"
+                        style={{ borderTopColor: department.ColorSet.primary }}
+                        onClick={() =>
+                          navigate(routes.department({ id: department.id }))
+                        }
+                      >
+                        <CardContent className="p-3">
+                          <h3 className="font-medium text-center truncate mb-1">
+                            {department.name}
+                          </h3>
+                          <div className="flex justify-center items-center gap-1 text-xs text-muted-foreground">
+                            <FileText className="h-3 w-3" />
+                            <span>
+                              {scriptCount} scénario{scriptCount > 1 ? 's' : ''}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => navigate(routes.departments())}
+                >
+                  Gérer les départements
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+
+          {/* Onglet Scénarios */}
+          <TabsContent value="scripts" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Gestion des scénarios</CardTitle>
+                <CardDescription>
+                  Tous les scénarios disponibles sur la plateforme
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {data.scripts.map((script) => (
                   <div
                     key={script.id}
-                    className="p-2 border rounded-lg mb-4"
+                    className="p-3 border rounded-lg flex flex-col sm:flex-row sm:items-center gap-3"
                     style={{
-                      borderColor: script.Department.ColorSet.primary,
+                      borderLeftColor: script.Department.ColorSet.primary,
+                      borderLeftWidth: '4px',
                     }}
                   >
-                    <h2 className="text-center font-bold mb-2">{script.name}</h2>
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                      <p className="text-sm mb-2 sm:mb-0">Département : {script.Department.name}</p>
-                      <div className="flex items-center space-x-2">
-                        <p className="text-sm">Visibilité :</p>
-                        <Switch
-                          checked={script.visible}
-                          onCheckedChange={() => handleVisibilityClick(script)}
-                        />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold truncate">{script.name}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Département: {script.Department.name} • Étapes:{' '}
+                        {script.ScriptStep?.length || 0}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 justify-between sm:justify-end">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm whitespace-nowrap">
+                          Visibilité:
+                        </span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Switch
+                                checked={script.visible}
+                                onCheckedChange={() =>
+                                  handleToggleVisibility(
+                                    script.id,
+                                    script.visible
+                                  )
+                                }
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {script.visible
+                                ? 'Masquer le scénario'
+                                : 'Rendre visible'}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
-                      <div className="flex space-x-2">
-                      <Button
+                      <div className="flex gap-1">
+                        <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => navigate(routes.editScript({ id: script.id }))}
+                          onClick={() =>
+                            navigate(routes.editScript({ id: script.id }))
+                          }
                         >
-                          <Pencil />
+                          <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(script)}>
-                          <Trash />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedScript(script)
+                            setDeleteDialogOpen(true)
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
                   </div>
                 ))}
-              <div className="flex justify-center mt-4">
-                <Button onClick={() => navigate(routes.scripts())}>Gérer tous les scénarios</Button>
-              </div>
-            </Card>
-          </div>
-
-          {/* Actualités */}
-            <div className="p-4 flex flex-col items-center">
-            <h2 className="text-2xl font-bold mb-4 text-center">Les actualités</h2>
-            <Card className="p-4 w-full max-w-lg">
-              {data.newses.slice(0, 3).map((news) => (
-              <div key={news.id} className="p-2 border rounded-lg mb-4">
-              <h3 className="text-xl font-bold mb-2">{news.title}</h3>
-              <p className="text-sm mb-2">{news.description}</p>
-              <div className="flex justify-between items-center">
-                <p className="text-sm mb-2 flex-grow text-left">Date : {new Date(news.date).toLocaleDateString()}</p>
-                <div className="flex space-x-2">
-                <Button variant="ghost" size="icon" onClick={() => navigate(routes.editNews({ id: news.id }))}>
-                <Pencil />
-                </Button>
-                <Button variant="ghost" size="icon" onClick={() => handleDeleteClickNews(news)}>
-                <Trash />
-                </Button>
-                </div>
-              </div>
-              </div>
-              ))}
-              <div className="flex justify-center mt-4">
-              <Button onClick={() => navigate(routes.newses())}>Gérer toutes les actualités</Button>
-              </div>
-            </Card>
-            </div>
-          {/* Départements */}
-          <div className="p-4 flex flex-col items-center">
-            <h2 className="text-2xl font-bold mb-4 text-center">Les départements</h2>
-            <Card className="p-4 w-full max-w-lg">
-              {departments.map((department) => (
-                <div
-                  key={department.id}
-                  className="p-2 border rounded-lg mb-4 cursor-pointer"
-                  onClick={() => navigate(routes.department({ id: department.id }))}
-                  style={{
-                  borderColor: department.ColorSet.primary,
-                  }}
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate(routes.scripts())}
                 >
-                  <h3 className="text-center">{department.name}</h3>
-                </div>
-              ))}
-              <div className="flex justify-center mt-4">
-                <Button onClick={() => navigate(routes.departments())}>Gérer tous les départements</Button>
-              </div>
+                  Gérer en détail
+                </Button>
+                <Button onClick={() => navigate(routes.newScript())}>
+                  Nouveau scénario
+                </Button>
+              </CardFooter>
             </Card>
-          </div>
-        </div>
-      )}
+          </TabsContent>
 
-      {/* Modal de confirmation de suppression */}
-      {isModalOpen && (
-        createModal(typeModal)
-      )}
+          {/* Onglet Actualités */}
+          <TabsContent value="news" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Actualités récentes</CardTitle>
+                <CardDescription>
+                  Gérez les actualités de la plateforme
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {data.newses.map((news) => (
+                    <Card key={news.id} className="overflow-hidden">
+                      <CardHeader className="p-4 pb-0">
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="text-lg">
+                            {news.title}
+                          </CardTitle>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() =>
+                                navigate(routes.editNews({ id: news.id }))
+                              }
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                setSelectedNews(news)
+                                setDeleteNewsDialogOpen(true)
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <CardDescription className="flex items-center gap-1">
+                          <CalendarIcon className="h-3.5 w-3.5" />
+                          {formatDate(news.date)}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-2">
+                        <p className="text-sm line-clamp-3">
+                          {news.description}
+                        </p>
+                        {news.tags && news.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {news.tags.map((tag) => (
+                              <Badge key={tag.id} variant="outline">
+                                {tag.title}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate(routes.newses())}
+                >
+                  Toutes les actualités
+                </Button>
+                <Button onClick={() => navigate(routes.newNews())}>
+                  Nouvelle actualité
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+
+          {/* Onglet Départements */}
+          <TabsContent value="departments">
+            <Card>
+              <CardHeader>
+                <CardTitle>Départements</CardTitle>
+                <CardDescription>
+                  Tous les départements disponibles sur la plateforme
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {data.departments.map((department) => {
+                    const scriptCount = department.Script?.length || 0
+                    const playerCount = department.Player?.length || 0
+
+                    return (
+                      <Card
+                        key={department.id}
+                        className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() =>
+                          navigate(routes.department({ id: department.id }))
+                        }
+                      >
+                        <div
+                          className="h-2"
+                          style={{
+                            backgroundColor: department.ColorSet.primary,
+                          }}
+                        />
+                        <CardHeader className="pb-2">
+                          <CardTitle>{department.name}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm line-clamp-2 mb-4">
+                            {department.description || 'Pas de description'}
+                          </p>
+                          <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div className="flex items-center gap-1">
+                              <FileText className="h-4 w-4 text-muted-foreground" />
+                              <span>
+                                {scriptCount} scénario
+                                {scriptCount > 1 ? 's' : ''}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Users className="h-4 w-4 text-muted-foreground" />
+                              <span>
+                                {playerCount} joueur{playerCount > 1 ? 's' : ''}
+                              </span>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="pt-0">
+                          <div className="flex gap-1">
+                            <div
+                              className="w-5 h-5 rounded-full"
+                              style={{
+                                backgroundColor: department.ColorSet.primary,
+                              }}
+                              title="Couleur primaire"
+                            />
+                            <div
+                              className="w-5 h-5 rounded-full"
+                              style={{
+                                backgroundColor: department.ColorSet.secondary,
+                              }}
+                              title="Couleur secondaire"
+                            />
+                            <div
+                              className="w-5 h-5 rounded-full"
+                              style={{
+                                backgroundColor: department.ColorSet.tertiary,
+                              }}
+                              title="Couleur tertiaire"
+                            />
+                          </div>
+                        </CardFooter>
+                      </Card>
+                    )
+                  })}
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate(routes.departments())}
+                >
+                  Gérer en détail
+                </Button>
+                <Button onClick={() => navigate(routes.newDepartment())}>
+                  Nouveau département
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Dialog de confirmation de suppression de scénario */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer le scénario &quot;
+              {selectedScript?.name}&quot; ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              Annuler
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteScript}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Supprimer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de confirmation de suppression d'actualité */}
+      <Dialog
+        open={deleteNewsDialogOpen}
+        onOpenChange={setDeleteNewsDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer l&apos;actualité &quot;
+              {selectedNews?.title}&quot; ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteNewsDialogOpen(false)}
+            >
+              Annuler
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteNews}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Supprimer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import type {
   EditDepartmentById,
   UpdateDepartmentInput,
@@ -11,7 +12,6 @@ import type {
   TypedDocumentNode,
 } from '@redwoodjs/web'
 import { useMutation } from '@redwoodjs/web'
-import { toast } from "sonner"
 
 import DepartmentForm from 'src/components/Department/DepartmentForm'
 
@@ -77,20 +77,11 @@ export const Success = ({
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">
-          Edit Department {department?.id}
-        </h2>
-      </header>
-      <div className="rw-segment-main">
-        <DepartmentForm
-          department={department}
-          onSave={onSave}
-          error={error}
-          loading={loading}
-        />
-      </div>
-    </div>
+    <DepartmentForm
+      department={department}
+      onSave={onSave}
+      error={error}
+      loading={loading}
+    />
   )
 }

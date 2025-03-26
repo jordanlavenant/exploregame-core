@@ -34,26 +34,16 @@ const Routes = () => {
         <Route path="/bdes/{id}" page={BdeBdePage} name="bde" />
         <Route path="/bdes" page={BdeBdesPage} name="bdes" />
       </Set>
-      <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
+      <Set wrap={ScaffoldLayout}>
         <Route path="/departments/new" page={DepartmentNewDepartmentPage} name="newDepartment" />
         <Route path="/departments/{id}/edit" page={DepartmentEditDepartmentPage} name="editDepartment" />
-        <Route path="/departments/{id}" page={DepartmentDepartmentPage} name="department" />
         <Route path="/departments" page={DepartmentDepartmentsPage} name="departments" />
-      </Set>
-      <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
-      </Set>
-      <Set wrap={ScaffoldLayout} title="Newses" titleTo="newses" buttonLabel="New News" buttonTo="newNews">
-      </Set>
-      <Set wrap={ScaffoldLayout} title="Tags" titleTo="tags" buttonLabel="New Tag" buttonTo="newTag">
-      </Set>
-      <Set wrap={ScaffoldLayout} title="Bdes" titleTo="bdes" buttonLabel="New Bde" buttonTo="newBde">
       </Set>
       <PrivateSet unauthenticated="login">
         <Route path="/" page={HomePage} name="home" />
-        <Set wrap={ScaffoldLayout} title="Scénarios" titleTo="scripts" buttonLabel="Nouveau scénario" buttonTo="newScript">
+        <Set wrap={ScaffoldLayout}>
           <Route path="/scripts/new" page={ScriptNewScriptPage} name="newScript" />
           <Route path="/scripts/{id}/edit" page={ScriptEditScriptPage} name="editScript" />
-          <Route path="/scripts/{id}" page={ScriptScriptPage} name="script" />
           <Route path="/scripts" page={ScriptScriptsPage} name="scripts" />
         </Set>
         <Set wrap={ScaffoldLayout} title="HintLevels" titleTo="hintLevels" buttonLabel="New HintLevel" buttonTo="newHintLevel">
@@ -80,16 +70,14 @@ const Routes = () => {
           <Route path="/users/{id}" page={UserUserPage} name="user" />
           <Route path="/users" page={UserUsersPage} name="users" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="Questions" titleTo="questions" buttonLabel="Nouvelle question" buttonTo="newQuestion">
+        <Set wrap={ScaffoldLayout}>
           <Route path="/questions/new" page={QuestionNewQuestionPage} name="newQuestion" />
           <Route path="/questions/{id}/edit" page={QuestionEditQuestionPage} name="editQuestion" />
-          <Route path="/questions/{id}" page={QuestionQuestionPage} name="question" />
           <Route path="/questions" page={QuestionQuestionsPage} name="questions" />
         </Set>
-        <Set wrap={ScaffoldLayout} title="ScriptSteps" titleTo="scriptSteps" buttonLabel="New ScriptStep" buttonTo="newScriptStep">
+        <Set wrap={ScaffoldLayout}>
           <Route path="/script-steps/new" page={ScriptStepNewScriptStepPage} name="newScriptStep" />
           <Route path="/script-steps/{id}/edit" page={ScriptStepEditScriptStepPage} name="editScriptStep" />
-          <Route path="/script-steps/{id}" page={ScriptStepScriptStepPage} name="scriptStep" />
           <Route path="/script-steps" page={ScriptStepScriptStepsPage} name="scriptSteps" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Players" titleTo="players" buttonLabel="New Player" buttonTo="newPlayer">
@@ -109,8 +97,6 @@ const Routes = () => {
           <Route path="/player-scripts/{id}/edit" page={PlayerScriptEditPlayerScriptPage} name="editPlayerScript" />
           <Route path="/player-scripts/{id}" page={PlayerScriptPlayerScriptPage} name="playerScript" />
           <Route path="/player-scripts" page={PlayerScriptPlayerScriptsPage} name="playerScripts" />
-        </Set>
-        <Set wrap={ScaffoldLayout} title="Departments" titleTo="departments" buttonLabel="New Department" buttonTo="newDepartment">
         </Set>
         <Set wrap={ScaffoldLayout} title="CharacterSteps" titleTo="characterSteps" buttonLabel="New CharacterStep" buttonTo="newCharacterStep">
           <Route path="/character-steps/new" page={CharacterStepNewCharacterStepPage} name="newCharacterStep" />
